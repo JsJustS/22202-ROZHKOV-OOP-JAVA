@@ -18,8 +18,14 @@ public class CommandBinary extends Command {
         super.run(ctx);
         try {
             this.secondOperand = ctx.pop();
+        } catch (RuntimeContextException e) {
+            throw new RuntimeCommandException(this.name + " could not perform operation: " + e.getMessage());
+        }
+
+        try {
             this.firstOperand = ctx.pop();
         } catch (RuntimeContextException e) {
+            ctx.push(this.secondOperand);
             throw new RuntimeCommandException(this.name + " could not perform operation: " + e.getMessage());
         }
     }
