@@ -31,6 +31,11 @@ public class CommandDefine extends Command {
     public void loadArgs(List<Object> args) throws BadArgumentCommandException {
         super.loadArgs(args);
         try {
+            // todo: Поговорить об условии
+            // Сейчас при попытке переозначить переменную
+            // Она заменяется на этапе подстановки, и здесь вылетает ошибка
+            // Стоит ли так и оставить, или переделать?
+            // Технически условие не нарушается
             this.varName = (String) args.get(0);
             this.varValue = (double) args.get(1);
         } catch (ClassCastException e) {

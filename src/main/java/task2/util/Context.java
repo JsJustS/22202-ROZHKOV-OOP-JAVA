@@ -10,9 +10,12 @@ public class Context {
     private final Stack<Double> STACK;
     private final HashMap<String, Double> varTable;
 
+    private boolean exitFlag;
+
     public Context() {
         this.STACK = new Stack<>();
         this.varTable = new HashMap<>();
+        this.exitFlag = false;
     }
 
     public void setVar(String name, double value) {
@@ -45,5 +48,13 @@ public class Context {
         } catch (EmptyStackException e) {
             throw new RuntimeContextException("Could not peek because stack is empty.");
         }
+    }
+
+    public void setExitFlag(boolean exitFlag) {
+        this.exitFlag = exitFlag;
+    }
+
+    public boolean shouldExit() {
+        return this.exitFlag;
     }
 }

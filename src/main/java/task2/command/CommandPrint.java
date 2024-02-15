@@ -4,8 +4,6 @@ import task2.error.RuntimeCommandException;
 import task2.error.RuntimeContextException;
 import task2.util.Context;
 
-import java.util.EmptyStackException;
-
 public class CommandPrint extends Command {
     public CommandPrint() {
         super("PRINT", 0);

@@ -31,6 +31,7 @@ public class Calculator {
         if (this.filename == null) {
             commandStream = new BufferedReader(new InputStreamReader(System.in)).lines();
         } else {
+            // todo: rewrite with simpler libs or ask for permission to use
             try{
                 commandStream = Files.lines(Paths.get(this.filename));
             } catch (IOException e) {
@@ -47,10 +48,13 @@ public class Calculator {
     private void updateState(String commandLine, CommandFactory factory, Context ctx) {
         try {
             CommandParser parser = new CommandParser(commandLine);
+            if (parser.shouldSkip()) return;
+
             Command command = factory.create(parser.getCommandName());
             command.loadArgs(parser.getArgs(ctx));
             command.run(ctx);
         } catch (CommandCreationException | BadArgumentCommandException | RuntimeCommandException e) {
+            // todo: logging
             System.err.printf("Skipped \"%s\" due to an error: " + e.getMessage(), commandLine);
         }
     }

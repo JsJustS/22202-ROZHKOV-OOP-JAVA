@@ -36,6 +36,9 @@ public class CommandFactory {
 
     public Command create(String name) throws CommandCreationException {
         try {
+            if (name == null || name.length() == 0 || !COMMANDS.containsKey(name)) {
+                throw new CommandCreationException("Invalid name provided.");
+            }
             return COMMANDS.get(name).getDeclaredConstructor().newInstance();
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new CommandCreationException(e.getMessage());
