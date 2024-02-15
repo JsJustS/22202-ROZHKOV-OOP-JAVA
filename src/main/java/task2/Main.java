@@ -20,6 +20,7 @@ public class Main {
         try {
             instance.start();
         } catch (ConfigException e) {
+            // todo: logging
             System.err.println("Could not start calculations: " + e.getMessage());
         }
     }
