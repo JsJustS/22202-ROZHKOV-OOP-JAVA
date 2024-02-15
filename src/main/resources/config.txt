@@ -1,0 +1,4 @@
+DEFINE=task2.command.CommandDefine
+POP=task2.command.CommandPop
+PRINT=task2.command.CommandPrint
+PUSH=task2.command.CommandPush
