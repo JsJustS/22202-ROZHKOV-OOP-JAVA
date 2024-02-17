@@ -1,10 +1,8 @@
-package task1;
+package task1.util;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import task1.util.DigitSequenceGen;
-import task1.util.ISequenceGen;
 
 import java.util.Random;
 

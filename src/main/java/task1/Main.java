@@ -7,10 +7,12 @@ import task1.util.DigitSequenceGen;
 
 public class Main {
     public static void main(String[] args) {
+        Config cfg = new Config(0L, 5);
+        //Config cfg = Config.GENERAL;
         Engine engine = new Engine();
-        engine.setInputHandler(new ConsoleInputImpl());
         engine.setOutputHandler(new ConsoleScreen());
-        engine.setConfig(Config.GENERAL);
+        engine.setConfig(cfg);
+        engine.setInputHandler(new ConsoleInputImpl(cfg));
 
         try {
             engine.start(new DigitSequenceGen());

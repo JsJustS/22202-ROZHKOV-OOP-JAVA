@@ -1,5 +1,9 @@
 package task1.input;
 
+import task1.util.Config;
+import task1.util.DigitValidator;
+import task1.util.IValidator;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,14 +19,19 @@ public class ConsoleInputImpl implements IInputHandler {
     private final List<Integer> inputSequence;
     private final BufferedReader reader;
 
+    private final IValidator validator;
+    private final int inputLength;
+
     // flags
     private boolean exitFlag;
     private boolean clueFlag;
     private boolean inputFlag;
 
-    public ConsoleInputImpl() {
+    public ConsoleInputImpl(Config cfg) {
         this.reader = new BufferedReader(new InputStreamReader(System.in));
-        this.inputSequence = new ArrayList<>(4);
+        this.inputSequence = new ArrayList<>();
+        this.validator = new DigitValidator(cfg.length());
+        this.inputLength = cfg.length();
 
         // flags
         this.exitFlag = false;
@@ -35,7 +44,7 @@ public class ConsoleInputImpl implements IInputHandler {
         this.inputFlag = false;
 
         HashSet<Character> bytes = new HashSet<>();
-        String badInput = "Bad input! Enter 4 different digits side by side, then press New Line.";
+        String badInput = "Bad input! Enter "+this.inputLength+" different digits side by side, then press New Line.";
 
         try {
             String userInput = this.reader.readLine();
@@ -43,15 +52,10 @@ public class ConsoleInputImpl implements IInputHandler {
                 return; // if any command found, tick is skipped.
             }
 
+            if (!validator.isOk(userInput)) {return;}
+
             this.inputSequence.clear();
             for (char c : userInput.toCharArray()) {
-                if (!Character.isDigit(c) || bytes.contains(c) || this.inputSequence.size() >= 4) {
-                    System.out.println(badInput);
-                    this.inputSequence.clear();
-                    return;
-                }
-
-                bytes.add(c);
                 this.inputSequence.add(Integer.parseInt(String.valueOf(c), 10));
             }
             this.inputFlag = true;
