@@ -34,10 +34,6 @@ public class ArgParser {
             return;
         }
 
-//        List<String> args = Arrays.asList(inputStrings);
-//        this.reverseFlag = args.contains("-r") || args.contains("--reverse");
-//        this.caseSensitivityFlag = args.contains("-c") || args.contains("--case");
-
         if (inputStrings.length == 1) {
             this.inputFilename = inputStrings[0];
         }
