@@ -1,5 +1,7 @@
 package task2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import task2.command.Command;
 import task2.error.BadArgumentCommandException;
 import task2.error.CommandCreationException;
@@ -17,6 +19,7 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 public class Calculator {
+    public final Logger LOGGER = LoggerFactory.getLogger(Calculator.class);
     private final String filename;
     public Calculator() {
         this.filename = null;
@@ -31,7 +34,6 @@ public class Calculator {
         if (this.filename == null) {
             commandStream = new BufferedReader(new InputStreamReader(System.in)).lines();
         } else {
-            // todo: rewrite with simpler libs or ask for permission to use
             try{
                 commandStream = Files.lines(Paths.get(this.filename));
             } catch (IOException e) {
@@ -53,9 +55,9 @@ public class Calculator {
             Command command = factory.create(parser.getCommandName());
             command.loadArgs(parser.getArgs(ctx));
             command.run(ctx);
+            LOGGER.debug(command + " was executed.");
         } catch (CommandCreationException | BadArgumentCommandException | RuntimeCommandException e) {
-            // todo: logging
-            System.err.printf("Skipped \"%s\" due to an error: " + e.getMessage(), commandLine);
+            LOGGER.warn("Skipped \"" + commandLine + "\" due to an error: " + e.getMessage());
         }
     }
 }
