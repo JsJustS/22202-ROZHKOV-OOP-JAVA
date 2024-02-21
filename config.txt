@@ -1,0 +1,10 @@
+# test comment
+storageBodySize = 50
+storageMotorSize = 50
+storageAccessorySize = 50
+storageAutoSize = 50
+accessorySuppliersCount = 5
+workersCount = 15
+dealersCount = 30
+
+isLogging = true
