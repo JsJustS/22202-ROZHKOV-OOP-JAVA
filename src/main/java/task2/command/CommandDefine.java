@@ -22,11 +22,7 @@ public class CommandDefine extends Command {
         super.run(ctx, args);
 
         try {
-            // todo: Поговорить об условии
-            // Сейчас при попытке переозначить переменную
-            // Она заменяется на этапе подстановки, и здесь вылетает ошибка
-            // Стоит ли так и оставить, или переделать?
-            // Технически условие не нарушается
+            // todo: apply redefine
             this.varName = (String) args.get(0);
             this.varValue = (double) args.get(1);
         } catch (ClassCastException e) {
