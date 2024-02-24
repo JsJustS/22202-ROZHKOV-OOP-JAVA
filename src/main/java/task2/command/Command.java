@@ -15,11 +15,7 @@ public abstract class Command {
         this.argCount = argCount;
     }
 
-    public void run(Context ctx) throws RuntimeCommandException {
-        // do stuff
-    }
-
-    public void loadArgs(List<Object> args) throws BadArgumentCommandException {
+    public void run(Context ctx, List<Object> args) throws RuntimeCommandException, BadArgumentCommandException {
         if (args.size() != this.argCount) {
             throw new BadArgumentCommandException("Wrong amount of arguments");
         }

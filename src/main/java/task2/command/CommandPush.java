@@ -15,22 +15,19 @@ public class CommandPush extends Command {
     }
 
     @Override
-    public void run(Context ctx) throws RuntimeCommandException {
-        super.run(ctx);
-        if (Double.isNaN(this.number)) {
-            throw new RuntimeCommandException(this.name + " tried to push NaN on stack.");
-        }
+    public void run(Context ctx, List<Object> args) throws RuntimeCommandException, BadArgumentCommandException {
+        super.run(ctx, args);
 
-        ctx.push(this.number);
-    }
-
-    @Override
-    public void loadArgs(List<Object> args) throws BadArgumentCommandException {
-        super.loadArgs(args);
         try {
             this.number = (double) args.get(0);
         } catch (ClassCastException e) {
             throw new BadArgumentCommandException(this.name + " could not parse argument");
         }
+
+        if (Double.isNaN(this.number)) {
+            throw new RuntimeCommandException(this.name + " tried to push NaN on stack.");
+        }
+
+        ctx.push(this.number);
     }
 }

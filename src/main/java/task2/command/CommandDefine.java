@@ -18,18 +18,9 @@ public class CommandDefine extends Command {
     }
 
     @Override
-    public void run(Context ctx) throws RuntimeCommandException {
-        super.run(ctx);
-        if (Double.isNaN(this.varValue)) {
-            throw new RuntimeCommandException(this.name + " has undefined variable.");
-        }
+    public void run(Context ctx, List<Object> args) throws RuntimeCommandException, BadArgumentCommandException {
+        super.run(ctx, args);
 
-        ctx.setVar(this.varName, this.varValue);
-    }
-
-    @Override
-    public void loadArgs(List<Object> args) throws BadArgumentCommandException {
-        super.loadArgs(args);
         try {
             // todo: Поговорить об условии
             // Сейчас при попытке переозначить переменную
@@ -41,5 +32,11 @@ public class CommandDefine extends Command {
         } catch (ClassCastException e) {
             throw new BadArgumentCommandException(this.name + " could not parse arguments");
         }
+
+        if (Double.isNaN(this.varValue)) {
+            throw new RuntimeCommandException(this.name + " has undefined variable.");
+        }
+
+        ctx.setVar(this.varName, this.varValue);
     }
 }
