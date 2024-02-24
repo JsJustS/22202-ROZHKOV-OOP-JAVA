@@ -7,8 +7,8 @@ import task1.util.DigitSequenceGen;
 
 public class Main {
     public static void main(String[] args) {
-        Config cfg = new Config(0L, 5);
-        //Config cfg = Config.GENERAL;
+        //Config cfg = new Config(0L, 5);
+        Config cfg = Config.GENERAL;
         Engine engine = new Engine();
         engine.setOutputHandler(new ConsoleScreen());
         engine.setConfig(cfg);
