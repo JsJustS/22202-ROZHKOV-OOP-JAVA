@@ -21,8 +21,7 @@ public class CommandPrintTest extends TestCase {
             Command command = new CommandFactory().create("PRINT");
             assertEquals(command.toString(), "PRINT");
 
-            command.loadArgs(new ArrayList<Object>());
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>());
         } catch (RuntimeCommandException | BadArgumentCommandException | CommandCreationException | ConfigException e) {
             fail(e.getMessage());
         }

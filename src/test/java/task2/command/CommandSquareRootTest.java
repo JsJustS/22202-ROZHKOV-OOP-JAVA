@@ -22,8 +22,7 @@ public class CommandSquareRootTest extends TestCase {
             Command command = new CommandFactory().create("SQRT");
             assertEquals(command.toString(), "SQRT");
 
-            command.loadArgs(new ArrayList<Object>());
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>());
 
             assertEquals(ctx.peek(), 2D);
         } catch (RuntimeContextException | RuntimeCommandException | BadArgumentCommandException |

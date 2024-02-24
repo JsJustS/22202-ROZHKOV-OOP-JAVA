@@ -22,8 +22,7 @@ public class CommandPushTest extends TestCase {
             Command command = new CommandFactory().create("PUSH");
             assertEquals(command.toString(), "PUSH");
 
-            command.loadArgs(new ArrayList<Object>(Collections.singletonList(42.42D)));
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>(Collections.singletonList(42.42D)));
             assertEquals(ctx.peek(), 42.42D);
         } catch (RuntimeContextException | RuntimeCommandException | BadArgumentCommandException |
                  CommandCreationException | ConfigException e) {

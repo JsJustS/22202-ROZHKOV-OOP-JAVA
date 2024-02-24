@@ -23,8 +23,7 @@ public class CommandPlusTest extends TestCase {
             assertEquals(command.toString(), "PLUS");
 
             ctx.push(1D); ctx.push(2D);
-            command.loadArgs(new ArrayList<Object>());
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>());
 
             assertEquals(ctx.peek(), 3D);
 
@@ -32,8 +31,7 @@ public class CommandPlusTest extends TestCase {
             assertEquals(command.toString(), "PLUS");
 
             ctx.push(1D); ctx.push(9D);
-            command.loadArgs(new ArrayList<Object>());
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>());
 
             assertEquals(ctx.peek(), 10D);
         } catch (RuntimeContextException | RuntimeCommandException | BadArgumentCommandException |

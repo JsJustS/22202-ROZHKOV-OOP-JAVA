@@ -22,8 +22,7 @@ public class CommandDivideTest extends TestCase {
             assertEquals(command.toString(), "DIVIDE");
 
             ctx.push(1D); ctx.push(2D);
-            command.loadArgs(new ArrayList<Object>());
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>());
 
             assertEquals(ctx.peek(), 0.5D);
 
@@ -31,8 +30,7 @@ public class CommandDivideTest extends TestCase {
             assertEquals(command.toString(), "DIVIDE");
 
             ctx.push(4D); ctx.push(2D);
-            command.loadArgs(new ArrayList<Object>());
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>());
 
             assertEquals(ctx.peek(), 2D);
         } catch (RuntimeContextException | RuntimeCommandException | BadArgumentCommandException |

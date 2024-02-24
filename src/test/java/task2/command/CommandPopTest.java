@@ -24,8 +24,7 @@ public class CommandPopTest extends TestCase {
             Command command = new CommandFactory().create("POP");
             assertEquals(command.toString(), "POP");
 
-            command.loadArgs(new ArrayList<Object>());
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>());
 
             assertEquals(ctx.peek(), 42.42D);
         } catch (RuntimeContextException | RuntimeCommandException | BadArgumentCommandException |

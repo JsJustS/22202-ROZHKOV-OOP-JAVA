@@ -22,8 +22,7 @@ public class CommandMinusTest extends TestCase {
             assertEquals(command.toString(), "MINUS");
 
             ctx.push(5D); ctx.push(4D);
-            command.loadArgs(new ArrayList<Object>());
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>());
 
             assertEquals(ctx.peek(), 1D);
 
@@ -31,8 +30,7 @@ public class CommandMinusTest extends TestCase {
             assertEquals(command.toString(), "MINUS");
 
             ctx.push(1D); ctx.push(9D);
-            command.loadArgs(new ArrayList<Object>());
-            command.run(ctx);
+            command.run(ctx, new ArrayList<Object>());
 
             assertEquals(ctx.peek(), -8D);
         } catch (RuntimeContextException | RuntimeCommandException | BadArgumentCommandException |
