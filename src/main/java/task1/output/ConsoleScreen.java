@@ -21,14 +21,14 @@ public class ConsoleScreen implements IOutputHandler {
     }
 
     @Override
-    public void tick() {
+    public void tick(boolean showCowsAndBulls) {
 
         if (this.isGuessed) {
             System.out.println("You guessed the sequence! Congratulation!");
         } else if (this.clueFlag) {
             this.clueFlag = false;
             System.out.println("Clue: " + this.clue);
-        } else {
+        } else if (showCowsAndBulls) {
             System.out.printf("Cows: %d\n", this.cows);
             System.out.printf("Bulls: %d\n", this.bulls);
         }

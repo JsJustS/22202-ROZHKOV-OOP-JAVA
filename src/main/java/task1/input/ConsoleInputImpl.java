@@ -42,9 +42,10 @@ public class ConsoleInputImpl implements IInputHandler {
     @Override
     public void tick() {
         this.inputFlag = false;
-
-        HashSet<Character> bytes = new HashSet<>();
-        String badInput = "Bad input! Enter "+this.inputLength+" different digits side by side, then press New Line.";
+        String badInput = String.format(
+                "Bad input! Enter %d different digits side by side, then press New Line.",
+                this.inputLength
+        );
 
         try {
             String userInput = this.reader.readLine();
@@ -52,7 +53,10 @@ public class ConsoleInputImpl implements IInputHandler {
                 return; // if any command found, tick is skipped.
             }
 
-            if (!validator.isOk(userInput)) {return;}
+            if (!validator.isOk(userInput)) {
+                System.out.println(badInput);
+                return;
+            }
 
             this.inputSequence.clear();
             for (char c : userInput.toCharArray()) {

@@ -76,7 +76,7 @@ public class Engine {
                 this.output.setResponse(cows, bulls, botPlayer.isSequenceGuessed());
             }
             this.output.showClue(this.input.askedClue());
-            this.output.tick();
+            this.output.tick(this.input.hasInput());
             this.checkExitCondition(botPlayer);
         }
     }
