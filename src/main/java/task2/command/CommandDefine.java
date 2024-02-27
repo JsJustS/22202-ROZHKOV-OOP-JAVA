@@ -22,9 +22,8 @@ public class CommandDefine extends Command {
         super.run(ctx, args);
 
         try {
-            // todo: apply redefine
             this.varName = (String) args.get(0);
-            this.varValue = (double) args.get(1);
+            this.varValue = (double) this.parseArgument(ctx, args.get(1));
         } catch (ClassCastException e) {
             throw new BadArgumentCommandException(this.name + " could not parse arguments");
         }

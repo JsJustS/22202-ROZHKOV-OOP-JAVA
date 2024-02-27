@@ -49,9 +49,7 @@ public class CommandParser {
         return this.commandName;
     }
 
-    public List<Object> getArgs(Context ctx) {
-        List<Object> copy = new ArrayList<>(this.commandArgs);
-        copy.replaceAll(el -> (el instanceof String && ctx.hasVar((String)el)?ctx.getVar((String)el):el));
-        return copy;
+    public List<Object> getArgs() {
+        return new ArrayList<>(this.commandArgs);
     }
 }

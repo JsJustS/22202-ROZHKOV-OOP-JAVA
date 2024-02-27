@@ -21,6 +21,11 @@ public abstract class Command {
         }
     }
 
+    protected Object parseArgument(Context ctx, Object argument) {
+        if (argument instanceof String && ctx.hasVar((String) argument)) return ctx.getVar((String) argument);
+        return argument;
+    }
+
     @Override
     public String toString() {
         return this.name;

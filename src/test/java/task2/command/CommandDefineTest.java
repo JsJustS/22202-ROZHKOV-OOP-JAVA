@@ -26,6 +26,9 @@ public class CommandDefineTest extends TestCase {
             command.run(ctx, new ArrayList<Object>(Arrays.asList("VAR_NAME", 42.42D)));
             assertTrue(ctx.hasVar("VAR_NAME"));
             assertEquals(ctx.getVar("VAR_NAME"), 42.42D);
+
+            command.run(ctx, new ArrayList<Object>(Arrays.asList("VAR_NAME", 13.37D)));
+            assertEquals(ctx.getVar("VAR_NAME"), 13.37D);
         } catch (RuntimeCommandException | BadArgumentCommandException | CommandCreationException | ConfigException e) {
             fail(e.getMessage());
         }

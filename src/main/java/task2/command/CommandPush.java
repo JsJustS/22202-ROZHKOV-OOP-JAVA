@@ -19,7 +19,7 @@ public class CommandPush extends Command {
         super.run(ctx, args);
 
         try {
-            this.number = (double) args.get(0);
+            this.number = (double) this.parseArgument(ctx, args.get(0));
         } catch (ClassCastException e) {
             throw new BadArgumentCommandException(this.name + " could not parse argument");
         }

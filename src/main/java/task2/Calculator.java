@@ -53,7 +53,7 @@ public class Calculator {
             if (parser.shouldSkip()) return;
 
             Command command = factory.create(parser.getCommandName());
-            command.run(ctx, parser.getArgs(ctx));
+            command.run(ctx, parser.getArgs());
             LOGGER.debug(command + " was executed.");
         } catch (CommandCreationException | BadArgumentCommandException | RuntimeCommandException e) {
             LOGGER.warn("Skipped \"" + commandLine + "\" due to an error: " + e.getMessage());
