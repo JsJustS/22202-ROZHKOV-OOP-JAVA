@@ -10,7 +10,7 @@ public class Screen extends JFrame {
 
     public Screen(Controller controller, World world) {
         JFrame.setDefaultLookAndFeelDecorated(true);
-        this.setTitle("Fabric");
+        this.setTitle("Factory");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(500, 400));
 
