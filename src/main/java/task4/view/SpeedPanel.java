@@ -37,6 +37,7 @@ public class SpeedPanel extends JPanel {
         private final JLabel bodyLabel;
         private final JLabel motorLabel;
         private final JLabel accessoryLabel;
+        private final JLabel dealerLabel;
 
         private final HashMap<JLabel, String> FORMAT;
         private final HashMap<JLabel, World.Part> LABEL2PART;
@@ -54,6 +55,7 @@ public class SpeedPanel extends JPanel {
             this.bodyLabel = new JLabel();
             this.motorLabel = new JLabel();
             this.accessoryLabel = new JLabel();
+            this.dealerLabel = new JLabel();
 
             this.fillFormat();
             this.fillParts();
@@ -63,6 +65,8 @@ public class SpeedPanel extends JPanel {
             this.add(motorLabel);
             this.add(Box.createRigidArea(new Dimension(0, 5)));
             this.add(accessoryLabel);
+            this.add(Box.createRigidArea(new Dimension(0, 5)));
+            this.add(dealerLabel);
 
             // Have to load values from model on <init>
             this.onNotification();
@@ -72,18 +76,21 @@ public class SpeedPanel extends JPanel {
             this.bodyLabel.setHorizontalAlignment(alignment);
             this.motorLabel.setHorizontalAlignment(alignment);
             this.accessoryLabel.setHorizontalAlignment(alignment);
+            this.dealerLabel.setHorizontalAlignment(alignment);
         }
 
         public void setVerticalAlignment(int alignment) {
             this.bodyLabel.setVerticalAlignment(alignment);
             this.motorLabel.setVerticalAlignment(alignment);
             this.accessoryLabel.setVerticalAlignment(alignment);
+            this.dealerLabel.setVerticalAlignment(alignment);
         }
 
         private void fillFormat() {
             this.FORMAT.put(this.bodyLabel, "Body Speed: %04d");
             this.FORMAT.put(this.motorLabel, "Motor Speed: %04d");
             this.FORMAT.put(this.accessoryLabel, "Accessory Speed: %04d");
+            this.FORMAT.put(this.dealerLabel, "Dealers Speed: %04d");
         }
 
         private void fillParts() {
@@ -93,13 +100,15 @@ public class SpeedPanel extends JPanel {
         }
 
         public void updateLabel(JLabel label) {
-            if (!this.LABEL2PART.containsKey(label) || !this.FORMAT.containsKey(label)) {
+            if (!this.FORMAT.containsKey(label)) {
                 throw new RuntimeException("Unsupported part");
             }
             label.setText(
                     String.format(
                             this.FORMAT.get(label),
-                            this.world.getCreationSpeed(this.LABEL2PART.get(label))
+                            ((this.LABEL2PART.containsKey(label))) ?
+                            this.world.getCreationSpeed(this.LABEL2PART.get(label)) :
+                            this.world.getDealersSpeed()
                     )
             );
         }
@@ -111,6 +120,7 @@ public class SpeedPanel extends JPanel {
                         this.updateLabel(this.bodyLabel);
                         this.updateLabel(this.motorLabel);
                         this.updateLabel(this.accessoryLabel);
+                        this.updateLabel(this.dealerLabel);
                     }
             );
         }
@@ -123,6 +133,7 @@ public class SpeedPanel extends JPanel {
         private final JSlider bodySlider;
         private final JSlider motorSlider;
         private final JSlider accessorySlider;
+        private final JSlider dealersSlider;
 
         public SliderPanel(World world, Controller controller) {
             this.world = world;
@@ -133,10 +144,12 @@ public class SpeedPanel extends JPanel {
             this.bodySlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 1000);
             this.motorSlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 1000);
             this.accessorySlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 1000);
+            this.dealersSlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 1000);
 
             this.bodySlider.setPreferredSize(new Dimension(300, 20));
             this.motorSlider.setPreferredSize(new Dimension(300, 20));
             this.accessorySlider.setPreferredSize(new Dimension(300, 20));
+            this.dealersSlider.setPreferredSize(new Dimension(300, 20));
 
             this.bodySlider.addChangeListener(
                     (e)->controller.execute(Controller.Operation.UPD_SPEED_BODY, world, this.bodySlider.getValue())
@@ -147,17 +160,23 @@ public class SpeedPanel extends JPanel {
             this.accessorySlider.addChangeListener(
                     (e)->controller.execute(Controller.Operation.UPD_SPEED_ACCESSORY, world, this.accessorySlider.getValue())
             );
+            this.dealersSlider.addChangeListener(
+                    (e)->controller.execute(Controller.Operation.UPD_SPEED_DEALERS, world, this.dealersSlider.getValue())
+            );
 
             this.add(this.bodySlider);
             this.add(Box.createRigidArea(new Dimension(0, 5)));
             this.add(this.motorSlider);
             this.add(Box.createRigidArea(new Dimension(0, 5)));
             this.add(this.accessorySlider);
+            this.add(Box.createRigidArea(new Dimension(0, 5)));
+            this.add(this.dealersSlider);
 
             // Have to set values with controller on <init>
             controller.execute(Controller.Operation.UPD_SPEED_BODY, world, this.bodySlider.getValue());
             controller.execute(Controller.Operation.UPD_SPEED_MOTOR, world, this.motorSlider.getValue());
             controller.execute(Controller.Operation.UPD_SPEED_ACCESSORY, world, this.accessorySlider.getValue());
+            controller.execute(Controller.Operation.UPD_SPEED_DEALERS, world, this.dealersSlider.getValue());
         }
     }
 }

@@ -18,6 +18,8 @@ public class Screen extends JFrame {
 
         SpeedPanel speedPanel = new SpeedPanel(world, controller);
         contentPane.add(speedPanel, BorderLayout.PAGE_START);
+        StatPanel statPanel = new StatPanel(world);
+        contentPane.add(statPanel, BorderLayout.PAGE_END);
 
         this.pack();
         this.setVisible(true);
