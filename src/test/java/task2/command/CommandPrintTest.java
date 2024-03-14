@@ -1,19 +1,15 @@
 package task2.command;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import task2.error.*;
 import task2.factory.CommandFactory;
 import task2.util.Context;
 
 import java.util.ArrayList;
 
-public class CommandPrintTest extends TestCase {
-    public CommandPrintTest(String testName) {super(testName);}
-
-    public static Test suite() {return new TestSuite(CommandPrintTest.class);}
-
+public class CommandPrintTest {
+    @Test
     public void testApp() {
         try {
             Context ctx = new Context();
@@ -22,11 +18,11 @@ public class CommandPrintTest extends TestCase {
             factory.init();
 
             Command command = factory.create("PRINT");
-            assertEquals(command.toString(), "PRINT");
+            Assertions.assertEquals(command.toString(), "PRINT");
 
             command.run(ctx, new ArrayList<Object>());
         } catch (RuntimeCommandException | BadArgumentCommandException | CommandCreationException | ConfigException e) {
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

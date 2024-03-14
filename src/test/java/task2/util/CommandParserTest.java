@@ -1,11 +1,13 @@
 package task2.util;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
 public class CommandParserTest {
 
+    @Test
     public void testApp() {
         CommandParser emptied = new CommandParser("");
         CommandParser nullified = new CommandParser(null);
