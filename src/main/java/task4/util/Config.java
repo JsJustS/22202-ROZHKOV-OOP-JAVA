@@ -11,7 +11,7 @@ public class Config {
     private int storageBodySize = 0;
     private int storageMotorSize = 0;
     private int storageAccessorySize = 0;
-    private int storageAutoSize = 0;
+    private int storageCarSize = 0;
     private int accessorySuppliersCount = 0;
     private int workersCount = 0;
     private int dealersCount = 0;
@@ -23,7 +23,7 @@ public class Config {
                 .withStorageBodySize(100)
                 .withStorageMotorSize(100)
                 .withStorageAccessorySize(100)
-                .withStorageAutoSize(100)
+                .withStorageCarSize(100)
                 .withAccessorySuppliersCount(5)
                 .withWorkersCount(10)
                 .withDealersCount(20)
@@ -66,8 +66,8 @@ public class Config {
                     case "storageAccessorySize":
                         builder = builder.withStorageAccessorySize(Integer.parseInt(pair[1]));
                         break;
-                    case "storageAutoSize":
-                        builder = builder.withStorageAutoSize(Integer.parseInt(pair[1]));
+                    case "storageCarSize":
+                        builder = builder.withStorageCarSize(Integer.parseInt(pair[1]));
                         break;
                     case "accessorySuppliersCount":
                         builder = builder.withAccessorySuppliersCount(Integer.parseInt(pair[1]));
@@ -101,8 +101,8 @@ public class Config {
         return storageAccessorySize;
     }
 
-    public int getStorageAutoSize() {
-        return storageAutoSize;
+    public int getStorageCarSize() {
+        return storageCarSize;
     }
 
     public int getAccessorySuppliersCount() {
@@ -139,8 +139,8 @@ public class Config {
             return this;
         }
 
-        public ConfigBuilder withStorageAutoSize(int size) {
-            config.storageAutoSize = size;
+        public ConfigBuilder withStorageCarSize(int size) {
+            config.storageCarSize = size;
             return this;
         }
 
