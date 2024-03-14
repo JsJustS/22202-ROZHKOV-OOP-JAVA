@@ -6,6 +6,7 @@ import junit.framework.TestSuite;
 import task2.command.*;
 import task2.error.CommandCreationException;
 import task2.error.ConfigException;
+import task2.factory.CommandFactory;
 
 public class CommandFactoryTest extends TestCase {
 
@@ -16,6 +17,7 @@ public class CommandFactoryTest extends TestCase {
     public void testApp() {
         try {
             CommandFactory factory = new CommandFactory();
+            factory.init();
             assertSame(factory.create("DEFINE").getClass(), CommandDefine.class);
             assertSame(factory.create("/").getClass(), CommandDivide.class);
             assertSame(factory.create("DIVIDE").getClass(), CommandDivide.class);

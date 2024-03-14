@@ -4,7 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import task2.error.*;
-import task2.util.CommandFactory;
+import task2.factory.CommandFactory;
 import task2.util.Context;
 
 import java.util.ArrayList;
@@ -18,7 +18,9 @@ public class CommandDivideTest extends TestCase {
         try {
             Context ctx = new Context();
 
-            Command command = new CommandFactory().create("DIVIDE");
+            CommandFactory factory =new CommandFactory();
+            factory.init();
+            Command command = factory.create("DIVIDE");
             assertEquals(command.toString(), "DIVIDE");
 
             ctx.push(1D); ctx.push(2D);
@@ -26,7 +28,7 @@ public class CommandDivideTest extends TestCase {
 
             assertEquals(ctx.peek(), 0.5D);
 
-            command = new CommandFactory().create("/");
+            command = factory.create("/");
             assertEquals(command.toString(), "DIVIDE");
 
             ctx.push(4D); ctx.push(2D);

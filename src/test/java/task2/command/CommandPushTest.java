@@ -4,11 +4,10 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import task2.error.*;
-import task2.util.CommandFactory;
+import task2.factory.CommandFactory;
 import task2.util.Context;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class CommandPushTest extends TestCase {
@@ -19,7 +18,10 @@ public class CommandPushTest extends TestCase {
     public void testApp() {
         try {
             Context ctx = new Context();
-            Command command = new CommandFactory().create("PUSH");
+            CommandFactory factory = new CommandFactory();
+            factory.init();
+
+            Command command = factory.create("PUSH");
             assertEquals(command.toString(), "PUSH");
 
             command.run(ctx, new ArrayList<Object>(Collections.singletonList(42.42D)));

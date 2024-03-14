@@ -1,38 +1,35 @@
 package task2.util;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
 
-public class CommandParserTest extends TestCase {
-    public CommandParserTest(String testName) {super(testName);}
-
-    public static Test suite() {return new TestSuite(CommandParserTest.class);}
+public class CommandParserTest {
 
     public void testApp() {
-        Context ctx = new Context();
-
         CommandParser emptied = new CommandParser("");
         CommandParser nullified = new CommandParser(null);
         CommandParser commented = new CommandParser("# this is comment");
+        emptied.parse();
+        nullified.parse();
+        commented.parse();
 
-        assertEquals(emptied.getCommandName(), nullified.getCommandName());
-        assertEquals(emptied.shouldSkip(), nullified.shouldSkip());
-        assertEquals(emptied.getArgs(), nullified.getArgs());
-        assertEquals(commented.getCommandName(), nullified.getCommandName());
-        assertEquals(commented.shouldSkip(), nullified.shouldSkip());
-        assertEquals(commented.getArgs(), nullified.getArgs());
-        assertNull(emptied.getCommandName());
-        assertTrue(emptied.shouldSkip());
-        assertEquals(emptied.getArgs(), new ArrayList<>());
+        Assertions.assertEquals(emptied.getCommandName(), nullified.getCommandName());
+        Assertions.assertEquals(emptied.shouldSkip(), nullified.shouldSkip());
+        Assertions.assertEquals(emptied.getArgs(), nullified.getArgs());
+        Assertions.assertEquals(commented.getCommandName(), nullified.getCommandName());
+        Assertions.assertEquals(commented.shouldSkip(), nullified.shouldSkip());
+        Assertions.assertEquals(commented.getArgs(), nullified.getArgs());
+        Assertions.assertNull(emptied.getCommandName());
+        Assertions.assertTrue(emptied.shouldSkip());
+        Assertions.assertEquals(emptied.getArgs(), new ArrayList<>());
 
         CommandParser command = new CommandParser("COMMAND_NAME TEXT_ARG 42.42");
-        assertEquals(command.getCommandName(), "COMMAND_NAME");
+        command.parse();
+        Assertions.assertEquals(command.getCommandName(), "COMMAND_NAME");
         ArrayList<Object> args = new ArrayList<>();
         args.add("TEXT_ARG"); args.add(42.42D);
-        assertEquals(command.getArgs(), args);
-        assertFalse(command.shouldSkip());
+        Assertions.assertEquals(command.getArgs(), args);
+        Assertions.assertFalse(command.shouldSkip());
     }
 }

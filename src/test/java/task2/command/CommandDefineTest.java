@@ -4,9 +4,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import task2.error.*;
-import task2.util.CommandFactory;
+import task2.factory.CommandFactory;
 import task2.util.Context;
-import task2.util.ContextTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +18,10 @@ public class CommandDefineTest extends TestCase {
     public void testApp() {
         try {
             Context ctx = new Context();
-            Command command = new CommandFactory().create("DEFINE");
+            CommandFactory factory = new CommandFactory();
+            factory.init();
+
+            Command command = factory.create("DEFINE");
             assertEquals(command.toString(), "DEFINE");
 
             assertFalse(ctx.hasVar("VAR_NAME"));

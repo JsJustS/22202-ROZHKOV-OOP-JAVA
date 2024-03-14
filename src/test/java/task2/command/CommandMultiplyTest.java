@@ -4,7 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import task2.error.*;
-import task2.util.CommandFactory;
+import task2.factory.CommandFactory;
 import task2.util.Context;
 
 import java.util.ArrayList;
@@ -17,8 +17,10 @@ public class CommandMultiplyTest extends TestCase {
     public void testApp() {
         try {
             Context ctx = new Context();
+            CommandFactory factory = new CommandFactory();
+            factory.init();
 
-            Command command = new CommandFactory().create("MULTIPLY");
+            Command command = factory.create("MULTIPLY");
             assertEquals(command.toString(), "MULTIPLY");
 
             ctx.push(3D); ctx.push(2D);
@@ -26,7 +28,7 @@ public class CommandMultiplyTest extends TestCase {
 
             assertEquals(ctx.peek(), 6D);
 
-            command = new CommandFactory().create("*");
+            command = factory.create("*");
             assertEquals(command.toString(), "MULTIPLY");
 
             ctx.push(2D); ctx.push(9D);

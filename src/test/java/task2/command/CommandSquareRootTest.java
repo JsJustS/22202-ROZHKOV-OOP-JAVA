@@ -4,7 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import task2.error.*;
-import task2.util.CommandFactory;
+import task2.factory.CommandFactory;
 import task2.util.Context;
 
 import java.util.ArrayList;
@@ -18,8 +18,10 @@ public class CommandSquareRootTest extends TestCase {
         try {
             Context ctx = new Context();
             ctx.push(4D);
+            CommandFactory factory = new CommandFactory();
+            factory.init();
 
-            Command command = new CommandFactory().create("SQRT");
+            Command command = factory.create("SQRT");
             assertEquals(command.toString(), "SQRT");
 
             command.run(ctx, new ArrayList<Object>());

@@ -4,7 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import task2.error.*;
-import task2.util.CommandFactory;
+import task2.factory.CommandFactory;
 import task2.util.Context;
 
 import java.util.ArrayList;
@@ -17,8 +17,10 @@ public class CommandMinusTest extends TestCase {
     public void testApp() {
         try {
             Context ctx = new Context();
+            CommandFactory factory = new CommandFactory();
+            factory.init();
 
-            Command command = new CommandFactory().create("MINUS");
+            Command command = factory.create("MINUS");
             assertEquals(command.toString(), "MINUS");
 
             ctx.push(5D); ctx.push(4D);
@@ -26,7 +28,7 @@ public class CommandMinusTest extends TestCase {
 
             assertEquals(ctx.peek(), 1D);
 
-            command = new CommandFactory().create("-");
+            command = factory.create("-");
             assertEquals(command.toString(), "MINUS");
 
             ctx.push(1D); ctx.push(9D);

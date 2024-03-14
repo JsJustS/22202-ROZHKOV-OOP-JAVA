@@ -7,7 +7,7 @@ import task2.error.BadArgumentCommandException;
 import task2.error.CommandCreationException;
 import task2.error.ConfigException;
 import task2.error.RuntimeCommandException;
-import task2.util.CommandFactory;
+import task2.factory.CommandFactory;
 import task2.util.CommandParser;
 import task2.util.Context;
 
@@ -42,6 +42,7 @@ public class Calculator {
         }
 
         CommandFactory commandFactory = new CommandFactory();
+        commandFactory.init();
         Context ctx = new Context();
 
         commandStream.forEach(commandLine -> updateState(commandLine, commandFactory, ctx));
@@ -50,6 +51,7 @@ public class Calculator {
     private void updateState(String commandLine, CommandFactory factory, Context ctx) {
         try {
             CommandParser parser = new CommandParser(commandLine);
+            parser.parse();
             if (parser.shouldSkip()) return;
 
             Command command = factory.create(parser.getCommandName());

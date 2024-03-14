@@ -14,6 +14,13 @@ public class CommandMinus extends CommandBinary{
     @Override
     public void run(Context ctx, List<Object> args) throws RuntimeCommandException, BadArgumentCommandException {
         super.run(ctx, args);
-        ctx.push(this.firstOperand - this.secondOperand);
+        try {
+            ctx.push(this.firstOperand - this.secondOperand);
+        } catch (ArithmeticException e) {
+            ctx.push(this.secondOperand);
+            ctx.push(this.firstOperand);
+            throw new RuntimeCommandException(this.name + " could not perform operation due to an arithmetic exception");
+        }
+
     }
 }

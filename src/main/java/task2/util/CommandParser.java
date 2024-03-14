@@ -5,26 +5,25 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommandParser {
-    private final String commandName;
-    private final List<Object> commandArgs;
-    private final boolean skipFlag;
+    private final String commandLine;
+    private String commandName;
+    private List<Object> commandArgs;
+    private boolean skipFlag;
 
     public CommandParser(String commandLine) {
-        if (commandLine == null || commandLine.equals("")) {
-            this.commandName = null;
-            this.commandArgs = new ArrayList<>();
-            this.skipFlag = true;
-            return;
-        }
+        this.commandLine = commandLine;
+        this.commandName = null;
+        this.commandArgs = new ArrayList<>();
+        this.skipFlag = true;
+    }
 
-        commandLine = commandLine.trim();
-        String[] splitLine = commandLine.split("\\s+");
-        if (splitLine[0].charAt(0) == '#') {
-            this.commandName = null;
-            this.commandArgs = new ArrayList<>();
-            this.skipFlag = true;
-            return;
-        }
+    public void parse() {
+        if (commandLine == null || commandLine.isEmpty()) return;
+
+        String trimmedCommandLine = commandLine.trim();
+        String[] splitLine = trimmedCommandLine.split("\\s+");
+        if (splitLine[0].charAt(0) == '#') return;
+
         List<Object> args = new ArrayList<>(Arrays.asList(splitLine));
 
         this.commandName = (String) args.get(0);
