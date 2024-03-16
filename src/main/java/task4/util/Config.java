@@ -12,6 +12,8 @@ public class Config {
     private int storageMotorSize = 0;
     private int storageAccessorySize = 0;
     private int storageCarSize = 0;
+    private int bodySuppliersCount = 0;
+    private int motorSuppliersCount = 0;
     private int accessorySuppliersCount = 0;
     private int workersCount = 0;
     private int dealersCount = 0;
@@ -24,6 +26,8 @@ public class Config {
                 .withStorageMotorSize(100)
                 .withStorageAccessorySize(100)
                 .withStorageCarSize(100)
+                .withBodySuppliersCount(1)
+                .withMotorSuppliersCount(1)
                 .withAccessorySuppliersCount(5)
                 .withWorkersCount(10)
                 .withDealersCount(20)
@@ -69,6 +73,12 @@ public class Config {
                     case "storageCarSize":
                         builder = builder.withStorageCarSize(Integer.parseInt(pair[1]));
                         break;
+                    case "bodySuppliersCount":
+                        builder = builder.withBodySuppliersCount(Integer.parseInt(pair[1]));
+                        break;
+                    case "motorSuppliersCount":
+                        builder = builder.withMotorSuppliersCount(Integer.parseInt(pair[1]));
+                        break;
                     case "accessorySuppliersCount":
                         builder = builder.withAccessorySuppliersCount(Integer.parseInt(pair[1]));
                         break;
@@ -105,6 +115,13 @@ public class Config {
         return storageCarSize;
     }
 
+    public int getBodySuppliersCount() {
+        return bodySuppliersCount;
+    }
+
+    public int getMotorSuppliersCount() {
+        return motorSuppliersCount;
+    }
     public int getAccessorySuppliersCount() {
         return accessorySuppliersCount;
     }
@@ -144,6 +161,15 @@ public class Config {
             return this;
         }
 
+        public ConfigBuilder withBodySuppliersCount(int count) {
+            config.bodySuppliersCount = count;
+            return this;
+        }
+
+        public ConfigBuilder withMotorSuppliersCount(int count) {
+            config.motorSuppliersCount = count;
+            return this;
+        }
         public ConfigBuilder withAccessorySuppliersCount(int count) {
             config.accessorySuppliersCount = count;
             return this;

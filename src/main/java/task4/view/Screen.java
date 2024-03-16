@@ -1,6 +1,6 @@
 package task4.view;
 
-import task4.controller.Controller;
+import task4.controller.UIController;
 import task4.model.World;
 
 import javax.swing.*;
@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class Screen extends JFrame {
 
-    public Screen(Controller controller, World world) {
+    public Screen(UIController controller, World world) {
         JFrame.setDefaultLookAndFeelDecorated(true);
         this.setTitle("Factory");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

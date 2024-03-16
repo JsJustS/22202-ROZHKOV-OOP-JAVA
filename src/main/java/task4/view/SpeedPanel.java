@@ -1,6 +1,6 @@
 package task4.view;
 
-import task4.controller.Controller;
+import task4.controller.UIController;
 import task4.model.World;
 import task4.util.pubsub.ISubscriber;
 
@@ -12,9 +12,9 @@ public class SpeedPanel extends JPanel {
     private final LabelPanel labelPanel;
     private final SliderPanel sliderPanel;
 
-    public SpeedPanel(World world, Controller controller) {
+    public SpeedPanel(World world, UIController UIController) {
         // 1. Create sliders firstly, so they can set values to model on <init>
-        this.sliderPanel = new SliderPanel(world, controller);
+        this.sliderPanel = new SliderPanel(world, UIController);
         // 2. Create labels secondly, so they can load stored values from model on <init>
         this.labelPanel = new LabelPanel(world);
         world.subscribe(this.labelPanel);
@@ -128,14 +128,14 @@ public class SpeedPanel extends JPanel {
 
     private class SliderPanel extends JPanel {
         private final World world;
-        private final Controller controller;
+        private final UIController controller;
 
         private final JSlider bodySlider;
         private final JSlider motorSlider;
         private final JSlider accessorySlider;
         private final JSlider dealersSlider;
 
-        public SliderPanel(World world, Controller controller) {
+        public SliderPanel(World world, UIController controller) {
             this.world = world;
             this.controller = controller;
 
@@ -152,16 +152,16 @@ public class SpeedPanel extends JPanel {
             this.dealersSlider.setPreferredSize(new Dimension(300, 20));
 
             this.bodySlider.addChangeListener(
-                    (e)->controller.execute(Controller.Operation.UPD_SPEED_BODY, world, this.bodySlider.getValue())
+                    (e)-> controller.execute(UIController.Operation.UPD_SPEED_BODY, world, this.bodySlider.getValue())
             );
             this.motorSlider.addChangeListener(
-                    (e)->controller.execute(Controller.Operation.UPD_SPEED_MOTOR, world, this.motorSlider.getValue())
+                    (e)-> controller.execute(UIController.Operation.UPD_SPEED_MOTOR, world, this.motorSlider.getValue())
             );
             this.accessorySlider.addChangeListener(
-                    (e)->controller.execute(Controller.Operation.UPD_SPEED_ACCESSORY, world, this.accessorySlider.getValue())
+                    (e)-> controller.execute(UIController.Operation.UPD_SPEED_ACCESSORY, world, this.accessorySlider.getValue())
             );
             this.dealersSlider.addChangeListener(
-                    (e)->controller.execute(Controller.Operation.UPD_SPEED_DEALERS, world, this.dealersSlider.getValue())
+                    (e)-> controller.execute(UIController.Operation.UPD_SPEED_DEALERS, world, this.dealersSlider.getValue())
             );
 
             this.add(this.bodySlider);
@@ -173,10 +173,10 @@ public class SpeedPanel extends JPanel {
             this.add(this.dealersSlider);
 
             // Have to set values with controller on <init>
-            controller.execute(Controller.Operation.UPD_SPEED_BODY, world, this.bodySlider.getValue());
-            controller.execute(Controller.Operation.UPD_SPEED_MOTOR, world, this.motorSlider.getValue());
-            controller.execute(Controller.Operation.UPD_SPEED_ACCESSORY, world, this.accessorySlider.getValue());
-            controller.execute(Controller.Operation.UPD_SPEED_DEALERS, world, this.dealersSlider.getValue());
+            controller.execute(UIController.Operation.UPD_SPEED_BODY, world, this.bodySlider.getValue());
+            controller.execute(UIController.Operation.UPD_SPEED_MOTOR, world, this.motorSlider.getValue());
+            controller.execute(UIController.Operation.UPD_SPEED_ACCESSORY, world, this.accessorySlider.getValue());
+            controller.execute(UIController.Operation.UPD_SPEED_DEALERS, world, this.dealersSlider.getValue());
         }
     }
 }

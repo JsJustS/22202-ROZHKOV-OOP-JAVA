@@ -1,6 +1,6 @@
 package task4;
 
-import task4.controller.Controller;
+import task4.controller.UIController;
 import task4.model.World;
 import task4.util.ArgParser;
 import task4.util.Config;
@@ -15,10 +15,10 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Controller controller = new Controller();
+                UIController UIController = new UIController();
                 World world = new World();
                 // view
-                Screen screen = new Screen(controller, world);
+                Screen screen = new Screen(UIController, world);
             }
         });
     }

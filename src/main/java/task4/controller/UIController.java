@@ -2,7 +2,7 @@ package task4.controller;
 
 import task4.model.World;
 
-public class Controller implements IController<Controller.Operation, World> {
+public class UIController implements IController<UIController.Operation, World> {
     public enum Operation {
         UPD_SPEED_BODY,
         UPD_SPEED_MOTOR,
