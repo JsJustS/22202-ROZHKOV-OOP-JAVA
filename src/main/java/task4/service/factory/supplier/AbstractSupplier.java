@@ -35,12 +35,12 @@ public abstract class AbstractSupplier <T extends Identifiable> implements Runna
     }
 
     protected void supplyStorage() throws InterruptedException {
-        synchronized (this) {
-            while (storage.isFull()) {
-                this.wait();
+        synchronized (this.storage) {
+            while (this.storage.isFull()) {
+                this.storage.wait();
             }
 
-            storage.store(this.get());
+            this.storage.store(this.get());
         }
     }
 }
