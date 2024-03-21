@@ -19,6 +19,7 @@ import task4.service.threadpool.ThreadPool;
 import task4.util.Config;
 
 public class Factory {
+    private final World world;
     private final FabricController controller;
 
     private final boolean shouldLog;
@@ -42,6 +43,7 @@ public class Factory {
     private final ThreadPool dealersThreadPool;
 
     public Factory(World world, Config cfg) {
+        this.world = world;
         this.controller = new FabricController();
         this.shouldLog = cfg.isLogging();
 
@@ -68,7 +70,7 @@ public class Factory {
         }
 
         this.workersThreadPool = new ThreadPool(cfg.getWorkersCount(), "worker");
-        this.dealersThreadPool = new ThreadPool(cfg.getWorkersCount(), "dealer");
+        this.dealersThreadPool = new ThreadPool(cfg.getDealersCount(), "dealer");
         for (int i = 0; i < cfg.getDealersCount(); ++i) {
             this.dealersThreadPool.addTask(new Dealer<>(world, this.carsStorage, cfg.isLogging()));
         }
@@ -78,7 +80,10 @@ public class Factory {
             while (Thread.currentThread().isAlive()) {
                 synchronized (this.carsStorage) {
                     if (this.carsStorage.isEmpty()) {
-                        this.workersThreadPool.addTaskForAll(this::order);
+                        for (int i = 0; i < cfg.getWorkersCount(); ++i) {
+                            this.workersThreadPool.addTask(this::order);
+                        }
+                        this.controller.execute(FabricController.Operation.UPD_TASK_WAITING, this.world, this.workersThreadPool.getBusyness());
                     }
                     try {this.carsStorage.wait();} catch (InterruptedException e) {
                         if (this.shouldLog) {LOGGER.error(e.getMessage());}
@@ -101,6 +106,9 @@ public class Factory {
     }
 
     private void order() {
+        // This Runnable was pulled from taskQueue, update model
+        this.controller.execute(FabricController.Operation.UPD_TASK_WAITING, this.world, this.workersThreadPool.getBusyness());
+
         BodyPart bodyPart;
         MotorPart motorPart;
         AccessoryPart accessoryPart;
@@ -129,6 +137,7 @@ public class Factory {
             accessoryPart = this.accessoryStorage.grabFirst();
         }
 
+        this.controller.execute(FabricController.Operation.UPD_CAR_CRAFTED, this.world, 1);
         Car car = new Car(bodyPart, motorPart, accessoryPart);
         synchronized (this.carsStorage) {
             while (this.carsStorage.isFull()) {
@@ -136,6 +145,7 @@ public class Factory {
                     if (this.shouldLog) {LOGGER.error(e.getMessage());}
                 }
             }
+            System.out.println("car stored");
             this.carsStorage.store(car);
         }
     }

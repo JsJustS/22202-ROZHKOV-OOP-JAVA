@@ -12,12 +12,16 @@ public class FabricController implements IController<FabricController.Operation,
         UPD_BODY_CRAFTED,
         UPD_MOTOR_CRAFTED,
         UPD_ACCESSORY_CRAFTED,
-        UPD_CAR_CRAFTED
+        UPD_CAR_CRAFTED,
+        UPD_TASK_WAITING
     }
 
     @Override
     public <T> void execute(Operation operation, World world, T value) {
         switch (operation) {
+            case UPD_TASK_WAITING:
+                world.setTasksWaitingCount((int) value);
+                break;
             case UPD_BODY_STORED:
                 world.setBodyStoredCount((int) value);
                 break;
@@ -29,6 +33,7 @@ public class FabricController implements IController<FabricController.Operation,
                 break;
             case UPD_CAR_STORED:
                 world.setCarsStoredCount((int) value);
+                System.out.println("машинок на скалде" + world.getCarsStoredCount());
                 break;
             case UPD_BODY_CRAFTED:
                 world.setBodyCraftedCount(world.getBodyCraftedCount() + (int) value);

@@ -50,6 +50,14 @@ public class ThreadPool {
         return this.threadCount;
     }
 
+    public int getBusyness() {
+        int count = 0;
+        for (WorkerThread worker : this.threads) {
+            count += worker.getBusyness();
+        }
+        return count;
+    }
+
     /**
      * Adds provided task to all threads in the pool
      * */

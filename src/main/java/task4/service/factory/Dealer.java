@@ -33,6 +33,8 @@ public class Dealer<T> implements Runnable {
     private void buy() {
         synchronized (this.storage) {
             while (this.storage.isEmpty()) {
+                // no goodies on the storage, waiting for supply
+                // todo: notify() on carStorage
                 try {
                     this.storage.wait();
                 } catch (InterruptedException e) {
@@ -41,10 +43,7 @@ public class Dealer<T> implements Runnable {
             }
             // buy goodies
             T goodies = this.storage.grabFirst();
-            if (this.shouldLog) LOGGER.info(
-                    String.format("%1$d: Dealer %2$s: %3$s",
-                            System.currentTimeMillis(), Thread.currentThread().getName(), goodies.toString())
-            );
+            if (this.shouldLog) LOGGER.info(goodies.toString());
         }
     }
 }
