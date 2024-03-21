@@ -31,16 +31,16 @@ public class FabricController implements IController<FabricController.Operation,
                 world.setCarsStoredCount((int) value);
                 break;
             case UPD_BODY_CRAFTED:
-                world.setBodyCraftedCount((int) value);
+                world.setBodyCraftedCount(world.getBodyCraftedCount() + (int) value);
                 break;
             case UPD_MOTOR_CRAFTED:
-                world.setMotorCraftedCount((int) value);
+                world.setMotorCraftedCount(world.getMotorCraftedCount() + (int) value);
                 break;
             case UPD_ACCESSORY_CRAFTED:
-                world.setAccessoryCraftedCount((int) value);
+                world.setAccessoryCraftedCount(world.getAccessoryCraftedCount() + (int) value);
                 break;
             case UPD_CAR_CRAFTED:
-                world.setCarsCraftedCount((int) value);
+                world.setCarsCraftedCount(world.getCarsCraftedCount() + (int) value);
                 break;
             default: throw new RuntimeException("Unsupported operation");
         }

@@ -53,17 +53,25 @@ public class Factory {
 
         // ThreadPools
         this.bodySupplierThreadPool = new ThreadPool(cfg.getBodySuppliersCount(), "bodySupplier");
-        this.bodySupplierThreadPool.addTaskForAll(new BodySupplier(this.bodyStorage, world));
+        for (int i = 0; i < cfg.getBodySuppliersCount(); ++i) {
+            this.bodySupplierThreadPool.addTask(new BodySupplier(this.bodyStorage, world, controller));
+        }
 
         this.motorSupplierThreadPool = new ThreadPool(cfg.getMotorSuppliersCount(), "motorSupplier");
-        this.motorSupplierThreadPool.addTaskForAll(new MotorSupplier(this.motorStorage, world));
+        for (int i = 0; i < cfg.getMotorSuppliersCount(); ++i) {
+            this.motorSupplierThreadPool.addTask(new MotorSupplier(this.motorStorage, world, controller));
+        }
 
         this.accessorySupplierThreadPool = new ThreadPool(cfg.getAccessorySuppliersCount(), "accessorySupplier");
-        this.accessorySupplierThreadPool.addTaskForAll(new AccessorySupplier(this.accessoryStorage, world));
+        for (int i = 0; i < cfg.getAccessorySuppliersCount(); ++i) {
+            this.accessorySupplierThreadPool.addTask(new AccessorySupplier(this.accessoryStorage, world, controller));
+        }
 
-        this.workersThreadPool = new ThreadPool(cfg.getWorkersCount(), "workers");
-        this.dealersThreadPool = new ThreadPool(cfg.getWorkersCount(), "dealers");
-        this.dealersThreadPool.addTaskForAll(new Dealer<>(world, this.carsStorage, cfg.isLogging()));
+        this.workersThreadPool = new ThreadPool(cfg.getWorkersCount(), "worker");
+        this.dealersThreadPool = new ThreadPool(cfg.getWorkersCount(), "dealer");
+        for (int i = 0; i < cfg.getDealersCount(); ++i) {
+            this.dealersThreadPool.addTask(new Dealer<>(world, this.carsStorage, cfg.isLogging()));
+        }
 
         this.storageControllerThread = new Thread(()->{
 

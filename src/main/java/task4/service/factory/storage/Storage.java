@@ -28,7 +28,7 @@ public abstract class Storage<T> {
     }
 
     public void store(T e) {
-        if (this.stored.size() + 1 >= maxSize) throw new RuntimeException("No storage space left.");
+        if (this.isFull()) throw new RuntimeException("No storage space left.");
         stored.add(e);
         this.notifyWorld();
     }
