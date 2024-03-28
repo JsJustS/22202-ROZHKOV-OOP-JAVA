@@ -22,7 +22,7 @@ public class Dealer<T> implements Runnable {
     public void run() {
         while (Thread.currentThread().isAlive() && !Thread.currentThread().isInterrupted()) {
             try {
-                Thread.sleep(world.getDealersSpeed());
+                Thread.sleep(5100 - world.getDealersSpeed());
                 this.buy();
             } catch (InterruptedException e) {
                 return;
@@ -31,18 +31,18 @@ public class Dealer<T> implements Runnable {
     }
 
     private void buy() {
+        // 1. заказать машину со склада
+        // 2. если машины на складе нет - дождаться машины
+        // 3. Распаковать машину
+        // 4. Оповестить всех о том, что машина получена
+
         synchronized (this.storage) {
             while (this.storage.isEmpty()) {
-                // no goodies on the storage, waiting for supply
-                // todo: notify() on carStorage
-                try {
-                    this.storage.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                try {this.storage.wait();} catch (InterruptedException ignored) {}
             }
             // buy goodies
             T goodies = this.storage.grabFirst();
+            this.storage.notifyAll();
             if (this.shouldLog) LOGGER.info(goodies.toString());
         }
     }

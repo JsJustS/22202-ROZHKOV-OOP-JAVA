@@ -27,7 +27,7 @@ public class Car implements Identifiable {
     }
     @Override
     public String getId() {
-        return "$car_" + this.toString() + "$fromThread_" + this.threadName;
+        return "$car_" + this.hashCode() + "$fromThread_" + this.threadName;
     }
 
     @Override

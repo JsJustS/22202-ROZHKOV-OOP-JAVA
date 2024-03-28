@@ -85,9 +85,7 @@ public class Factory {
                         }
                         this.controller.execute(FabricController.Operation.UPD_TASK_WAITING, this.world, this.workersThreadPool.getBusyness());
                     }
-                    try {this.carsStorage.wait();} catch (InterruptedException e) {
-                        if (this.shouldLog) {LOGGER.error(e.getMessage());}
-                    }
+                    try {this.carsStorage.wait();} catch (InterruptedException ignored) {}
                 }
             }
         }, "storageController");
@@ -110,43 +108,41 @@ public class Factory {
         this.controller.execute(FabricController.Operation.UPD_TASK_WAITING, this.world, this.workersThreadPool.getBusyness());
 
         BodyPart bodyPart;
-        MotorPart motorPart;
-        AccessoryPart accessoryPart;
+        MotorPart motorPart = null;
+        AccessoryPart accessoryPart = null;
         synchronized (this.bodyStorage) {
             while (this.bodyStorage.isEmpty()) {
-                try{this.bodyStorage.wait();}catch (InterruptedException e) {
-                    if (this.shouldLog) {LOGGER.error(e.getMessage());}
-                }
+                try {this.bodyStorage.wait();} catch (InterruptedException ignored) {}
             }
             bodyPart = this.bodyStorage.grabFirst();
+            this.bodyStorage.notifyAll();
         }
+
         synchronized (this.motorStorage) {
             while (this.motorStorage.isEmpty()) {
-                try{this.motorStorage.wait();}catch (InterruptedException e) {
-                    if (this.shouldLog) {LOGGER.error(e.getMessage());}
-                }
+                try {this.motorStorage.wait();} catch (InterruptedException ignored) {}
             }
             motorPart = this.motorStorage.grabFirst();
+            this.motorStorage.notifyAll();
         }
+
         synchronized (this.accessoryStorage) {
             while (this.accessoryStorage.isEmpty()) {
-                try{this.accessoryStorage.wait();}catch (InterruptedException e) {
-                    if (this.shouldLog) {LOGGER.error(e.getMessage());}
-                }
+                try {this.accessoryStorage.wait();} catch (InterruptedException ignored) {}
             }
             accessoryPart = this.accessoryStorage.grabFirst();
+            this.accessoryStorage.notifyAll();
         }
 
         this.controller.execute(FabricController.Operation.UPD_CAR_CRAFTED, this.world, 1);
         Car car = new Car(bodyPart, motorPart, accessoryPart);
+
         synchronized (this.carsStorage) {
             while (this.carsStorage.isFull()) {
-                try{this.carsStorage.wait();}catch (InterruptedException e) {
-                    if (this.shouldLog) {LOGGER.error(e.getMessage());}
-                }
+                try{this.carsStorage.wait();} catch (InterruptedException ignored) {}
             }
-            System.out.println("car stored");
             this.carsStorage.store(car);
+            this.carsStorage.notifyAll();
         }
     }
 }

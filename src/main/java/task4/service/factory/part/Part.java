@@ -11,6 +11,6 @@ public abstract class Part implements Identifiable {
 
     @Override
     public String getId() {
-        return "$prodBy_" + producerId + "$id_" + this.toString();
+        return "$prodBy_" + producerId + "$id_" + this.hashCode();
     }
 }

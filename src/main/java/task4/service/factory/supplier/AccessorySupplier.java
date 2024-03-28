@@ -23,6 +23,6 @@ public class AccessorySupplier extends AbstractSupplier<AccessoryPart> {
     @Override
     public AccessoryPart get() {
         this.controller.execute(FabricController.Operation.UPD_ACCESSORY_CRAFTED, this.world, 1);
-        return new AccessoryPart(this.toString(), Thread.currentThread().getName());
+        return new AccessoryPart(Thread.currentThread().getName());
     }
 }

@@ -33,7 +33,6 @@ public class FabricController implements IController<FabricController.Operation,
                 break;
             case UPD_CAR_STORED:
                 world.setCarsStoredCount((int) value);
-                System.out.println("машинок на скалде" + world.getCarsStoredCount());
                 break;
             case UPD_BODY_CRAFTED:
                 world.setBodyCraftedCount(world.getBodyCraftedCount() + (int) value);

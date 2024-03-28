@@ -23,6 +23,6 @@ public class BodySupplier extends AbstractSupplier<BodyPart>{
     @Override
     public BodyPart get() {
         this.controller.execute(FabricController.Operation.UPD_BODY_CRAFTED, this.world, 1);
-        return new BodyPart(this.toString());
+        return new BodyPart(Thread.currentThread().getName());
     }
 }

@@ -23,6 +23,6 @@ public class MotorSupplier extends AbstractSupplier<MotorPart> {
     @Override
     public MotorPart get() {
         this.controller.execute(FabricController.Operation.UPD_MOTOR_CRAFTED, this.world, 1);
-        return new MotorPart(this.toString());
+        return new MotorPart(Thread.currentThread().getName());
     }
 }

@@ -22,7 +22,7 @@ public abstract class AbstractSupplier <T extends Identifiable> implements Runna
     public void run() {
         while (Thread.currentThread().isAlive() && !Thread.currentThread().isInterrupted()) {
             try {
-                Thread.sleep(this.getSpeed());
+                Thread.sleep(5100 - this.getSpeed());
                 this.supplyStorage();
             } catch (InterruptedException e) {
                 return;
@@ -41,6 +41,7 @@ public abstract class AbstractSupplier <T extends Identifiable> implements Runna
             }
 
             this.storage.store(this.get());
+            this.storage.notifyAll();
         }
     }
 }
