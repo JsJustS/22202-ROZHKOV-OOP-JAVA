@@ -87,10 +87,10 @@ public class SpeedPanel extends JPanel {
         }
 
         private void fillFormat() {
-            this.FORMAT.put(this.bodyLabel, "Body Speed: %04d");
-            this.FORMAT.put(this.motorLabel, "Motor Speed: %04d");
-            this.FORMAT.put(this.accessoryLabel, "Accessory Speed: %04d");
-            this.FORMAT.put(this.dealerLabel, "Dealers Speed: %04d");
+            this.FORMAT.put(this.bodyLabel, "Body Speed: %1$,.4f/sec");
+            this.FORMAT.put(this.motorLabel, "Motor Speed: %1$,.4f/sec");
+            this.FORMAT.put(this.accessoryLabel, "Accessory Speed: %1$,.4f/sec");
+            this.FORMAT.put(this.dealerLabel, "Dealers Speed: %1$,.4f/sec");
         }
 
         private void fillParts() {
@@ -107,8 +107,8 @@ public class SpeedPanel extends JPanel {
                     String.format(
                             this.FORMAT.get(label),
                             ((this.LABEL2PART.containsKey(label))) ?
-                            this.world.getCreationSpeed(this.LABEL2PART.get(label)) :
-                            this.world.getDealersSpeed()
+                            1000d / (double)(5100 - this.world.getCreationSpeed(this.LABEL2PART.get(label))) :
+                            1000d / (double)(5100 - this.world.getDealersSpeed())
                     )
             );
         }
@@ -141,10 +141,10 @@ public class SpeedPanel extends JPanel {
 
             this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-            this.bodySlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 1000);
-            this.motorSlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 1000);
-            this.accessorySlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 1000);
-            this.dealersSlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 1000);
+            this.bodySlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 4100);
+            this.motorSlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 4100);
+            this.accessorySlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 4100);
+            this.dealersSlider = new JSlider(SwingConstants.HORIZONTAL, 100, 5000, 4100);
 
             this.bodySlider.setPreferredSize(new Dimension(300, 20));
             this.motorSlider.setPreferredSize(new Dimension(300, 20));

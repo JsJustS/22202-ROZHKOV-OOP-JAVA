@@ -80,10 +80,22 @@ public class Factory {
             while (Thread.currentThread().isAlive()) {
                 synchronized (this.carsStorage) {
                     if (this.carsStorage.isEmpty()) {
-                        for (int i = 0; i < cfg.getWorkersCount(); ++i) {
-                            this.workersThreadPool.addTask(this::order);
+                        int max = cfg.getStorageCarSize() - world.getTasksWaitingCount();
+                        for (int i = 0; i < max; ++i) {
+                            this.workersThreadPool.addTask(
+                                    new Worker(
+                                            this.world,
+                                            this.controller,
+                                            this.carsStorage,
+                                            this.bodyStorage,
+                                            this.motorStorage,
+                                            this.accessoryStorage,
+                                            this.workersThreadPool,
+                                            shouldLog
+                                    )
+                            );
                         }
-                        this.controller.execute(FabricController.Operation.UPD_TASK_WAITING, this.world, this.workersThreadPool.getBusyness());
+                        this.controller.execute(FabricController.Operation.UPD_TASK_WAITING, this.world, this.workersThreadPool.getQueueSize());
                     }
                     try {this.carsStorage.wait();} catch (InterruptedException ignored) {}
                 }
@@ -101,48 +113,5 @@ public class Factory {
         this.dealersThreadPool.start();
 
         this.storageControllerThread.start();
-    }
-
-    private void order() {
-        // This Runnable was pulled from taskQueue, update model
-        this.controller.execute(FabricController.Operation.UPD_TASK_WAITING, this.world, this.workersThreadPool.getBusyness());
-
-        BodyPart bodyPart;
-        MotorPart motorPart = null;
-        AccessoryPart accessoryPart = null;
-        synchronized (this.bodyStorage) {
-            while (this.bodyStorage.isEmpty()) {
-                try {this.bodyStorage.wait();} catch (InterruptedException ignored) {}
-            }
-            bodyPart = this.bodyStorage.grabFirst();
-            this.bodyStorage.notifyAll();
-        }
-
-        synchronized (this.motorStorage) {
-            while (this.motorStorage.isEmpty()) {
-                try {this.motorStorage.wait();} catch (InterruptedException ignored) {}
-            }
-            motorPart = this.motorStorage.grabFirst();
-            this.motorStorage.notifyAll();
-        }
-
-        synchronized (this.accessoryStorage) {
-            while (this.accessoryStorage.isEmpty()) {
-                try {this.accessoryStorage.wait();} catch (InterruptedException ignored) {}
-            }
-            accessoryPart = this.accessoryStorage.grabFirst();
-            this.accessoryStorage.notifyAll();
-        }
-
-        this.controller.execute(FabricController.Operation.UPD_CAR_CRAFTED, this.world, 1);
-        Car car = new Car(bodyPart, motorPart, accessoryPart);
-
-        synchronized (this.carsStorage) {
-            while (this.carsStorage.isFull()) {
-                try{this.carsStorage.wait();} catch (InterruptedException ignored) {}
-            }
-            this.carsStorage.store(car);
-            this.carsStorage.notifyAll();
-        }
     }
 }

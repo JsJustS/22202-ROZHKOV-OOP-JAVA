@@ -8,13 +8,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ThreadPool {
     private final int threadCount;
     private final List<WorkerThread> threads;
+    private final Queue<Runnable> taskQueue;
 
     public ThreadPool(int threadCount, String name) {
         this.threadCount = threadCount;
+        this.taskQueue = new LinkedBlockingQueue<>();
 
         this.threads = new ArrayList<>();
         for (int i = 1; i <= threadCount; ++i) {
-            WorkerThread worker = new WorkerThread();
+            WorkerThread worker = new WorkerThread(this);
             worker.setName(name + "-" + i);
             this.threads.add(worker);
         }
@@ -50,45 +52,28 @@ public class ThreadPool {
         return this.threadCount;
     }
 
-    public int getBusyness() {
-        int count = 0;
-        for (WorkerThread worker : this.threads) {
-            count += worker.getBusyness();
-        }
-        return count;
+    public int getQueueSize() {
+        return this.taskQueue.size();
     }
 
-    /**
-     * Adds provided task to all threads in the pool
-     * */
-    public void addTaskForAll(Runnable task) {
-        for (WorkerThread worker : this.threads) {
-            worker.addTask(task);
-        }
+    private Runnable getTask() {
+        return this.taskQueue.poll();
     }
 
     /**
      * Adds task to queue for threads in pool to execute
      * */
     public void addTask(Runnable task) {
-        int min = Integer.MAX_VALUE;
-        WorkerThread laziest = this.threads.get(0);
-        for (WorkerThread worker : this.threads) {
-            int busyness = worker.getBusyness();
-            if (busyness < min) {
-                min = busyness;
-                laziest = worker;
-            }
-        }
-        laziest.addTask(task);
+        this.taskQueue.add(task);
     }
 
     private class WorkerThread extends Thread {
-        private final Queue<Runnable> taskQueue;
-        private boolean isRunning;
 
-        public WorkerThread() {
-            this.taskQueue = new LinkedBlockingQueue<>();
+        private boolean isRunning;
+        private final ThreadPool parentPool;
+
+        public WorkerThread(ThreadPool parent) {
+            this.parentPool = parent;
             this.isRunning = false;
         }
 
@@ -101,19 +86,11 @@ public class ThreadPool {
         @Override
         public void run() {
             while (this.isRunning) {
-                Runnable task = this.taskQueue.poll();
+                Runnable task = this.parentPool.getTask();
                 if (task != null) {
                     task.run();
                 }
             }
-        }
-
-        public void addTask(Runnable task) {
-            this.taskQueue.add(task);
-        }
-
-        public int getBusyness() {
-            return this.taskQueue.size();
         }
 
         public void stopThread() {
