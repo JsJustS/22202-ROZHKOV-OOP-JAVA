@@ -56,7 +56,7 @@ public class ThreadPool {
         return this.taskQueue.size();
     }
 
-    private Runnable getTask() {
+    private synchronized Runnable getTask() {
         return this.taskQueue.poll();
     }
 
@@ -64,7 +64,10 @@ public class ThreadPool {
      * Adds task to queue for threads in pool to execute
      * */
     public void addTask(Runnable task) {
-        this.taskQueue.add(task);
+        synchronized (this.taskQueue) {
+            this.taskQueue.add(task);
+            this.taskQueue.notify();
+        }
     }
 
     private class WorkerThread extends Thread {
@@ -86,7 +89,13 @@ public class ThreadPool {
         @Override
         public void run() {
             while (this.isRunning) {
-                Runnable task = this.parentPool.getTask();
+                Runnable task;
+                synchronized (this.parentPool.taskQueue) {
+                    while (this.parentPool.getQueueSize() == 0) {
+                        try {this.parentPool.taskQueue.wait();} catch (InterruptedException ignored) {}
+                    }
+                    task = this.parentPool.getTask();
+                }
                 if (task != null) {
                     task.run();
                 }
