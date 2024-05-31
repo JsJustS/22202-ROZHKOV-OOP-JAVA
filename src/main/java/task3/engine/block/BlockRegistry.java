@@ -2,7 +2,6 @@ package task3.engine.block;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.view.MainWindow;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -11,8 +10,16 @@ public class BlockRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(BlockRegistry.class);
     private static final HashMap<Integer, Class<? extends Block>> registeredBlocks = new HashMap<>();
 
+    public enum Blocks {
+        BEDROCK
+    }
+
     static {
-        register(BedrockBlock.class);
+        register(Blocks.BEDROCK, BedrockBlock.class);
+    }
+
+    public static Block getBlockById(int x, int y, Blocks id) {
+        return getBlockById(x, y, id.ordinal());
     }
 
     public static Block getBlockById(int x, int y, int id) {
@@ -26,7 +33,7 @@ public class BlockRegistry {
         return null;
     }
 
-    private static void register(Class<? extends Block> blockClass) {
-        registeredBlocks.put(registeredBlocks.size(), blockClass);
+    private static void register(Blocks id, Class<? extends Block> blockClass) {
+        registeredBlocks.put(id.ordinal(), blockClass);
     }
 }
