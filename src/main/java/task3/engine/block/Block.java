@@ -6,13 +6,13 @@ public abstract class Block {
     protected int x;
     protected int y;
     protected BufferedImage sprite;
-    protected double blastResistance;
+    protected int blastResistance;
     protected boolean isCollidable;
 
     Block(int x, int y) {
         this.x = x;
         this.y = y;
-        blastResistance = -1;
+        blastResistance = 0;
         isCollidable = false;
     }
 
