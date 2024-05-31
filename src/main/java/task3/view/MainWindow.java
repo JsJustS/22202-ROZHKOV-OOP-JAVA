@@ -60,6 +60,7 @@ public class MainWindow extends JFrame implements ISubscriber {
             }
         }
         model.setGameStateDirty(false);
+        this.revalidate();
         this.repaint();
     }
 }

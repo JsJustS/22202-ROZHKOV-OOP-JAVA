@@ -1,10 +1,10 @@
 package task3.view.pubsub;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Publisher {
-    private final List<ISubscriber> subscribers = new ArrayList<>();
+    private final List<ISubscriber> subscribers = new CopyOnWriteArrayList<>();
 
     protected void notifySubscribers() {
         for (ISubscriber subscriber : subscribers) {

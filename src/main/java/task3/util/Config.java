@@ -8,13 +8,19 @@ import java.util.Scanner;
 public class Config {
     public static final Config GENERAL;
 
-    private String gameTitle = "BomberMan Java Edition";
+    private String gameTitle = "BomberMan | Java Edition";
     private int winWidth;
     private int winHeight;
+
+    private long seed;
+    private int fieldWidth;
+    private int fieldHeight;
 
     static {
         GENERAL = new ConfigBuilder()
                 .withWinWidth(1280).withWinHeight(720)
+                .withSeed(0)
+                .withFieldWidth(10).withFieldHeight(7)
                 .build();
     }
 
@@ -30,6 +36,18 @@ public class Config {
 
     public int getWinHeight() {
         return winHeight;
+    }
+
+    public long getSeed() {
+        return seed;
+    }
+
+    public int getFieldWidth() {
+        return fieldWidth;
+    }
+
+    public int getFieldHeight() {
+        return fieldHeight;
     }
 
     public static Config load(String filepath) {
@@ -60,6 +78,15 @@ public class Config {
                     case "window_height":
                         builder = builder.withWinHeight(Integer.parseInt(pair[1]));
                         break;
+                    case "seed":
+                        builder = builder.withSeed(Long.parseLong(pair[1]));
+                        break;
+                    case "field_width":
+                        builder = builder.withFieldWidth(Integer.parseInt(pair[1]));
+                        break;
+                    case "field_height":
+                        builder = builder.withFieldHeight(Integer.parseInt(pair[1]));
+                        break;
                 }
             } catch (NumberFormatException e) {
                 //todo: log e.getMessage()
@@ -79,6 +106,21 @@ public class Config {
 
         public ConfigBuilder withWinHeight(int value) {
             config.winHeight = value;
+            return this;
+        }
+
+        public ConfigBuilder withSeed(long value) {
+            config.seed = value;
+            return this;
+        }
+
+        public ConfigBuilder withFieldWidth(int value) {
+            config.fieldWidth = value;
+            return this;
+        }
+
+        public ConfigBuilder withFieldHeight(int value) {
+            config.fieldHeight = value;
             return this;
         }
 

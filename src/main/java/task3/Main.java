@@ -1,6 +1,7 @@
 package task3;
 
 import task3.controller.ClientController;
+import task3.engine.GameEngine;
 import task3.model.ClientModel;
 import task3.util.ArgParser;
 import task3.util.Config;
@@ -19,5 +20,9 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             MainWindow mainWindow = new MainWindow(clientController, clientModel, cfg);
         });
+
+        GameEngine gameEngine = new GameEngine(cfg);
+        gameEngine.resetGame();
+        gameEngine.startGame();
     }
 }
