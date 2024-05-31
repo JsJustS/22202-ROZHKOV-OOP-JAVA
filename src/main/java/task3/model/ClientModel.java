@@ -15,15 +15,17 @@ public class ClientModel extends Publisher implements IModel {
         INGAME
     }
 
+    private boolean flagMapReady = false;
+
     private GAMESTATE gameState;
     private boolean gameStateMark;
 
     //todo: get that from network
-    private int fieldWidthInBlocks = 10;
-    private int fieldHeightInBlocks = 7;
+    private int fieldWidthInBlocks;
+    private int fieldHeightInBlocks;
 
-    private HashSet<ClientEntity> clientEntities = new HashSet<>();
-    private HashSet<Block> blocks = new HashSet<>();
+    private final HashSet<ClientEntity> clientEntities = new HashSet<>();
+    private final HashSet<Block> blocks = new HashSet<>();
 
     public void setGameState(GAMESTATE value) {
         gameState = value;
@@ -65,4 +67,20 @@ public class ClientModel extends Publisher implements IModel {
 
     public int getFieldWidthInBlocks() {return fieldWidthInBlocks;}
     public int getFieldHeightInBlocks() {return fieldHeightInBlocks;}
+
+    public void setFieldHeightInBlocks(int fieldHeightInBlocks) {
+        this.fieldHeightInBlocks = fieldHeightInBlocks;
+    }
+
+    public void setFieldWidthInBlocks(int fieldWidthInBlocks) {
+        this.fieldWidthInBlocks = fieldWidthInBlocks;
+    }
+
+    public boolean isMapReady() {
+        return flagMapReady;
+    }
+
+    public void setMapReady(boolean flagMapReady) {
+        this.flagMapReady = flagMapReady;
+    }
 }

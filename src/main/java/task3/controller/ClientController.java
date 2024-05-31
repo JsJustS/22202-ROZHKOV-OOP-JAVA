@@ -6,6 +6,11 @@ import task3.model.ClientModel;
 
 public class ClientController implements IController<ClientController.OP, ClientModel>{
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
+    private final NetworkC2SController networkC2SController;
+
+    public ClientController(NetworkC2SController networkC2SController) {
+        this.networkC2SController = networkC2SController;
+    }
 
     public enum OP {
         ON_KEY_PRESSED,
