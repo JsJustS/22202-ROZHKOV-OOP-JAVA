@@ -8,15 +8,29 @@ import java.util.Scanner;
 public class Config {
     public static final Config GENERAL;
 
-    // private int value = 0;
+    private String gameTitle = "BomberMan Java Edition";
+    private int winWidth;
+    private int winHeight;
 
     static {
         GENERAL = new ConfigBuilder()
-
+                .withWinWidth(1280).withWinHeight(720)
                 .build();
     }
 
     private Config() {}
+
+    public String getGameTitle() {
+        return gameTitle;
+    }
+
+    public int getWinWidth() {
+        return winWidth;
+    }
+
+    public int getWinHeight() {
+        return winHeight;
+    }
 
     public static Config load(String filepath) {
         ConfigBuilder builder = new ConfigBuilder();
@@ -40,9 +54,12 @@ public class Config {
 
             try {
                 switch (pair[0]) {
-//                    case "value":
-//                        builder = builder.withValue(Integer.parseInt(pair[1]));
-//                        break;
+                    case "window_width":
+                        builder = builder.withWinWidth(Integer.parseInt(pair[1]));
+                        break;
+                    case "window_height":
+                        builder = builder.withWinHeight(Integer.parseInt(pair[1]));
+                        break;
                 }
             } catch (NumberFormatException e) {
                 //todo: log e.getMessage()
@@ -52,17 +69,18 @@ public class Config {
         return builder.build();
     }
 
-//    public int getValue() {
-//        return value;
-//    }
-
     public static class ConfigBuilder {
         private final Config config = new Config();
 
-//        public ConfigBuilder withValue(int value) {
-//            config.value = value;
-//            return this;
-//        }
+        public ConfigBuilder withWinWidth(int value) {
+            config.winWidth = value;
+            return this;
+        }
+
+        public ConfigBuilder withWinHeight(int value) {
+            config.winHeight = value;
+            return this;
+        }
 
         public Config build() {
             return config;
