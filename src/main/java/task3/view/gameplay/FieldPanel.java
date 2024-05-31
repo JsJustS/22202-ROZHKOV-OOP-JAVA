@@ -2,7 +2,7 @@ package task3.view.gameplay;
 
 import task3.engine.block.Block;
 import task3.model.ClientModel;
-import task3.view.pubsub.ISubscriber;
+import task3.util.pubsub.ISubscriber;
 
 import javax.swing.*;
 import java.awt.*;

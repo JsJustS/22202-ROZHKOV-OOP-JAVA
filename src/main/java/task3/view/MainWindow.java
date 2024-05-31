@@ -7,7 +7,7 @@ import task3.model.ClientModel;
 import task3.util.Config;
 import task3.view.gameplay.MainGameplayWindow;
 import task3.view.menu.MainMenu;
-import task3.view.pubsub.ISubscriber;
+import task3.util.pubsub.ISubscriber;
 
 import javax.swing.*;
 import java.awt.*;

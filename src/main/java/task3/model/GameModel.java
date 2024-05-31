@@ -3,7 +3,7 @@ package task3.model;
 import task3.engine.block.Block;
 import task3.engine.block.BlockRegistry;
 import task3.engine.entity.Entity;
-import task3.view.pubsub.Publisher;
+import task3.util.pubsub.Publisher;
 
 import java.util.HashSet;
 

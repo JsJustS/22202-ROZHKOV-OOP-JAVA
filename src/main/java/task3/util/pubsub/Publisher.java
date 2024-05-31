@@ -1,4 +1,4 @@
-package task3.view.pubsub;
+package task3.util.pubsub;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

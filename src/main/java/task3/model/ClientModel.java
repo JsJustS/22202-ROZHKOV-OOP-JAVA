@@ -3,9 +3,8 @@ package task3.model;
 import task3.engine.block.Block;
 import task3.engine.block.BlockRegistry;
 import task3.engine.entity.ClientEntity;
-import task3.view.pubsub.Publisher;
+import task3.util.pubsub.Publisher;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class ClientModel extends Publisher implements IModel {
