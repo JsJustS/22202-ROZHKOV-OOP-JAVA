@@ -29,7 +29,6 @@ public class Main {
         });
 
         GameEngine gameEngine = new GameEngine(cfg, gameModel, networkS2CController);
-        gameEngine.resetGame();
-        gameEngine.startGame();
+        gameEngine.start();
     }
 }

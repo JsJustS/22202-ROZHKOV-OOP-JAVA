@@ -27,9 +27,11 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
     public <T> void execute(NetworkC2SController.PacketType packetType, GameModel model, T value) {
         switch (packetType) {
             case PLAYER_JOINED: {
+                model.setHasPlayer(true);
                 break;
             }
             case PLAYER_LEFT: {
+                model.setHasPlayer(false);
                 break;
             }
             case PLAYER_MOVED: {

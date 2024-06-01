@@ -93,10 +93,12 @@ public class MainWindow extends JFrame implements ISubscriber {
         switch (model.getGameState()) {
             case MENU: {
                 this.getContentPane().add(new MainMenu(this, controller, model));
+                this.network.execute(NetworkC2SController.PacketType.PLAYER_LEFT, null);
                 break;
             }
             case INGAME: {
                 this.getContentPane().add(new MainGameplayWindow(this, controller, model));
+                this.network.execute(NetworkC2SController.PacketType.PLAYER_JOINED, null);
                 break;
             }
             default: {

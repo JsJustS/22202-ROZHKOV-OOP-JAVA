@@ -17,6 +17,17 @@ public class GameModel extends Publisher implements IModel {
     private final HashSet<Block> blocks = new HashSet<>();
     private final HashSet<AbstractAbilityInstance> abilityInstances = new HashSet<>();
 
+    private boolean hasPlayerJoined;
+
+    public void setHasPlayer(boolean value) {
+        this.hasPlayerJoined = value;
+        notifySubscribers();
+    }
+
+    public boolean hasPlayer() {
+        return this.hasPlayerJoined;
+    }
+
     public void setGameRunning(boolean value) {
         this.gameIsRunning = value;
     }
