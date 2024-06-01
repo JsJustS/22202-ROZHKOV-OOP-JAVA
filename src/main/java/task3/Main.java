@@ -23,9 +23,9 @@ public class Main {
         NetworkS2CController networkS2CController = new NetworkS2CController(clientModel);
         NetworkC2SController networkC2SController = new NetworkC2SController(gameModel);
 
-        ClientController clientController = new ClientController(networkC2SController);
+        ClientController clientController = new ClientController();
         SwingUtilities.invokeLater(() -> {
-            MainWindow mainWindow = new MainWindow(clientController, clientModel, cfg);
+            MainWindow mainWindow = new MainWindow(clientController, clientModel, networkC2SController, cfg);
         });
 
         GameEngine gameEngine = new GameEngine(cfg, gameModel, networkS2CController);

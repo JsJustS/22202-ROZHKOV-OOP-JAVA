@@ -1,6 +1,9 @@
 package task3.controller;
 
 import task3.model.ClientModel;
+import task3.view.MainWindow;
+
+import javax.swing.*;
 
 public class NetworkS2CController implements IController<NetworkS2CController.PacketType, ClientModel> {
     private final ClientModel client;
@@ -19,7 +22,10 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
     }
 
     public <T> void execute(PacketType packetType, T value) {
-        this.execute(packetType, client, value);
+        // Execute on client Thread
+        SwingUtilities.invokeLater(() -> {
+            this.execute(packetType, client, value);
+        });
     }
 
     @Override

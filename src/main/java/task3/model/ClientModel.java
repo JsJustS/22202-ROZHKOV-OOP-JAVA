@@ -3,11 +3,14 @@ package task3.model;
 import task3.engine.block.Block;
 import task3.engine.block.BlockRegistry;
 import task3.engine.entity.ClientEntity;
+import task3.util.keyboard.KeyBindManager;
 import task3.util.pubsub.Publisher;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ClientModel extends Publisher implements IModel {
     public enum GAMESTATE {
@@ -16,7 +19,8 @@ public class ClientModel extends Publisher implements IModel {
         INGAME
     }
 
-    private final HashMap<String, Runnable> keyBinds = new HashMap<>();
+    private final Map<String, KeyBindManager.KeyAction> keyBinds = new HashMap<>();
+    private final Map<KeyBindManager.KeyAction, Boolean> keysPressed = new HashMap<>();
 
     private boolean flagMapReady = false;
 
@@ -41,12 +45,25 @@ public class ClientModel extends Publisher implements IModel {
         notifySubscribers();
     }
 
-    public void setKeyBind(String key, Runnable bind) {
-        keyBinds.put(key, bind);
+    public void setKeyBind(String key, KeyBindManager.KeyAction bind) {
+        keyBinds.put(key.toUpperCase(), bind);
     }
 
-    public Map<String, Runnable> getKeyBinds() {
+    public Map<String, KeyBindManager.KeyAction> getKeyBinds() {
         return keyBinds;
+    }
+
+    public Set<KeyBindManager.KeyAction> getPressedKeys() {
+        return this.keysPressed.keySet().stream().filter(this.keysPressed::get).collect(Collectors.toSet());
+    }
+
+    public boolean isKeyPressed(KeyBindManager.KeyAction keyAction) {
+        return this.keysPressed.get(keyAction);
+    }
+
+    public void setKeyPressed(KeyBindManager.KeyAction keyAction, boolean value) {
+        this.keysPressed.put(keyAction, value);
+        notifySubscribers();
     }
 
     public GAMESTATE getGameState() {

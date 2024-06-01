@@ -3,21 +3,18 @@ package task3.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task3.model.ClientModel;
+import task3.util.Pair;
+import task3.util.keyboard.KeyBindManager;
 
 public class ClientController implements IController<ClientController.OP, ClientModel>{
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
-    private final NetworkC2SController networkC2SController;
-
-    public ClientController(NetworkC2SController networkC2SController) {
-        this.networkC2SController = networkC2SController;
-    }
 
     public enum OP {
         ON_KEY_PRESSED,
         ON_KEY_RELEASED,
-        CHANGE_GAMESTATE
+        CHANGE_GAMESTATE,
+        UPDATE_KEYBINDS
     }
-    boolean flag = false;
 
     @Override
     public <T> void execute(OP operation, ClientModel model, T value) {
@@ -29,10 +26,19 @@ public class ClientController implements IController<ClientController.OP, Client
                 model.setGameState(state);
                 break;
             }
+            case UPDATE_KEYBINDS: {
+                Pair<String, KeyBindManager.KeyAction> pair = (Pair<String, KeyBindManager.KeyAction>) value;
+                model.setKeyBind(pair.getFirst(), pair.getSecond());
+                break;
+            }
             case ON_KEY_PRESSED: {
+                KeyBindManager.KeyAction keyAction = (KeyBindManager.KeyAction) value;
+                model.setKeyPressed(keyAction, true);
                 break;
             }
             case ON_KEY_RELEASED: {
+                KeyBindManager.KeyAction keyAction = (KeyBindManager.KeyAction) value;
+                model.setKeyPressed(keyAction, false);
                 break;
             }
         }

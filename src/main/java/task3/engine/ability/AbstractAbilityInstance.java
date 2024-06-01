@@ -9,8 +9,10 @@ public abstract class AbstractAbilityInstance {
     protected double x;
     protected double y;
 
-    public AbstractAbilityInstance(int x, int y, Entity parent) {
-
+    public AbstractAbilityInstance(double x, double y, Entity parent) {
+        this.x = x;
+        this.y = y;
+        this.parent = parent;
     }
 
     public void execute(GameModel model, NetworkS2CController networkController) {

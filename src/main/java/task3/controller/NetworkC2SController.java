@@ -18,7 +18,9 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
     }
 
     public <T> void execute(NetworkC2SController.PacketType packetType, T value) {
-        this.execute(packetType, server, value);
+        synchronized (server) {
+            this.execute(packetType, server, value);
+        }
     }
 
     @Override
@@ -35,6 +37,7 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
             }
             case PLAYER_ABILITY_USED: {
                 int[] packet = (int[]) value;
+                System.out.println("DestroyBlockAbilityInstance " + packet[0] + " " + packet[1]);
                 model.addAbilityInstance(
                         new DestroyBlockAbilityInstance(packet[0], packet[1], null)
                 );

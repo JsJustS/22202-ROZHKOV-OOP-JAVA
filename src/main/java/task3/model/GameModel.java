@@ -57,7 +57,7 @@ public class GameModel extends Publisher implements IModel {
 
     public void removeBlock(int x, int y) {
         for (Block block : blocks) {
-            if (block.getX() == x && block.getY() == block.getY()) {
+            if (block.getX() == x && y == block.getY()) {
                 blocks.remove(block);
                 break;
             }
@@ -68,8 +68,8 @@ public class GameModel extends Publisher implements IModel {
         abilityInstances.add(abilityInstance);
     }
 
-    public void removeAbilityInstance(AbstractAbilityInstance abilityInstance) {
-        abilityInstances.remove(abilityInstance);
+    public void clearAbilityInstances() {
+        abilityInstances.clear();
     }
 
     public HashSet<AbstractAbilityInstance> getAbilityInstances() {

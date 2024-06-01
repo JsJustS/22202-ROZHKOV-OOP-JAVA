@@ -76,6 +76,7 @@ public class GameEngine {
         for (AbstractAbilityInstance abilityInstance : gameModel.getAbilityInstances()) {
             abilityInstance.execute(gameModel, networkS2CController);
         }
+        gameModel.clearAbilityInstances();
     }
 
     private void generateField() {
