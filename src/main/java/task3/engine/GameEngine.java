@@ -80,12 +80,18 @@ public class GameEngine {
     }
 
     private void generateField() {
-        this.random.setSeed(this.seed);
+        FieldGenerator generator = new FieldGenerator(
+                this.seed,
+                gameModel.getFieldWidthInBlock(),
+                gameModel.getFieldHeightInBlocks()
+        );
+        byte[][] field = generator.generateField();
 
+        this.random.setSeed(this.seed);
         for (int i = 0; i < gameModel.getFieldWidthInBlock(); ++i) {
             for (int j = 0; j < gameModel.getFieldHeightInBlocks(); ++j) {
-                if (this.random.nextDouble() < 0.5d) {
-                    BlockRegistry.Blocks blockType = BlockRegistry.Blocks.values()[this.random.nextInt(BlockRegistry.Blocks.values().length)];
+                if (field[i][j] > 0) {
+                    BlockRegistry.Blocks blockType = BlockRegistry.Blocks.values()[field[i][j]];
                     gameModel.addBlock(i, j, blockType);
                     this.networkS2CController.execute(
                             NetworkS2CController.PacketType.BLOCK_PLACED,

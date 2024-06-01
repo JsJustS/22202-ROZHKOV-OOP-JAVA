@@ -4,13 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.*;
 
 public class BlockRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(BlockRegistry.class);
     private static final HashMap<Integer, Class<? extends Block>> registeredBlocks = new HashMap<>();
 
     public enum Blocks {
+        AIR,
         BEDROCK,
         BRICK,
         STONE,
@@ -19,11 +20,27 @@ public class BlockRegistry {
     }
 
     static {
+        register(Blocks.AIR, BedrockBlock.class);
         register(Blocks.BEDROCK, BedrockBlock.class);
         register(Blocks.BRICK, BrickBlock.class);
         register(Blocks.STONE, StoneBlock.class);
         register(Blocks.COBBLESTONE, CobblestoneBlock.class);
         register(Blocks.LUCKYBLOCK, LuckyBlock.class);
+    }
+
+    public static List<Blocks> getWallBlocks() {
+        List<Blocks> pathable = new ArrayList<>();
+        pathable.add(Blocks.BRICK);
+        pathable.add(Blocks.BEDROCK);
+        return pathable;
+    }
+
+    public static List<Blocks> getPathBlocks() {
+        List<Blocks> pathable = new ArrayList<>();
+        pathable.add(Blocks.STONE);
+        pathable.add(Blocks.COBBLESTONE);
+        pathable.add(Blocks.LUCKYBLOCK);
+        return pathable;
     }
 
     public static Block getBlockById(int x, int y, Blocks id) {

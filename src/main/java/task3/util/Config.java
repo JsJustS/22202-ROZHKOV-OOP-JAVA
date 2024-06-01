@@ -22,7 +22,7 @@ public class Config {
         GENERAL = new ConfigBuilder()
                 .withWinWidth(1280).withWinHeight(720)
                 .withSeed(0)
-                .withFieldWidth(10).withFieldHeight(7)
+                .withFieldWidth(25).withFieldHeight(25)
                 .withAbilityKey("Enter")
                 .build();
     }
