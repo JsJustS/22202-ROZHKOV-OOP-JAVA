@@ -7,7 +7,7 @@ import task3.util.pubsub.ISubscriber;
 import javax.swing.*;
 import java.awt.*;
 
-public class FieldPanel extends JPanel implements ISubscriber {
+public class FieldPanel extends JPanel {
     private final ClientModel model;
     public FieldPanel(ClientModel model) {
         this.model = model;
@@ -32,25 +32,11 @@ public class FieldPanel extends JPanel implements ISubscriber {
         int spareHorizontalPixels = getHeight() - (heightPerBlock * model.getFieldHeightInBlocks());
 
         for (Block block : model.getBlocks()) {
-            int w = (block.getX() < spareVerticalPixels) ? widthPerBlock : widthPerBlock + 1;
-            int h = (block.getY() < spareHorizontalPixels) ? heightPerBlock : heightPerBlock + 1;
-            int x, y;
-            if (block.getX() > spareVerticalPixels) {
-                x = (widthPerBlock+1)*spareHorizontalPixels + widthPerBlock*(block.getX()-spareVerticalPixels);
-            } else {
-                x = (widthPerBlock+1)*block.getX();
-            }
-            if (block.getY() > spareHorizontalPixels) {
-                y = (heightPerBlock+1)*spareHorizontalPixels + heightPerBlock*(block.getY()-spareHorizontalPixels);
-            } else {
-                y = (heightPerBlock+1)*block.getY();
-            }
+            int w = (block.getX() < spareVerticalPixels) ? widthPerBlock + 1 : widthPerBlock;
+            int h = (block.getY() < spareHorizontalPixels) ? heightPerBlock + 1 : heightPerBlock;
+            int x = widthPerBlock * block.getX() + Math.min(block.getX(), spareVerticalPixels);
+            int y = heightPerBlock * block.getY() + Math.min(block.getY(), spareHorizontalPixels);
             g.drawImage(block.getSprite(), x, y, w, h, this);
         }
-    }
-
-    @Override
-    public void onNotification() {
-
     }
 }

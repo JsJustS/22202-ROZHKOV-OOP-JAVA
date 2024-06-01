@@ -19,4 +19,6 @@ public abstract class Block {
     public int getX() {return x;}
     public int getY() {return y;}
     public BufferedImage getSprite() {return sprite;}
+
+    public void onExplosion() {};
 }

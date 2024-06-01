@@ -26,10 +26,15 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
     public <T> void execute(PacketType packetType, ClientModel model, T value) {
         switch (packetType) {
             case MAP_DIM_CHANGED: {
-                int[] dims = (int[]) value;
-                model.setFieldWidthInBlocks(dims[0]);
-                model.setFieldHeightInBlocks(dims[1]);
+                int[] packet = (int[]) value;
+                model.setFieldWidthInBlocks(packet[0]);
+                model.setFieldHeightInBlocks(packet[1]);
                 model.setMapReady(true);
+                break;
+            }
+            case BLOCK_PLACED: {
+                int[] packet = (int[]) value;
+                model.addBlock(packet[0], packet[1], packet[2]);
                 break;
             }
         }

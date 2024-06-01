@@ -26,7 +26,7 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
         gbc.fill = GridBagConstraints.BOTH;
 
         field = new FieldPanel(model);
-        model.subscribe(field);
+        //model.subscribe(field);
         this.add(field, gbc);
 
         keyboardHandler = new KeyboardHandler(this, controller, model);

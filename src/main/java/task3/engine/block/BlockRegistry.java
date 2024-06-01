@@ -11,11 +11,19 @@ public class BlockRegistry {
     private static final HashMap<Integer, Class<? extends Block>> registeredBlocks = new HashMap<>();
 
     public enum Blocks {
-        BEDROCK
+        BEDROCK,
+        BRICK,
+        STONE,
+        COBBLESTONE,
+        LUCKYBLOCK
     }
 
     static {
         register(Blocks.BEDROCK, BedrockBlock.class);
+        register(Blocks.BRICK, BrickBlock.class);
+        register(Blocks.STONE, StoneBlock.class);
+        register(Blocks.COBBLESTONE, CobblestoneBlock.class);
+        register(Blocks.LUCKYBLOCK, LuckyBlock.class);
     }
 
     public static Block getBlockById(int x, int y, Blocks id) {
