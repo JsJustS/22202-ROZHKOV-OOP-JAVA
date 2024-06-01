@@ -16,11 +16,14 @@ public class Config {
     private int fieldWidth;
     private int fieldHeight;
 
+    private String abilityKey;
+
     static {
         GENERAL = new ConfigBuilder()
                 .withWinWidth(1280).withWinHeight(720)
                 .withSeed(0)
                 .withFieldWidth(10).withFieldHeight(7)
+                .withAbilityKey("Enter")
                 .build();
     }
 
@@ -28,6 +31,9 @@ public class Config {
 
     public String getGameTitle() {
         return gameTitle;
+    }
+    public String getAbilityKey() {
+        return abilityKey;
     }
 
     public int getWinWidth() {
@@ -87,6 +93,9 @@ public class Config {
                     case "field_height":
                         builder = builder.withFieldHeight(Integer.parseInt(pair[1]));
                         break;
+                    case "keybind_ability":
+                        builder = builder.withAbilityKey(pair[1]);
+                        break;
                 }
             } catch (NumberFormatException e) {
                 //todo: log e.getMessage()
@@ -121,6 +130,11 @@ public class Config {
 
         public ConfigBuilder withFieldHeight(int value) {
             config.fieldHeight = value;
+            return this;
+        }
+
+        public ConfigBuilder withAbilityKey(String key) {
+            config.abilityKey = key;
             return this;
         }
 

@@ -5,7 +5,9 @@ import task3.engine.block.BlockRegistry;
 import task3.engine.entity.ClientEntity;
 import task3.util.pubsub.Publisher;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class ClientModel extends Publisher implements IModel {
     public enum GAMESTATE {
@@ -13,6 +15,8 @@ public class ClientModel extends Publisher implements IModel {
         PAUSE,
         INGAME
     }
+
+    private final HashMap<String, Runnable> keyBinds = new HashMap<>();
 
     private boolean flagMapReady = false;
 
@@ -35,6 +39,14 @@ public class ClientModel extends Publisher implements IModel {
     public void setGameStateDirty(boolean gameStateMark) {
         this.gameStateMark = gameStateMark;
         notifySubscribers();
+    }
+
+    public void setKeyBind(String key, Runnable bind) {
+        keyBinds.put(key, bind);
+    }
+
+    public Map<String, Runnable> getKeyBinds() {
+        return keyBinds;
     }
 
     public GAMESTATE getGameState() {

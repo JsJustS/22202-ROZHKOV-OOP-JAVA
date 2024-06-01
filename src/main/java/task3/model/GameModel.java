@@ -1,5 +1,6 @@
 package task3.model;
 
+import task3.engine.ability.AbstractAbilityInstance;
 import task3.engine.block.Block;
 import task3.engine.block.BlockRegistry;
 import task3.engine.entity.Entity;
@@ -10,9 +11,19 @@ import java.util.HashSet;
 public class GameModel extends Publisher implements IModel {
     private int fieldWidthInBlock;
     private int fieldHeightInBlocks;
+    private boolean gameIsRunning;
 
     private final HashSet<Entity> entities = new HashSet<>();
     private final HashSet<Block> blocks = new HashSet<>();
+    private final HashSet<AbstractAbilityInstance> abilityInstances = new HashSet<>();
+
+    public void setGameRunning(boolean value) {
+        this.gameIsRunning = value;
+    }
+
+    public boolean isGameRunning() {
+        return this.gameIsRunning;
+    }
 
     public int getFieldHeightInBlocks() {
         return fieldHeightInBlocks;
@@ -51,5 +62,17 @@ public class GameModel extends Publisher implements IModel {
                 break;
             }
         }
+    }
+
+    public void addAbilityInstance(AbstractAbilityInstance abilityInstance) {
+        abilityInstances.add(abilityInstance);
+    }
+
+    public void removeAbilityInstance(AbstractAbilityInstance abilityInstance) {
+        abilityInstances.remove(abilityInstance);
+    }
+
+    public HashSet<AbstractAbilityInstance> getAbilityInstances() {
+        return abilityInstances;
     }
 }

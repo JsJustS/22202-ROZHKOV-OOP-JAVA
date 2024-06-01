@@ -3,6 +3,7 @@ package task3.engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task3.controller.NetworkS2CController;
+import task3.engine.ability.AbstractAbilityInstance;
 import task3.engine.block.Block;
 import task3.engine.block.BlockRegistry;
 import task3.model.GameModel;
@@ -56,15 +57,25 @@ public class GameEngine {
      * Start game from stored in-game state
      * */
     public void startGame() {
-
+        gameModel.setGameRunning(true);
+        long last = System.currentTimeMillis();
+        while (gameModel.isGameRunning()) {
+            if (System.currentTimeMillis() - last < 50) {
+                continue;
+            }
+            this.tick();
+            last = System.currentTimeMillis();
+        }
     }
 
     public void stopGame() {
-
+        gameModel.setGameRunning(false);
     }
 
     private void tick() {
-
+        for (AbstractAbilityInstance abilityInstance : gameModel.getAbilityInstances()) {
+            abilityInstance.execute(gameModel, networkS2CController);
+        }
     }
 
     private void generateField() {

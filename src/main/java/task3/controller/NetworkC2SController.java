@@ -1,7 +1,8 @@
 package task3.controller;
+import task3.engine.ability.DestroyBlockAbilityInstance;
 import task3.model.GameModel;
 
-public class NetworkC2SController implements IController<NetworkS2CController.PacketType, GameModel> {
+public class NetworkC2SController implements IController<NetworkC2SController.PacketType, GameModel> {
 
     private final GameModel server;
 
@@ -16,12 +17,29 @@ public class NetworkC2SController implements IController<NetworkS2CController.Pa
         PLAYER_ABILITY_USED
     }
 
-    public <T> void execute(NetworkS2CController.PacketType packetType, T value) {
+    public <T> void execute(NetworkC2SController.PacketType packetType, T value) {
         this.execute(packetType, server, value);
     }
 
     @Override
-    public <T> void execute(NetworkS2CController.PacketType packetType, GameModel model, T value) {
-
+    public <T> void execute(NetworkC2SController.PacketType packetType, GameModel model, T value) {
+        switch (packetType) {
+            case PLAYER_JOINED: {
+                break;
+            }
+            case PLAYER_LEFT: {
+                break;
+            }
+            case PLAYER_MOVED: {
+                break;
+            }
+            case PLAYER_ABILITY_USED: {
+                int[] packet = (int[]) value;
+                model.addAbilityInstance(
+                        new DestroyBlockAbilityInstance(packet[0], packet[1], null)
+                );
+                break;
+            }
+        }
     }
 }

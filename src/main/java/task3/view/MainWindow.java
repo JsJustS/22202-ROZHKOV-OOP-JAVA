@@ -33,6 +33,10 @@ public class MainWindow extends JFrame implements ISubscriber {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    public void initKeyBinds(Config cfg) {
+        model.setKeyBind(cfg.getAbilityKey(), ()->System.out.println("Damn"));
+    }
+
     @Override
     public void onNotification() {
         if (model.isGameStateDirty()) {

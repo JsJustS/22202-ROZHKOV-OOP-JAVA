@@ -37,6 +37,11 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
                 model.addBlock(packet[0], packet[1], packet[2]);
                 break;
             }
+            case BLOCK_REMOVED: {
+                int[] packet = (int[]) value;
+                model.removeBlock(packet[0], packet[1]);
+                break;
+            }
         }
     }
 }

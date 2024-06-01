@@ -30,17 +30,9 @@ public class ClientController implements IController<ClientController.OP, Client
                 break;
             }
             case ON_KEY_PRESSED: {
-                //todo: remove
-                if (!flag) {
-                    model.addBlock(0, 1, 0);
-                    flag = true;
-                }
                 break;
             }
             case ON_KEY_RELEASED: {
-                //todo: remove
-                model.removeBlock(0, 1);
-                flag = false;
                 break;
             }
         }

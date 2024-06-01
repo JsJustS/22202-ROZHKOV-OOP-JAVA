@@ -1,7 +1,7 @@
 package task3.view.gameplay;
 
 import task3.controller.ClientController;
-import task3.controller.KeyboardHandler;
+import task3.util.keyboard.KeyBindManager;
 import task3.model.ClientModel;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 
 public class MainGameplayWindow extends JPanel implements ActionListener {
     private final FieldPanel field;
-    private final KeyboardHandler keyboardHandler;
+    private final KeyBindManager keyBindManager;
 
     public MainGameplayWindow(JFrame parent, ClientController controller, ClientModel model) {
         Timer timer = new Timer(1000/60, this);
@@ -29,7 +29,7 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
         //model.subscribe(field);
         this.add(field, gbc);
 
-        keyboardHandler = new KeyboardHandler(this, controller, model);
+        keyBindManager = new KeyBindManager(this, controller, model);
     }
 
     @Override
