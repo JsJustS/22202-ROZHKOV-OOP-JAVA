@@ -17,6 +17,7 @@ public class KeyBindManager {
 
     public enum KeyAction {
         USE_ABILITY,
+        SWAP_ABILITY,
         MOVE_UP,
         MOVE_DOWN,
         MOVE_RIGHT,

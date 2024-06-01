@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class ClientModel extends Publisher implements IModel {
     public enum GAMESTATE {
         MENU,
-        PAUSE,
         INGAME
     }
 
@@ -27,7 +26,6 @@ public class ClientModel extends Publisher implements IModel {
     private GAMESTATE gameState;
     private boolean gameStateMark;
 
-    //todo: get that from network
     private int fieldWidthInBlocks;
     private int fieldHeightInBlocks;
 

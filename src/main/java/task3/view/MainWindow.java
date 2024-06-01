@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task3.controller.ClientController;
 import task3.controller.NetworkC2SController;
-import task3.engine.ability.DestroyBlockAbilityInstance;
 import task3.model.ClientModel;
 import task3.util.Config;
 import task3.util.Pair;
@@ -60,7 +59,7 @@ public class MainWindow extends JFrame implements ISubscriber {
         for (KeyBindManager.KeyAction keyAction : model.getPressedKeys()) {
             switch (keyAction) {
                 case USE_ABILITY:
-                    //todo: ability manager for client
+                    //todo: replace with player coords, or player entity
                     Random random = new Random();
                     int x = random.nextInt(model.getFieldWidthInBlocks());
                     int y = random.nextInt(model.getFieldHeightInBlocks());
@@ -73,6 +72,8 @@ public class MainWindow extends JFrame implements ISubscriber {
                             }
                     );
                     break;
+                case SWAP_ABILITY:
+                    //todo: ability manager for client
                 case MOVE_UP:
                     break;
                 case MOVE_DOWN:
@@ -96,10 +97,6 @@ public class MainWindow extends JFrame implements ISubscriber {
             }
             case INGAME: {
                 this.getContentPane().add(new MainGameplayWindow(this, controller, model));
-                break;
-            }
-            case PAUSE: {
-                //todo: this.getContentPane().add(new MainPauseWindow(this, controller, model));
                 break;
             }
             default: {

@@ -1,11 +1,15 @@
 package task3.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Scanner;
 
 public class Config {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
     public static final Config GENERAL;
 
     private String gameTitle = "BomberMan | Java Edition";
@@ -98,7 +102,7 @@ public class Config {
                         break;
                 }
             } catch (NumberFormatException e) {
-                //todo: log e.getMessage()
+                LOGGER.error(e.toString());
             }
         }
 
