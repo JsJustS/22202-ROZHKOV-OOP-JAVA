@@ -1,11 +1,15 @@
 package task3.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import task3.engine.entity.Entity;
+import task3.engine.entity.EntityRegistry;
 import task3.model.ClientModel;
-import task3.view.MainWindow;
 
 import javax.swing.*;
 
 public class NetworkS2CController implements IController<NetworkS2CController.PacketType, ClientModel> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NetworkS2CController.class);
     private final ClientModel client;
 
     public NetworkS2CController(ClientModel clientModel) {
@@ -46,6 +50,26 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
             case BLOCK_REMOVED: {
                 int[] packet = (int[]) value;
                 model.removeBlock(packet[0], packet[1]);
+                break;
+            }
+            case ENTITY_SPAWNED: {
+                double[] packet = (double[]) value;
+                Entity entity = EntityRegistry.getEntityById((int)packet[0]);
+                if (entity == null) {
+                    LOGGER.error("Wrong Entity id");
+                    break;
+                }
+                entity.setX(packet[1]);
+                entity.setY(packet[2]);
+                entity.setId((int)packet[3]);
+                model.spawnEntity(entity);
+                break;
+            }
+
+            case ENTITY_DESPAWNED: {
+                int id = (int) value;
+                model.removeEntity(id);
+                LOGGER.info("Removed entity " + id);
                 break;
             }
         }

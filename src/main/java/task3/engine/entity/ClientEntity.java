@@ -17,13 +17,13 @@ public abstract class ClientEntity extends Entity {
     protected double wSprite;
     protected double hSprite;
 
-    ClientEntity(double w, double h) {
-        super(w, h);
+    ClientEntity() {
+        super();
     }
 
     public void render(JPanel canvas, Graphics g) {
         // 1. Translate entity coordinates in Window coordinates
         // 2. Translate Window coordinates to sprite coordinates
-        g.drawImage(this.sprite, (int)xSprite, (int)ySprite, (int)wSprite, (int)hSprite, canvas);
+        g.drawImage(this.sprite, xSprite, ySprite, (int)wSprite, (int)hSprite, canvas);
     }
 }

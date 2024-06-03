@@ -3,6 +3,7 @@ package task3.model;
 import task3.engine.block.Block;
 import task3.engine.block.BlockRegistry;
 import task3.engine.entity.ClientEntity;
+import task3.engine.entity.Entity;
 import task3.util.keyboard.KeyBindManager;
 import task3.util.pubsub.Publisher;
 
@@ -29,7 +30,7 @@ public class ClientModel extends Publisher implements IModel {
     private int fieldWidthInBlocks;
     private int fieldHeightInBlocks;
 
-    private final HashSet<ClientEntity> clientEntities = new HashSet<>();
+    private final HashSet<Entity> clientEntities = new HashSet<>();
     private final HashSet<Block> blocks = new HashSet<>();
 
     public void setGameState(GAMESTATE value) {
@@ -70,6 +71,26 @@ public class ClientModel extends Publisher implements IModel {
 
     public boolean isGameStateDirty() {
         return gameStateMark;
+    }
+
+    public HashSet<Entity> getClientEntities() {
+        return clientEntities;
+    }
+
+    public void spawnEntity(Entity entity) {
+        this.clientEntities.add(entity);
+    }
+
+    public void removeEntity(Entity entity) {
+        this.clientEntities.remove(entity);
+    }
+    public void removeEntity(int id) {
+        for (Entity entity : clientEntities) {
+            if (entity.getId() == id) {
+                clientEntities.remove(entity);
+                break;
+            }
+        }
     }
 
     public void addBlock(int x, int y, int id) {

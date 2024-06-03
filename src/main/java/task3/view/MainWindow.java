@@ -60,16 +60,10 @@ public class MainWindow extends JFrame implements ISubscriber {
             switch (keyAction) {
                 case USE_ABILITY:
                     //todo: replace with player coords, or player entity
-                    Random random = new Random();
-                    int x = 2;//random.nextInt(model.getFieldWidthInBlocks());
-                    int y = 2;//random.nextInt(model.getFieldHeightInBlocks());
-                    System.out.println("handleKeyActions " + x + " " + y);
                     network.execute(
                             NetworkC2SController.PacketType.PLAYER_ABILITY_USED,
-                            new int[]{
-                                    x,
-                                    y
-                            }
+                            // new int[]{clientModel.getMainPlayer().getX(), clientModel.getMainPlayer().getY()}
+                            new int[]{2, 2}
                     );
                     break;
                 case SWAP_ABILITY:

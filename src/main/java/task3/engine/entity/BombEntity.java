@@ -1,21 +1,33 @@
 package task3.engine.entity;
 
 import task3.engine.ability.ExplosionAbilityInstance;
-import task3.engine.block.Block;
 import task3.model.GameModel;
+import task3.util.ResourceManager;
 
 public class BombEntity extends Entity {
     protected int timeToLive;
     protected int power;
     protected GameModel gameModel;
 
-    public BombEntity(int x, int y, GameModel gameModel) {
-        super(0.5, 0.5);
+    public BombEntity() {
+        this(0, 0, null);
+    }
+
+    public BombEntity(double x, double y, GameModel gameModel) {
+        super();
+        setHeight(0.75);
+        setWidth(0.75);
         this.gameModel = gameModel;
         this.timeToLive = 60; // 3 seconds
-        this.power = 6; // block where spawned + 5 radius
-        this.x = x;
-        this.y = y;
+        this.power = 3; // block where spawned + 2 radius
+        this.x = ((int)x)+0.5d;
+        this.y = ((int)y)+0.5d;
+
+        this.sprite = ResourceManager.loadImage("img/entity/bomb/bomb.png");
+    }
+
+    public void setGameModel(GameModel gameModel) {
+        this.gameModel = gameModel;
     }
 
     @Override

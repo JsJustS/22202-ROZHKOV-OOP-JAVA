@@ -13,6 +13,7 @@ public class GameModel extends Publisher implements IModel {
     private int fieldHeightInBlocks;
     private boolean gameIsRunning;
 
+    private int lastEntityId;
     private final HashSet<Entity> entities = new HashSet<>();
     private final HashSet<Block> blocks = new HashSet<>();
     private final HashSet<AbstractAbilityInstance> abilityInstances = new HashSet<>();
@@ -44,6 +45,13 @@ public class GameModel extends Publisher implements IModel {
         return fieldWidthInBlock;
     }
 
+    public int getLastEntityId() {
+        return lastEntityId;
+    }
+
+    public void setLastEntityId(int value) {
+        this.lastEntityId = value;
+    }
     public HashSet<Entity> getEntities() {
         return entities;
     }
@@ -74,6 +82,14 @@ public class GameModel extends Publisher implements IModel {
 
     public void removeEntity(Entity entity) {
         this.entities.remove(entity);
+    }
+    public void removeEntity(int id) {
+        for (Entity entity : entities) {
+            if (entity.getId() == id) {
+                entities.remove(entity);
+                break;
+            }
+        }
     }
 
     public void addBlock(int x, int y, BlockRegistry.Blocks id) {

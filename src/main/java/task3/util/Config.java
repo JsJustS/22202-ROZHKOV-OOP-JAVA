@@ -24,7 +24,7 @@ public class Config {
 
     static {
         GENERAL = new ConfigBuilder()
-                .withWinWidth(1280).withWinHeight(720)
+                .withWinWidth(1000).withWinHeight(1000)
                 .withSeed(0)
                 .withFieldWidth(25).withFieldHeight(25)
                 .withAbilityKey("Enter")

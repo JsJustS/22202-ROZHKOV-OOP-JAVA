@@ -1,6 +1,6 @@
 package task3.engine.entity;
 
-import task3.model.GameModel;
+import java.awt.image.BufferedImage;
 
 public abstract class Entity {
     // Note:
@@ -8,16 +8,63 @@ public abstract class Entity {
     // it's hitbox should be calculated as (x - w/2, y - h/2) and (x + w/2, y + h/2).
     protected double x;
     protected double y;
-    protected double w;
-    protected double h;
+    private double hitboxWidth;
+    private double hitboxHeight;
     protected boolean alive;
+    private int id;
 
-    Entity(double w, double h) {
+    protected BufferedImage sprite;
+
+    Entity() {
         x = 0;
         y = 0;
-        this.w = w;
-        this.h = h;
+        this.hitboxWidth = 0.5;
+        this.hitboxHeight = 0.5;
         this.alive = true;
+    }
+
+    public BufferedImage getSprite() {
+        return sprite;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getX() {
+        return this.x;
+    }
+
+    public double getY() {
+        return this.y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    protected void setWidth(double w) {
+        this.hitboxWidth = w;
+    }
+
+    public double getHitboxWidth() {
+        return hitboxWidth;
+    }
+
+    public double getHitboxHeight() {
+        return hitboxHeight;
+    }
+
+    protected void setHeight(double h) {
+        this.hitboxHeight = h;
     }
 
     public void tick() {

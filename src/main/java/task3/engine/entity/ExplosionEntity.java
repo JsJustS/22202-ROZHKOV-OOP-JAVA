@@ -1,0 +1,29 @@
+package task3.engine.entity;
+
+import task3.util.ResourceManager;
+
+public class ExplosionEntity extends Entity {
+    private int timeToLive;
+
+    public ExplosionEntity() {
+        this(0, 0);
+    }
+
+    public ExplosionEntity(double x, double y) {
+        setWidth(1);
+        setHeight(1);
+        this.timeToLive = 10; // 1 sec
+        this.x = x;
+        this.y = y;
+        this.sprite = ResourceManager.loadImage("img/entity/bomb/explosion.png");
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.timeToLive--;
+        if (this.timeToLive <= 0) {
+            this.kill();
+        }
+    }
+}

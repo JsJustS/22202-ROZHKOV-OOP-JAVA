@@ -90,7 +90,15 @@ public class GameEngine implements ISubscriber {
             entity.tick();
             if (!entity.isAlive()) entitiesToBeRemoved.add(entity);
         }
-        entitiesToBeRemoved.forEach(gameModel::removeEntity);
+
+        for (Entity entity : entitiesToBeRemoved) {
+            LOGGER.info("Removed entity " + entity.getId());
+            gameModel.removeEntity(entity);
+            networkS2CController.execute(
+                    NetworkS2CController.PacketType.ENTITY_DESPAWNED,
+                    entity.getId()
+            );
+        }
     }
 
     private void generateField() {
