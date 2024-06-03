@@ -1,5 +1,6 @@
 package task3.engine.entity;
 
+import task3.model.GameModel;
 import task3.util.ResourceManager;
 
 import java.awt.image.BufferedImage;
@@ -29,11 +30,11 @@ public class PlayerEntity extends Entity {
     }
 
     @Override
-    public void tickMovement() {
+    public void tickMovement(GameModel model) {
         if (this.isMoving() && this.getVelocity() == 0) {
             this.setVelocity(this.getSpeed());
         }
-        super.tickMovement();
+        super.tickMovement(model);
     }
 
     @Override

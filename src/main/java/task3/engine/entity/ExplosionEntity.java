@@ -1,5 +1,6 @@
 package task3.engine.entity;
 
+import task3.model.GameModel;
 import task3.util.ResourceManager;
 
 public class ExplosionEntity extends Entity {
@@ -19,8 +20,8 @@ public class ExplosionEntity extends Entity {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void tick(GameModel model) {
+        super.tick(model);
         this.timeToLive--;
         if (this.timeToLive <= 0) {
             this.kill();

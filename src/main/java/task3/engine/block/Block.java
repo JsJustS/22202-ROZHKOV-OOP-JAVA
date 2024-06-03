@@ -18,6 +18,10 @@ public abstract class Block {
         isCollidable = false;
     }
 
+    public boolean isCollidable() {
+        return isCollidable;
+    }
+
     public int getX() {return x;}
     public int getY() {return y;}
     public BufferedImage getSprite() {return sprite;}

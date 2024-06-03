@@ -1,6 +1,11 @@
 package task3.engine.entity;
 
+import task3.engine.block.Block;
+import task3.model.GameModel;
+
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Entity {
     // Note:
@@ -102,8 +107,8 @@ public abstract class Entity {
         this.hitboxHeight = h;
     }
 
-    public void tick() {
-        this.tickMovement();
+    public void tick(GameModel model) {
+        this.tickMovement(model);
     }
 
     public boolean isMoving() {
@@ -122,11 +127,13 @@ public abstract class Entity {
         return this.direction;
     }
 
-    public void tickMovement() {
+    public void tickMovement(GameModel model) {
         if (Math.abs(this.getVelocity()) > this.maxVelocity) {
             this.setVelocity(this.maxVelocity*Math.signum(this.getVelocity()));
         }
 
+        double prevX = this.getX();
+        double prevY = this.getY();
         switch (this.direction) {
             case UP:
                 this.setY(this.getY()-this.getVelocity());
@@ -141,6 +148,12 @@ public abstract class Entity {
                 this.setX(this.getX()+this.getVelocity());
                 break;
         }
+        if (isColliding(model)) {
+            this.setX(prevX);
+            this.setY(prevY);
+            this.setVelocity(this.getVelocity() * this.friction);
+        }
+
         this.setVelocity(this.getVelocity() * this.friction);
         if (this.getVelocity() < 0.001 && this.getVelocity() > -0.001) {
             this.setVelocity(0);
@@ -155,5 +168,26 @@ public abstract class Entity {
 
     public boolean isAlive() {
         return alive;
+    }
+
+    private boolean isColliding(GameModel model) {
+        List<Block> blocksToCheck = new ArrayList<>();
+        blocksToCheck.add(model.getBlock((int)this.getX(), (int)this.getY()));
+        blocksToCheck.add(model.getBlock((int)this.getX()+1, (int)this.getY()));
+        blocksToCheck.add(model.getBlock((int)this.getX()-1, (int)this.getY()));
+        blocksToCheck.add(model.getBlock((int)this.getX(), (int)this.getY()+1));
+        blocksToCheck.add(model.getBlock((int)this.getX(), (int)this.getY()-1));
+        for (Block block : blocksToCheck) {
+            if (block == null) continue;
+            if (!block.isCollidable()) continue;
+            if (block.getX() > this.getX() + this.getHitboxWidth()/2 || this.getX() - this.getHitboxWidth()/2 > block.getX() + 1) {
+                continue;
+            }
+            if (block.getY() > this.getY() + this.getHitboxHeight()/2 || this.getY() - this.getHitboxHeight()/2 > block.getY() + 1) {
+                continue;
+            }
+            return true;
+        }
+        return false;
     }
 }

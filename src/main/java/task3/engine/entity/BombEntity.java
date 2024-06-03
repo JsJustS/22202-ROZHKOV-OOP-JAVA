@@ -31,8 +31,8 @@ public class BombEntity extends Entity {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void tick(GameModel model) {
+        super.tick(model);
         this.timeToLive--;
         if (this.timeToLive <= 0) {
             this.explode();

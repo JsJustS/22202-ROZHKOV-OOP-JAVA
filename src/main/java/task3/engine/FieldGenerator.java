@@ -40,8 +40,8 @@ public class FieldGenerator {
                     quarter[i][j] = 1;
                 }
 
-                // 2x2 free space
-                if ((0 < i && i < 3) && (0 < j && j < 3)) {
+                // 3x3 free space
+                if ((0 < i && i < 4) && (0 < j && j < 4)) {
                     quarter[i][j] = 0;
                 }
 
