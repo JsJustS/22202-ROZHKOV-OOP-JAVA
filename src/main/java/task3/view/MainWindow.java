@@ -61,8 +61,8 @@ public class MainWindow extends JFrame implements ISubscriber {
                 case USE_ABILITY:
                     //todo: replace with player coords, or player entity
                     Random random = new Random();
-                    int x = random.nextInt(model.getFieldWidthInBlocks());
-                    int y = random.nextInt(model.getFieldHeightInBlocks());
+                    int x = 2;//random.nextInt(model.getFieldWidthInBlocks());
+                    int y = 2;//random.nextInt(model.getFieldHeightInBlocks());
                     System.out.println("handleKeyActions " + x + " " + y);
                     network.execute(
                             NetworkC2SController.PacketType.PLAYER_ABILITY_USED,

@@ -51,6 +51,14 @@ public class GameModel extends Publisher implements IModel {
     public HashSet<Block> getBlocks() {
         return blocks;
     }
+    public Block getBlock(int x, int y) {
+        for (Block block : blocks) {
+            if (block.getX() == x && block.getY() == y) {
+                return block;
+            }
+        }
+        return null;
+    }
 
     public void setFieldHeightInBlocks(int fieldHeightInBlocks) {
         this.fieldHeightInBlocks = fieldHeightInBlocks;
@@ -58,6 +66,14 @@ public class GameModel extends Publisher implements IModel {
 
     public void setFieldWidthInBlock(int fieldWidthInBlock) {
         this.fieldWidthInBlock = fieldWidthInBlock;
+    }
+
+    public void spawnEntity(Entity entity) {
+        this.entities.add(entity);
+    }
+
+    public void removeEntity(Entity entity) {
+        this.entities.remove(entity);
     }
 
     public void addBlock(int x, int y, BlockRegistry.Blocks id) {

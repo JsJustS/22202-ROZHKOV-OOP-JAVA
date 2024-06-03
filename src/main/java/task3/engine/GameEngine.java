@@ -5,11 +5,14 @@ import org.slf4j.LoggerFactory;
 import task3.controller.NetworkS2CController;
 import task3.engine.ability.AbstractAbilityInstance;
 import task3.engine.block.BlockRegistry;
+import task3.engine.entity.Entity;
 import task3.model.GameModel;
 import task3.util.Config;
 import task3.util.pubsub.ISubscriber;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Sophisticated controller with logic for GameModel.
@@ -81,6 +84,13 @@ public class GameEngine implements ISubscriber {
             abilityInstance.execute(gameModel, networkS2CController);
         }
         gameModel.clearAbilityInstances();
+
+        Set<Entity> entitiesToBeRemoved = new HashSet<>();
+        for (Entity entity : gameModel.getEntities()) {
+            entity.tick();
+            if (!entity.isAlive()) entitiesToBeRemoved.add(entity);
+        }
+        entitiesToBeRemoved.forEach(gameModel::removeEntity);
     }
 
     private void generateField() {

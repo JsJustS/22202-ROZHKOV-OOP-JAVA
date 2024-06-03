@@ -1,5 +1,5 @@
 package task3.controller;
-import task3.engine.ability.DestroyBlockAbilityInstance;
+import task3.engine.ability.SpawnBombAbilityInstance;
 import task3.model.GameModel;
 
 public class NetworkC2SController implements IController<NetworkC2SController.PacketType, GameModel> {
@@ -39,9 +39,8 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
             }
             case PLAYER_ABILITY_USED: {
                 int[] packet = (int[]) value;
-                System.out.println("DestroyBlockAbilityInstance " + packet[0] + " " + packet[1]);
                 model.addAbilityInstance(
-                        new DestroyBlockAbilityInstance(packet[0], packet[1], null)
+                        new SpawnBombAbilityInstance(packet[0], packet[1], null)
                 );
                 break;
             }

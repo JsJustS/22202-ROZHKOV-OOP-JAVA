@@ -80,7 +80,7 @@ public class ClientModel extends Publisher implements IModel {
 
     public void removeBlock(int x, int y) {
         for (Block block : blocks) {
-            if (block.getX() == x && block.getY() == block.getY()) {
+            if (block.getX() == x && y == block.getY()) {
                 blocks.remove(block);
                 break;
             }

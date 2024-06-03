@@ -1,5 +1,7 @@
 package task3.engine.block;
 
+import task3.model.GameModel;
+
 import java.awt.image.BufferedImage;
 
 public abstract class Block {
@@ -19,6 +21,9 @@ public abstract class Block {
     public int getX() {return x;}
     public int getY() {return y;}
     public BufferedImage getSprite() {return sprite;}
+    public int getBlastResistance() {return blastResistance;}
 
-    public void onExplosion() {};
+    public void onExplosion(GameModel model) {
+        System.out.println("onExplosion " + x + " " + y);
+    };
 }
