@@ -64,7 +64,7 @@ public class GameEngine implements ISubscriber {
 
         this.generateField();
 
-        PlayerEntity playerEntity = new PlayerEntity(2, 2);
+        PlayerEntity playerEntity = new PlayerEntity(2.5, 2.5);
         playerEntity.setId(gameModel.getLastEntityId()+1);
         gameModel.setLastEntityId(playerEntity.getId());
         gameModel.spawnEntity(playerEntity);
@@ -114,7 +114,7 @@ public class GameEngine implements ISubscriber {
             if (x != entity.getX() || y != entity.getY()) {
                 networkS2CController.execute(
                         NetworkS2CController.PacketType.ENTITY_MOVED,
-                        new double[]{entity.getId(), entity.getX(), entity.getY(), entity.getSpeedX(), entity.getSpeedY()}
+                        new double[]{entity.getId(), entity.getX(), entity.getY(), entity.getVelocity(), entity.getDirection().ordinal()}
                 );
             }
             if (!entity.isAlive()) entitiesToBeRemoved.add(entity);

@@ -20,7 +20,8 @@ public class ClientModel extends Publisher implements IModel {
     }
 
     private final Map<String, KeyBindManager.KeyAction> keyBinds = new HashMap<>();
-    private final Map<KeyBindManager.KeyAction, Boolean> keysPressed = new HashMap<>();
+    private final Set<KeyBindManager.KeyAction> keysPressed = new HashSet<>();
+    private final Set<KeyBindManager.KeyAction> keysReleased = new HashSet<>();
 
     private boolean flagMapReady = false;
 
@@ -54,16 +55,37 @@ public class ClientModel extends Publisher implements IModel {
     }
 
     public Set<KeyBindManager.KeyAction> getPressedKeys() {
-        return this.keysPressed.keySet().stream().filter(this.keysPressed::get).collect(Collectors.toSet());
+        return this.keysPressed;
+    }
+
+    public Set<KeyBindManager.KeyAction> getReleasedKeys() {
+        return this.keysReleased;
     }
 
     public boolean isKeyPressed(KeyBindManager.KeyAction keyAction) {
-        return this.keysPressed.get(keyAction);
+        return this.keysPressed.contains(keyAction);
     }
 
-    public void setKeyPressed(KeyBindManager.KeyAction keyAction, boolean value) {
-        this.keysPressed.put(keyAction, value);
+    public boolean isKeyReleased(KeyBindManager.KeyAction keyAction) {
+        return this.keysReleased.contains(keyAction);
+    }
+
+    public void setKeyPressed(KeyBindManager.KeyAction keyAction) {
+        this.keysPressed.add(keyAction);
         notifySubscribers();
+    }
+
+    public void setKeyReleased(KeyBindManager.KeyAction keyAction) {
+        this.keysReleased.add(keyAction);
+        notifySubscribers();
+    }
+
+    public void clearPressedKeys() {
+        this.keysPressed.clear();
+    }
+
+    public void clearReleasedKeys() {
+        this.keysReleased.clear();
     }
 
     public GAMESTATE getGameState() {

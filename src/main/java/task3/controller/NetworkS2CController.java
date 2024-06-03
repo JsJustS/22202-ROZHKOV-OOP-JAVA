@@ -95,8 +95,8 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
                 }
                 entity.setX(packet[1]);
                 entity.setY(packet[2]);
-                entity.setVelocityX(packet[3]);
-                entity.setVelocityY(packet[4]);
+                entity.setVelocity(packet[3]);
+                entity.setDirection(Entity.Direction.values()[(int)packet[4]]);
                 break;
             }
         }

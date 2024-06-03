@@ -33,12 +33,12 @@ public class ClientController implements IController<ClientController.OP, Client
             }
             case ON_KEY_PRESSED: {
                 KeyBindManager.KeyAction keyAction = (KeyBindManager.KeyAction) value;
-                model.setKeyPressed(keyAction, true);
+                model.setKeyPressed(keyAction);
                 break;
             }
             case ON_KEY_RELEASED: {
                 KeyBindManager.KeyAction keyAction = (KeyBindManager.KeyAction) value;
-                model.setKeyPressed(keyAction, false);
+                model.setKeyReleased(keyAction);
                 break;
             }
         }

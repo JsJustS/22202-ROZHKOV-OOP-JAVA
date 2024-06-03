@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task3.controller.ClientController;
 import task3.controller.NetworkC2SController;
+import task3.engine.entity.PlayerEntity;
 import task3.model.ClientModel;
 import task3.util.Config;
 import task3.util.Pair;
@@ -85,25 +86,25 @@ public class MainWindow extends JFrame implements ISubscriber {
                 case MOVE_UP:
                     network.execute(
                             NetworkC2SController.PacketType.PLAYER_MOVED,
-                            new int[]{model.getMainPlayer().getId(), 0, -1}
+                            new int[]{model.getMainPlayer().getId(), PlayerEntity.Direction.UP.ordinal()+1}
                     );
                     break;
                 case MOVE_DOWN:
                     network.execute(
                             NetworkC2SController.PacketType.PLAYER_MOVED,
-                            new int[]{model.getMainPlayer().getId(), 0, 1}
+                            new int[]{model.getMainPlayer().getId(), PlayerEntity.Direction.DOWN.ordinal()+1}
                     );
                     break;
                 case MOVE_RIGHT:
                     network.execute(
                             NetworkC2SController.PacketType.PLAYER_MOVED,
-                            new int[]{model.getMainPlayer().getId(), 1, 0}
+                            new int[]{model.getMainPlayer().getId(), PlayerEntity.Direction.RIGHT.ordinal()+1}
                     );
                     break;
                 case MOVE_LEFT:
                     network.execute(
                             NetworkC2SController.PacketType.PLAYER_MOVED,
-                            new int[]{model.getMainPlayer().getId(), -1, 0}
+                            new int[]{model.getMainPlayer().getId(), PlayerEntity.Direction.LEFT.ordinal()+1}
                     );
                     break;
                 case LEAVE:
@@ -114,6 +115,28 @@ public class MainWindow extends JFrame implements ISubscriber {
                     break;
             }
         }
+        model.clearPressedKeys();
+
+        for (KeyBindManager.KeyAction keyAction : model.getReleasedKeys()) {
+            switch (keyAction) {
+                case USE_ABILITY:
+                    break;
+                case SWAP_ABILITY:
+                    break;
+                case LEAVE:
+                    break;
+                case MOVE_UP:
+                case MOVE_DOWN:
+                case MOVE_RIGHT:
+                case MOVE_LEFT:
+                    network.execute(
+                            NetworkC2SController.PacketType.PLAYER_MOVED,
+                            new int[]{model.getMainPlayer().getId(), 0}
+                    );
+                    break;
+            }
+        }
+        model.clearReleasedKeys();
     }
 
     private void changeClientState() {

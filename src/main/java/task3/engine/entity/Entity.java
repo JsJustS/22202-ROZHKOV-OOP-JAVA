@@ -8,29 +8,38 @@ public abstract class Entity {
     // it's hitbox should be calculated as (x - w/2, y - h/2) and (x + w/2, y + h/2).
     protected double x;
     protected double y;
-    protected double speedX;
-    protected double speedY;
+    protected double speed;
     protected double maxVelocity;
-    protected double velocityX;
-    protected double velocityY;
+    protected double velocity;
     protected double friction;
     private double hitboxWidth;
     private double hitboxHeight;
     protected boolean alive;
     private int id;
 
+    protected boolean isMoving;
+    protected Direction direction;
+
     protected BufferedImage sprite;
+
+    public enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    }
 
     Entity() {
         x = 0;
         y = 0;
         this.hitboxWidth = 0.5;
         this.hitboxHeight = 0.5;
-        this.speedX = 1;
-        this.speedY = 1;
-        this.friction = 0.2;
+        this.speed = 1;
+        this.friction = 0.5;
         this.maxVelocity = 0.5;
         this.alive = true;
+        this.isMoving = false;
+        this.direction = Direction.UP;
     }
 
     public BufferedImage getSprite() {
@@ -61,36 +70,20 @@ public abstract class Entity {
         return this.y;
     }
 
-    protected void setSpeedX(double speedX) {
-        this.speedX = speedX;
+    protected void setSpeed(double speed) {
+        this.speed = speed;
     }
 
-    public double getSpeedX() {
-        return this.speedX;
+    public double getSpeed() {
+        return this.speed;
     }
 
-    protected void setSpeedY(double speedY) {
-        this.speedY = speedY;
+    public double getVelocity() {
+        return velocity;
     }
 
-    public double getVelocityX() {
-        return velocityX;
-    }
-
-    public double getVelocityY() {
-        return velocityY;
-    }
-
-    public void setVelocityX(double velocityX) {
-        this.velocityX = velocityX;
-    }
-
-    public void setVelocityY(double velocityY) {
-        this.velocityY = velocityY;
-    }
-
-    public double getSpeedY() {
-        return this.speedY;
+    public void setVelocity(double velocity) {
+        this.velocity = velocity;
     }
 
     protected void setWidth(double w) {
@@ -113,22 +106,46 @@ public abstract class Entity {
         this.tickMovement();
     }
 
+    public boolean isMoving() {
+        return isMoving;
+    }
+
+    public void setMoving(boolean moving) {
+        isMoving = moving;
+    }
+
+    public void setDirection(PlayerEntity.Direction direction) {
+        this.direction = direction;
+    }
+
+    public Direction getDirection() {
+        return this.direction;
+    }
+
     public void tickMovement() {
-        if (Math.abs(this.getVelocityX()) > this.maxVelocity) {
-            this.setVelocityX(this.maxVelocity*Math.signum(this.getVelocityX()));
+        if (Math.abs(this.getVelocity()) > this.maxVelocity) {
+            this.setVelocity(this.maxVelocity*Math.signum(this.getVelocity()));
         }
-        if (Math.abs(this.getVelocityY()) > this.maxVelocity) {
-            this.setVelocityY(this.maxVelocity*Math.signum(this.getVelocityY()));
+
+        switch (this.direction) {
+            case UP:
+                this.setY(this.getY()-this.getVelocity());
+                break;
+            case LEFT:
+                this.setX(this.getX()-this.getVelocity());
+                break;
+            case DOWN:
+                this.setY(this.getY()+this.getVelocity());
+                break;
+            case RIGHT:
+                this.setX(this.getX()+this.getVelocity());
+                break;
         }
-        this.setX(this.getX()+this.getVelocityX());
-        this.setY(this.getY()+this.getVelocityY());
-        this.setVelocityX(this.getVelocityX() * this.friction);
-        this.setVelocityY(this.getVelocityY() * this.friction);
-        if (this.getVelocityX() < 0.001 && this.getVelocityX() > -0.001) {
-            this.setVelocityX(0);
-        }
-        if (this.getVelocityY() < 0.001 && this.getVelocityY() > -0.001) {
-            this.setVelocityY(0);
+        this.setVelocity(this.getVelocity() * this.friction);
+        if (this.getVelocity() < 0.001 && this.getVelocity() > -0.001) {
+            this.setVelocity(0);
+            this.setX((int)this.getX()+0.5);
+            this.setY((int)this.getY()+0.5);
         }
     }
 

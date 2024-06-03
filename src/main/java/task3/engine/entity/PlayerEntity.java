@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayerEntity extends Entity {
+
     private final Map<String, List<BufferedImage>> spriteSheets = new HashMap<>();
     private int animationTick;
+    private int animationStep;
 
     public PlayerEntity() {
         this(0, 0);
@@ -27,35 +29,39 @@ public class PlayerEntity extends Entity {
     }
 
     @Override
+    public void tickMovement() {
+        if (this.isMoving() && this.getVelocity() == 0) {
+            this.setVelocity(this.getSpeed());
+        }
+        super.tickMovement();
+    }
+
+    @Override
     public BufferedImage getSprite() {
         this.animationTick++;
-        int spriteIndex = (animationTick % 10 == 0) ? 0: 1;
-        if (this.getVelocityX() > 0) {
-            if (this.getVelocityX() > this.getVelocityY()) {
-                return this.spriteSheets.get("left").get(spriteIndex);
-            }
-            return this.spriteSheets.get("down").get(spriteIndex);
-        } else if (this.getVelocityX() < 0) {
-            if (this.getVelocityX() < this.getVelocityY()) {
-                return this.spriteSheets.get("right").get(spriteIndex);
-            }
-            return this.spriteSheets.get("up").get(spriteIndex);
+        if (animationTick % 20 == 0) {
+            this.animationStep++;
         }
-        return this.spriteSheets.get("calm").get(spriteIndex);
+        switch (this.getDirection()) {
+            case UP: return this.spriteSheets.get("up").get(this.animationStep % 2);
+            case LEFT: return this.spriteSheets.get("left").get(this.animationStep % 2);
+            case DOWN: return this.spriteSheets.get("down").get(this.animationStep % 2);
+            case RIGHT: return this.spriteSheets.get("right").get(this.animationStep % 2);
+        }
+        return this.spriteSheets.get("up").get(this.animationStep % 2);
     }
 
     private void loadSpriteSheets() {
-        loadSprites("calm");
         loadSprites("left");
         loadSprites("right");
         loadSprites("up");
         loadSprites("down");
     }
 
-    private void loadSprites(String keyName) {
-        List<BufferedImage> calm = new ArrayList<>();
-        calm.add(ResourceManager.loadImage("img/entity/player/player_"+ keyName +"_1.png"));
-        calm.add(ResourceManager.loadImage("img/entity/player/player_"+ keyName +"_2.png"));
-        this.spriteSheets.put(keyName, calm);
+    private void loadSprites(String spriteName) {
+        List<BufferedImage> spriteSheet = new ArrayList<>();
+        spriteSheet.add(ResourceManager.loadImage("img/entity/player/player_"+ spriteName +"_1.png"));
+        spriteSheet.add(ResourceManager.loadImage("img/entity/player/player_"+ spriteName +"_2.png"));
+        this.spriteSheets.put(spriteName, spriteSheet);
     }
 }

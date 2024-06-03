@@ -1,7 +1,5 @@
 package task3.util;
 
-import task3.view.menu.MainMenu;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,7 +18,7 @@ public class ResourceManager {
 
     public static BufferedImage loadImage(String filename) {
         BufferedImage loadedImage;
-        try (InputStream stream = MainMenu.class.getResourceAsStream("/" + filename)) {
+        try (InputStream stream = ResourceManager.class.getResourceAsStream("/" + filename)) {
             if (stream == null) throw new IOException();
             loadedImage = ImageIO.read(stream);
         } catch (IOException ignored) {

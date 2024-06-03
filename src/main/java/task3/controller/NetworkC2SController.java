@@ -46,9 +46,14 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
                     break;
                 }
                 //LOGGER.info(packet[0]+"|"+packet[1]+"|"+packet[2]);
-                if (entity.getVelocityX() == 0 && entity.getVelocityY() == 0) {
-                    entity.setVelocityX(entity.getVelocityX() + entity.getSpeedX()*packet[1]);
-                    entity.setVelocityY(entity.getVelocityY() + entity.getSpeedY()*packet[2]);
+//                if (entity.getVelocityX() == 0 && entity.getVelocityY() == 0) {
+//                    entity.setVelocityX(entity.getVelocityX() + entity.getSpeedX()*packet[1]);
+//                    entity.setVelocityY(entity.getVelocityY() + entity.getSpeedY()*packet[2]);
+//                }
+                PlayerEntity playerEntity = (PlayerEntity) entity;
+                playerEntity.setMoving(packet[1] != 0);
+                if (packet[1] != 0) {
+                    playerEntity.setDirection(PlayerEntity.Direction.values()[packet[1]-1]);
                 }
                 break;
             }
