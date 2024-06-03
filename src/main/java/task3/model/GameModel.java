@@ -76,6 +76,15 @@ public class GameModel extends Publisher implements IModel {
         this.fieldWidthInBlock = fieldWidthInBlock;
     }
 
+    public Entity getEntity(int id) {
+        for (Entity entity : entities) {
+            if (entity.getId() == id) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
     public void spawnEntity(Entity entity) {
         this.entities.add(entity);
     }

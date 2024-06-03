@@ -41,11 +41,6 @@ public class FieldPanel extends JPanel {
             int h = (entity.getY() < spareHorizontalPixels) ? heightPerBlock + 1 : heightPerBlock;
             int x = widthPerBlock * (int)entity.getX() + Math.min((int)entity.getX(), spareVerticalPixels);
             int y = heightPerBlock * (int)entity.getY() + Math.min((int)entity.getY(), spareHorizontalPixels);
-            /*System.out.println(
-                    entity + " x:" + (int)(x+w*(entity.getX()-(int)entity.getX())) + " y:" +  (int)(y+h*(entity.getY()-(int)entity.getY())) +
-                            " w:" + (int)(w*entity.getHitboxWidth()) + " h:" +  (int)(h*entity.getHitboxHeight()) + " sprite:" +
-                            entity.getSprite()
-            );*/
             int spriteWidth = (int)(w*entity.getHitboxWidth());
             int spriteHeight = (int)(h*entity.getHitboxHeight());
             int spriteX = (int)(x+w*(entity.getX()-(int)entity.getX())-spriteWidth/2);

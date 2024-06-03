@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task3.engine.entity.Entity;
 import task3.engine.entity.EntityRegistry;
+import task3.engine.entity.PlayerEntity;
 import task3.model.ClientModel;
 
 import javax.swing.*;
@@ -17,9 +18,11 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
     }
 
     public enum PacketType {
+        BIND_PLAYER,
         MAP_DIM_CHANGED,
         ENTITY_SPAWNED,
         ENTITY_DESPAWNED,
+        ENTITY_MOVED,
         ENTITY_PLAYED_ANIMATION,
         BLOCK_PLACED,
         BLOCK_REMOVED
@@ -35,6 +38,16 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
     @Override
     public <T> void execute(PacketType packetType, ClientModel model, T value) {
         switch (packetType) {
+            case BIND_PLAYER: {
+                int id = (int) value;
+                Entity entity = model.getEntity(id);
+                if (!(entity instanceof PlayerEntity)) {
+                    LOGGER.error("Wrong Entity id");
+                    break;
+                }
+                model.setMainPlayer((PlayerEntity)entity);
+                break;
+            }
             case MAP_DIM_CHANGED: {
                 int[] packet = (int[]) value;
                 model.setFieldWidthInBlocks(packet[0]);
@@ -69,7 +82,21 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
             case ENTITY_DESPAWNED: {
                 int id = (int) value;
                 model.removeEntity(id);
-                LOGGER.info("Removed entity " + id);
+                break;
+            }
+
+            case ENTITY_MOVED: {
+                double[] packet = (double[]) value;
+                int id = (int) packet[0];
+                Entity entity = model.getEntity(id);
+                if (entity == null) {
+                    LOGGER.error("Wrong Entity id");
+                    break;
+                }
+                entity.setX(packet[1]);
+                entity.setY(packet[2]);
+                entity.setVelocityX(packet[3]);
+                entity.setVelocityY(packet[4]);
                 break;
             }
         }

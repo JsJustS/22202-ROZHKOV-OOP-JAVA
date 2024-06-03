@@ -17,6 +17,7 @@ public class EntityRegistry {
     }
 
     static {
+        register(Entities.PLAYER, PlayerEntity.class);
         register(Entities.BOMB, BombEntity.class);
         register(Entities.EXPLOSION, ExplosionEntity.class);
     }

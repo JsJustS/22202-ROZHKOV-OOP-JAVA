@@ -1,9 +1,13 @@
 package task3.controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import task3.engine.ability.SpawnBombAbilityInstance;
+import task3.engine.entity.Entity;
+import task3.engine.entity.PlayerEntity;
 import task3.model.GameModel;
 
 public class NetworkC2SController implements IController<NetworkC2SController.PacketType, GameModel> {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(NetworkC2SController.class);
     private final GameModel server;
 
     public NetworkC2SController(GameModel gameModel) {
@@ -35,12 +39,24 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
                 break;
             }
             case PLAYER_MOVED: {
+                int[] packet = (int[]) value;
+                Entity entity = model.getEntity(packet[0]);
+                if(!(entity instanceof PlayerEntity)) {
+                    LOGGER.error("Wrong entity id");
+                    break;
+                }
+                //LOGGER.info(packet[0]+"|"+packet[1]+"|"+packet[2]);
+                if (entity.getVelocityX() == 0 && entity.getVelocityY() == 0) {
+                    entity.setVelocityX(entity.getVelocityX() + entity.getSpeedX()*packet[1]);
+                    entity.setVelocityY(entity.getVelocityY() + entity.getSpeedY()*packet[2]);
+                }
                 break;
             }
             case PLAYER_ABILITY_USED: {
-                int[] packet = (int[]) value;
+                double[] packet = (double[]) value;
+                // todo: ability registry?
                 model.addAbilityInstance(
-                        new SpawnBombAbilityInstance(packet[0], packet[1], null)
+                        new SpawnBombAbilityInstance((int)packet[1], (int)packet[2], null)
                 );
                 break;
             }

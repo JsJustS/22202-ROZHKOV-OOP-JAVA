@@ -21,13 +21,21 @@ public class Config {
     private int fieldHeight;
 
     private String abilityKey;
+    private String moveUpKey;
+    private String moveDownKey;
+    private String moveLeftKey;
+    private String moveRightKey;
 
     static {
         GENERAL = new ConfigBuilder()
                 .withWinWidth(1000).withWinHeight(1000)
                 .withSeed(0)
                 .withFieldWidth(25).withFieldHeight(25)
-                .withAbilityKey("Enter")
+                .withAbilityKey("Space")
+                .withMoveUpKey("W")
+                .withMoveLeftKey("A")
+                .withMoveDownKey("S")
+                .withMoveRightKey("D")
                 .build();
     }
 
@@ -38,6 +46,18 @@ public class Config {
     }
     public String getAbilityKey() {
         return abilityKey;
+    }
+    public String getMoveUpKey() {
+        return moveUpKey;
+    }
+    public String getMoveDownKey() {
+        return moveDownKey;
+    }
+    public String getMoveLeftKey() {
+        return moveLeftKey;
+    }
+    public String getMoveRightKey() {
+        return moveRightKey;
     }
 
     public int getWinWidth() {
@@ -100,6 +120,18 @@ public class Config {
                     case "keybind_ability":
                         builder = builder.withAbilityKey(pair[1]);
                         break;
+                    case "keybind_move_up":
+                        builder = builder.withMoveUpKey(pair[1]);
+                        break;
+                    case "keybind_move_left":
+                        builder = builder.withMoveLeftKey(pair[1]);
+                        break;
+                    case "keybind_move_down":
+                        builder = builder.withMoveDownKey(pair[1]);
+                        break;
+                    case "keybind_move_right":
+                        builder = builder.withMoveRightKey(pair[1]);
+                        break;
                 }
             } catch (NumberFormatException e) {
                 LOGGER.error(e.toString());
@@ -139,6 +171,26 @@ public class Config {
 
         public ConfigBuilder withAbilityKey(String key) {
             config.abilityKey = key;
+            return this;
+        }
+
+        public ConfigBuilder withMoveUpKey(String key) {
+            config.moveUpKey = key;
+            return this;
+        }
+
+        public ConfigBuilder withMoveLeftKey(String key) {
+            config.moveLeftKey = key;
+            return this;
+        }
+
+        public ConfigBuilder withMoveDownKey(String key) {
+            config.moveDownKey = key;
+            return this;
+        }
+
+        public ConfigBuilder withMoveRightKey(String key) {
+            config.moveRightKey = key;
             return this;
         }
 

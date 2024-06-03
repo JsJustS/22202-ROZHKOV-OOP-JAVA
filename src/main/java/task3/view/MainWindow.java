@@ -44,6 +44,22 @@ public class MainWindow extends JFrame implements ISubscriber {
                 ClientController.OP.UPDATE_KEYBINDS, model,
                 new Pair<>(cfg.getAbilityKey(), KeyBindManager.KeyAction.USE_ABILITY)
         );
+        controller.execute(
+                ClientController.OP.UPDATE_KEYBINDS, model,
+                new Pair<>(cfg.getMoveUpKey(), KeyBindManager.KeyAction.MOVE_UP)
+        );
+        controller.execute(
+                ClientController.OP.UPDATE_KEYBINDS, model,
+                new Pair<>(cfg.getMoveDownKey(), KeyBindManager.KeyAction.MOVE_DOWN)
+        );
+        controller.execute(
+                ClientController.OP.UPDATE_KEYBINDS, model,
+                new Pair<>(cfg.getMoveLeftKey(), KeyBindManager.KeyAction.MOVE_LEFT)
+        );
+        controller.execute(
+                ClientController.OP.UPDATE_KEYBINDS, model,
+                new Pair<>(cfg.getMoveRightKey(), KeyBindManager.KeyAction.MOVE_RIGHT)
+        );
     }
 
     @Override
@@ -59,24 +75,42 @@ public class MainWindow extends JFrame implements ISubscriber {
         for (KeyBindManager.KeyAction keyAction : model.getPressedKeys()) {
             switch (keyAction) {
                 case USE_ABILITY:
-                    //todo: replace with player coords, or player entity
                     network.execute(
                             NetworkC2SController.PacketType.PLAYER_ABILITY_USED,
-                            // new int[]{clientModel.getMainPlayer().getX(), clientModel.getMainPlayer().getY()}
-                            new int[]{2, 2}
+                            new double[]{model.getMainPlayer().getId(), model.getMainPlayer().getX(), model.getMainPlayer().getY()}
                     );
                     break;
                 case SWAP_ABILITY:
                     //todo: ability manager for client
                 case MOVE_UP:
+                    network.execute(
+                            NetworkC2SController.PacketType.PLAYER_MOVED,
+                            new int[]{model.getMainPlayer().getId(), 0, -1}
+                    );
                     break;
                 case MOVE_DOWN:
+                    network.execute(
+                            NetworkC2SController.PacketType.PLAYER_MOVED,
+                            new int[]{model.getMainPlayer().getId(), 0, 1}
+                    );
                     break;
                 case MOVE_RIGHT:
+                    network.execute(
+                            NetworkC2SController.PacketType.PLAYER_MOVED,
+                            new int[]{model.getMainPlayer().getId(), 1, 0}
+                    );
                     break;
                 case MOVE_LEFT:
+                    network.execute(
+                            NetworkC2SController.PacketType.PLAYER_MOVED,
+                            new int[]{model.getMainPlayer().getId(), -1, 0}
+                    );
                     break;
                 case LEAVE:
+                    network.execute(
+                            NetworkC2SController.PacketType.PLAYER_LEFT,
+                            model.getMainPlayer().getId()
+                    );
                     break;
             }
         }

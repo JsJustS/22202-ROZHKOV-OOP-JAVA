@@ -6,6 +6,8 @@ import task3.controller.NetworkS2CController;
 import task3.engine.ability.AbstractAbilityInstance;
 import task3.engine.block.BlockRegistry;
 import task3.engine.entity.Entity;
+import task3.engine.entity.EntityRegistry;
+import task3.engine.entity.PlayerEntity;
 import task3.model.GameModel;
 import task3.util.Config;
 import task3.util.pubsub.ISubscriber;
@@ -58,8 +60,23 @@ public class GameEngine implements ISubscriber {
                 NetworkS2CController.PacketType.MAP_DIM_CHANGED,
                 new int[]{gameModel.getFieldWidthInBlock(), gameModel.getFieldHeightInBlocks()}
         );
+        //todo: remove all blocks and entities
 
         this.generateField();
+
+        PlayerEntity playerEntity = new PlayerEntity(2, 2);
+        playerEntity.setId(gameModel.getLastEntityId()+1);
+        gameModel.setLastEntityId(playerEntity.getId());
+        gameModel.spawnEntity(playerEntity);
+
+        networkS2CController.execute(
+                NetworkS2CController.PacketType.ENTITY_SPAWNED,
+                new double[]{EntityRegistry.Entities.PLAYER.ordinal(), playerEntity.getX(), playerEntity.getY(), playerEntity.getId()}
+        );
+        networkS2CController.execute(
+                NetworkS2CController.PacketType.BIND_PLAYER,
+                playerEntity.getId()
+        );
     }
 
     public void resetGame(long seed) {
@@ -80,19 +97,29 @@ public class GameEngine implements ISubscriber {
     }
 
     private void tick() {
+        // ###################
+        // Abilities (in-game event system)
         for (AbstractAbilityInstance abilityInstance : gameModel.getAbilityInstances()) {
             abilityInstance.execute(gameModel, networkS2CController);
         }
         gameModel.clearAbilityInstances();
 
+        // ###################
+        // Entities
         Set<Entity> entitiesToBeRemoved = new HashSet<>();
         for (Entity entity : gameModel.getEntities()) {
+            double x = entity.getX();
+            double y = entity.getY();
             entity.tick();
+            if (x != entity.getX() || y != entity.getY()) {
+                networkS2CController.execute(
+                        NetworkS2CController.PacketType.ENTITY_MOVED,
+                        new double[]{entity.getId(), entity.getX(), entity.getY(), entity.getSpeedX(), entity.getSpeedY()}
+                );
+            }
             if (!entity.isAlive()) entitiesToBeRemoved.add(entity);
         }
-
         for (Entity entity : entitiesToBeRemoved) {
-            LOGGER.info("Removed entity " + entity.getId());
             gameModel.removeEntity(entity);
             networkS2CController.execute(
                     NetworkS2CController.PacketType.ENTITY_DESPAWNED,
