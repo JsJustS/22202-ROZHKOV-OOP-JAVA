@@ -39,7 +39,7 @@ public abstract class Entity {
         this.maxVelocity = 0.5;
         this.alive = true;
         this.isMoving = false;
-        this.direction = Direction.UP;
+        this.direction = Direction.DOWN;
     }
 
     public BufferedImage getSprite() {

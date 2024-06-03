@@ -14,6 +14,12 @@ public class FieldPanel extends JPanel {
     }
 
     @Override
+    public Dimension getPreferredSize() {
+        int best = Math.min(super.getParent().getWidth(), super.getParent().getHeight());
+        return new Dimension(best, best);
+    }
+
+    @Override
     public void revalidate() {
         super.revalidate();
     }
