@@ -7,6 +7,8 @@ import task3.engine.entity.Entity;
 import task3.util.pubsub.Publisher;
 
 import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class GameModel extends Publisher implements IModel {
     private int fieldWidthInBlock;
@@ -14,9 +16,9 @@ public class GameModel extends Publisher implements IModel {
     private boolean gameIsRunning;
 
     private int lastEntityId;
-    private final HashSet<Entity> entities = new HashSet<>();
-    private final HashSet<Block> blocks = new HashSet<>();
-    private final HashSet<AbstractAbilityInstance> abilityInstances = new HashSet<>();
+    private final Set<Entity> entities = new CopyOnWriteArraySet<>();
+    private final Set<Block> blocks = new CopyOnWriteArraySet<>();
+    private final Set<AbstractAbilityInstance> abilityInstances = new CopyOnWriteArraySet<>();
 
     private boolean hasPlayerJoined;
 
@@ -52,11 +54,11 @@ public class GameModel extends Publisher implements IModel {
     public void setLastEntityId(int value) {
         this.lastEntityId = value;
     }
-    public HashSet<Entity> getEntities() {
+    public Set<Entity> getEntities() {
         return entities;
     }
 
-    public HashSet<Block> getBlocks() {
+    public Set<Block> getBlocks() {
         return blocks;
     }
     public Block getBlock(int x, int y) {
@@ -124,7 +126,7 @@ public class GameModel extends Publisher implements IModel {
         abilityInstances.clear();
     }
 
-    public HashSet<AbstractAbilityInstance> getAbilityInstances() {
+    public Set<AbstractAbilityInstance> getAbilityInstances() {
         return abilityInstances;
     }
 
