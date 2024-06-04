@@ -13,42 +13,50 @@ public class FieldGenerator {
     private final byte[] range = new byte[]{0, 1, 2, 3};
     public FieldGenerator(long seed, int row, int col) {
         this.random = new Random(seed);
-        this.row = row;
-        this.col = col;
+        this.row = row; // walls
+        this.col = col; // walls
     }
 
     public byte[][] generateField() {
         int quarterWidth = (row%2==0)?row/2:row/2+1;
         int quarterHeight = (col%2==0)?col/2:col/2+1;
-        byte[][] quarter = new byte[quarterWidth][quarterHeight];
+        byte[][] quarter = new byte[quarterWidth-1][quarterHeight-1];
+
+        byte wall = 1;
+        byte empty = 0;
 
         this.recursiveBacktracking(quarter);
         byte[][] field = new byte[row][col];
         for (int i = 0; i < quarterWidth; ++i) {
             for (int j = 0; j < quarterHeight; ++j) {
+                byte value;
+                if (i == 0 || j == 0) {
+                    value = wall;
+                } else if (quarterWidth - 2 <= i && quarterHeight -2 <= j && i != j) {
+                    value = empty;
+                } else {
+                    value = (byte) ((quarter[i-1][j-1] + 1) % 2);
+                }
+                //quarter[i][j] = (byte) ((quarter[i][j] + 1) % 2);
+
                 List<BlockRegistry.Blocks> blocksToChooseFrom;
-                if (quarter[i][j] == 1) {
+                if (value == wall) {
                     blocksToChooseFrom = BlockRegistry.getWallBlocks();
                 } else {
                     blocksToChooseFrom = BlockRegistry.getPathBlocks();
                 }
                 byte blockId = (byte)blocksToChooseFrom.get(random.nextInt(blocksToChooseFrom.size())).ordinal();
-                quarter[i][j] = blockId;
+                value = blockId;
 
-                // walls around map
-                if (i == 0 || j == 0) {
-                    quarter[i][j] = 1;
+                // 2x2 free space
+                if ((0 < i && i < 3) && (0 < j && j < 3)) {
+                    value = empty;
                 }
 
-                // 3x3 free space
-                if ((0 < i && i < 4) && (0 < j && j < 4)) {
-                    quarter[i][j] = 0;
-                }
-
-                field[i][j] = quarter[i][j];
-                field[row-i-1][j] = quarter[i][j];
-                field[i][col-j-1] = quarter[i][j];
-                field[row-i-1][col-j-1] = quarter[i][j];
+                field[i][j] = value;
+                field[row-i-1][j] = value;
+                field[i][col-j-1] = value;
+                field[row-i-1][col-j-1] = value;
             }
         }
         return field;
@@ -57,8 +65,9 @@ public class FieldGenerator {
     private void recursiveBacktracking(byte[][] maze) {
         Stack<Pair<Integer, Integer>> stack = new Stack<>();
 
-        Integer x = random.nextInt(maze.length);
-        Integer y = random.nextInt(maze[0].length);
+        //todo:
+        Integer x = 2;//random.nextInt(maze.length);
+        Integer y = 2;//random.nextInt(maze[0].length);
         maze[x][y] = 1;
         while (x != null & y != null) {
             while (x != null & y != null) {
