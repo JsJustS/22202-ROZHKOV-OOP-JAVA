@@ -16,7 +16,7 @@ public class BlockRegistry {
         BRICK,
         STONE,
         COBBLESTONE,
-        LUCKYBLOCK,
+        GOLD,
         DIAMOND
     }
 
@@ -26,7 +26,7 @@ public class BlockRegistry {
         register(Blocks.BRICK, BrickBlock.class);
         register(Blocks.STONE, StoneBlock.class);
         register(Blocks.COBBLESTONE, CobblestoneBlock.class);
-        register(Blocks.LUCKYBLOCK, LuckyBlock.class);
+        register(Blocks.GOLD, GoldBlock.class);
         register(Blocks.DIAMOND, DiamondOreBlock.class);
     }
 
@@ -41,7 +41,7 @@ public class BlockRegistry {
         List<Blocks> pathable = new ArrayList<>();
         pathable.add(Blocks.STONE);
         pathable.add(Blocks.COBBLESTONE);
-        pathable.add(Blocks.LUCKYBLOCK);
+        pathable.add(Blocks.GOLD);
         pathable.add(Blocks.DIAMOND);
         return pathable;
     }

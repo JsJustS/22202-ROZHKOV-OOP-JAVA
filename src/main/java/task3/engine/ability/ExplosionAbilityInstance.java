@@ -19,6 +19,7 @@ public class ExplosionAbilityInstance extends AbstractAbilityInstance {
     @Override
     public void execute(GameModel model, NetworkS2CController networkController) {
         super.execute(model, networkController);
+        int collectedPoints = 0;
         for (int direction = 0; direction < 4; ++direction) {
             int x = this.x;
             int y = this.y;
@@ -30,19 +31,25 @@ public class ExplosionAbilityInstance extends AbstractAbilityInstance {
                     powerLeft -= block.getBlastResistance();
                     model.removeBlock(x, y);
                     block.onExplosion(model);
-                    Entity entity = ((BombEntity)this.parent).getParent();
-                    if (entity instanceof PlayerEntity) {
-                        ((PlayerEntity)entity).setPoints(((PlayerEntity)entity).getPoints() + block.getPoints());
-                        networkController.execute(
-                                NetworkS2CController.PacketType.PLAYER_STATUS,
-                                new int[]{entity.getId(), ((PlayerEntity)entity).getPoints()}
-                        );
-                    }
+                    collectedPoints += block.getPoints();
+
                     networkController.execute(
                             NetworkS2CController.PacketType.BLOCK_REMOVED,
                             new int[]{x, y}
                     );
                 } else {
+                    for (Entity entity : model.getEntities()) {
+                        if (entity instanceof ExplosionEntity) {
+                            continue;
+                        }
+                        if (x > entity.getX() + entity.getHitboxWidth()/2 || entity.getX() - entity.getHitboxWidth()/2 > x + 1) {
+                            continue;
+                        }
+                        if (y > entity.getY() + entity.getHitboxHeight()/2 || entity.getY() - entity.getHitboxHeight()/2 > y + 1) {
+                            continue;
+                        }
+                        entity.damage(this.parent);
+                    }
                     powerLeft--;
                 }
 
@@ -65,6 +72,18 @@ public class ExplosionAbilityInstance extends AbstractAbilityInstance {
                     case 3: y--; break;
                 }
             }
+        }
+        this.parent.onFinishAbility(collectedPoints);
+
+        if (!(this.parent instanceof BombEntity)) {
+            return;
+        }
+        Entity entity = ((BombEntity)this.parent).getParent();
+        if (entity instanceof PlayerEntity) {
+            networkController.execute(
+                    NetworkS2CController.PacketType.PLAYER_STATUS,
+                    new int[]{entity.getId(), ((PlayerEntity)entity).getPoints()}
+            );
         }
     }
 }

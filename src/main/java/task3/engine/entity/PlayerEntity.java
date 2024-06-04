@@ -15,6 +15,9 @@ public class PlayerEntity extends Entity {
     private int animationTick;
     private int animationStep;
     private int points;
+    private int allTimePoints;
+
+    private final double pointUponDeathCoefficient = 0.5;
 
     public PlayerEntity() {
         this(0, 0);
@@ -26,6 +29,7 @@ public class PlayerEntity extends Entity {
         setWidth(0.9);
         setHeight(0.9);
         points = 0;
+        allTimePoints = 0;
 
         this.animationTick = 0;
         loadSpriteSheets();
@@ -37,6 +41,32 @@ public class PlayerEntity extends Entity {
             this.setVelocity(this.getSpeed());
         }
         super.tickMovement(model);
+    }
+
+    @Override
+    public <T> void onFinishAbility(T data) {
+        super.onFinishAbility(data);
+        if (data instanceof Integer) {
+            this.addPoints((int)data);
+        }
+    }
+
+    @Override
+    public void damage(Entity source) {
+        super.damage(source);
+        this.setPoints(this.getPoints() - 100);
+        if (this.points >= 0) return;
+
+        if (source instanceof BombEntity) {
+            BombEntity bomb = (BombEntity) source;
+            if (bomb.getParent() instanceof PlayerEntity) {
+                PlayerEntity playerSource = (PlayerEntity) bomb.getParent();
+                if (!playerSource.equals(this)) {
+                    playerSource.addPoints((int)(this.allTimePoints * this.pointUponDeathCoefficient));
+                }
+            }
+        }
+        this.kill();
     }
 
     @Override
@@ -74,5 +104,10 @@ public class PlayerEntity extends Entity {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public void addPoints(int points) {
+        this.points += points;
+        this.allTimePoints += points;
     }
 }

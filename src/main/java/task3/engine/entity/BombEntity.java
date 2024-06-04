@@ -51,4 +51,16 @@ public class BombEntity extends Entity {
         );
         this.kill();
     }
+
+    @Override
+    public void damage(Entity source) {
+        super.damage(source);
+        this.explode();
+    }
+
+    @Override
+    public <T> void onFinishAbility(T data) {
+        super.onFinishAbility(data);
+        this.parent.onFinishAbility(data);
+    }
 }

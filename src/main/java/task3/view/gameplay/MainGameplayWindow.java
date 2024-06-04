@@ -38,12 +38,19 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (clientModel != null && clientModel.getMainPlayer() != null) {
-            g.setColor(new Color(255, 255, 255));
+
             g.setFont(new Font("Times New Roman", Font.BOLD, 25));
             int x = 10;
             int y = 30;
 
-            g.drawString("POINTS: " + clientModel.getMainPlayer().getPoints(), x, y);
+            if (clientModel.getMainPlayer().getPoints() >= 0) {
+                g.setColor(Color.WHITE);
+                g.drawString("POINTS: " + clientModel.getMainPlayer().getPoints(), x, y);
+            } else {
+                g.setColor(Color.RED);
+                g.drawString("YOU DIED!", x, y);
+            }
+
         }
     }
 }

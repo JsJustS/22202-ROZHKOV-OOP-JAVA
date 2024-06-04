@@ -99,10 +99,15 @@ public class GameEngine implements ISubscriber {
     private void tick() {
         // ###################
         // Abilities (in-game event system)
+        Set<AbstractAbilityInstance> abilitiesToBeRemoved = new HashSet<>();
         for (AbstractAbilityInstance abilityInstance : gameModel.getAbilityInstances()) {
             abilityInstance.execute(gameModel, networkS2CController);
+            abilitiesToBeRemoved.add(abilityInstance);
         }
-        gameModel.clearAbilityInstances();
+        for (AbstractAbilityInstance abilityInstance : abilitiesToBeRemoved) {
+            gameModel.removeAbilityInstance(abilityInstance);
+        }
+        //gameModel.clearAbilityInstances();
 
         // ###################
         // Entities

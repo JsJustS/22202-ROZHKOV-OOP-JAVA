@@ -21,6 +21,7 @@ public abstract class Entity {
     private double hitboxHeight;
     protected boolean alive;
     private int id;
+    protected boolean isCollidable;
 
     protected boolean isMoving;
     protected Direction direction;
@@ -45,6 +46,11 @@ public abstract class Entity {
         this.alive = true;
         this.isMoving = false;
         this.direction = Direction.DOWN;
+        this.isCollidable = true;
+    }
+
+    public boolean isCollidable() {
+        return isCollidable;
     }
 
     public BufferedImage getSprite() {
@@ -162,6 +168,14 @@ public abstract class Entity {
         }
     }
 
+    public void damage(Entity source) {
+
+    }
+
+    public <T>void onFinishAbility(T data) {
+
+    }
+
     public void kill() {
         this.alive = false;
     }
@@ -184,6 +198,24 @@ public abstract class Entity {
                 continue;
             }
             if (block.getY() > this.getY() + this.getHitboxHeight()/2 || this.getY() - this.getHitboxHeight()/2 > block.getY() + 1) {
+                continue;
+            }
+            return true;
+        }
+        for (Entity entity : model.getEntities()) {
+            if (!entity.isCollidable()) {
+                continue;
+            }
+            if (entity.equals(this)) {
+                continue;
+            }
+            if ((entity instanceof BombEntity) && ((BombEntity)entity).getParent().equals(this)) {
+                continue;
+            }
+            if (entity.getX()-entity.getHitboxWidth()/2 > this.getX() + this.getHitboxWidth()/2 || this.getX() - this.getHitboxWidth()/2 > entity.getX()+entity.getHitboxWidth()/2) {
+                continue;
+            }
+            if (entity.getY()-entity.getHitboxHeight()/2 > this.getY() + this.getHitboxHeight()/2 || this.getY() - this.getHitboxHeight()/2 > entity.getY()+entity.getHitboxHeight()) {
                 continue;
             }
             return true;

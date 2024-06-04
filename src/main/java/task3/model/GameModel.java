@@ -127,4 +127,8 @@ public class GameModel extends Publisher implements IModel {
     public HashSet<AbstractAbilityInstance> getAbilityInstances() {
         return abilityInstances;
     }
+
+    public void removeAbilityInstance(AbstractAbilityInstance abilityInstance) {
+        abilityInstances.remove(abilityInstance);
+    }
 }

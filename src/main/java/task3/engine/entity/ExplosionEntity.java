@@ -16,6 +16,7 @@ public class ExplosionEntity extends Entity {
         this.timeToLive = 10; // 1 sec
         this.x = x;
         this.y = y;
+        this.isCollidable = false;
         this.sprite = ResourceManager.loadImage("img/entity/bomb/explosion.png");
     }
 
