@@ -9,13 +9,14 @@ import java.awt.*;
 
 public class FieldPanel extends JPanel {
     private final ClientModel model;
+    private final int intents = 75;
     public FieldPanel(ClientModel model) {
         this.model = model;
     }
 
     @Override
     public Dimension getPreferredSize() {
-        int best = Math.min(super.getParent().getWidth(), super.getParent().getHeight());
+        int best = Math.min(super.getParent().getWidth() - intents, super.getParent().getHeight() - intents);
         return new Dimension(best, best);
     }
 

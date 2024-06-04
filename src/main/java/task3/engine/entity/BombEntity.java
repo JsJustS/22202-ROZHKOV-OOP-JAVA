@@ -8,16 +8,18 @@ public class BombEntity extends Entity {
     protected int timeToLive;
     protected int power;
     protected GameModel gameModel;
+    protected Entity parent;
 
     public BombEntity() {
-        this(0, 0, null);
+        this(0, 0, null, null);
     }
 
-    public BombEntity(double x, double y, GameModel gameModel) {
+    public BombEntity(double x, double y, GameModel gameModel, Entity parent) {
         super();
         setHeight(0.75);
         setWidth(0.75);
         this.gameModel = gameModel;
+        this.parent = parent;
         this.timeToLive = 60; // 3 seconds
         this.power = 3; // block where spawned + 2 radius
         this.x = ((int)x)+0.5d;
@@ -37,6 +39,10 @@ public class BombEntity extends Entity {
         if (this.timeToLive <= 0) {
             this.explode();
         }
+    }
+
+    public Entity getParent() {
+        return parent;
     }
 
     public void explode() {

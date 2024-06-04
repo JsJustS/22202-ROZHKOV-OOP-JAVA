@@ -8,5 +8,6 @@ public class BrickBlock extends Block {
         this.blastResistance = 10;
         this.isCollidable = true;
         this.sprite = ResourceManager.loadImage("img/block/brick.png");
+        this.points = 3;
     }
 }

@@ -60,8 +60,25 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
             case PLAYER_ABILITY_USED: {
                 double[] packet = (double[]) value;
                 // todo: ability registry?
+                Entity playerEntity = model.getEntity((int)packet[0]);
+                if(!(playerEntity instanceof PlayerEntity)) {
+                    LOGGER.error("Wrong entity id");
+                    break;
+                }
+                for (Entity entity : model.getEntities()) {
+                    if (entity.equals(playerEntity)) {
+                        continue;
+                    }
+                    if ((int)packet[1] > entity.getX() + entity.getHitboxWidth()/2 || entity.getX() - entity.getHitboxWidth()/2 > (int)packet[1] + 1) {
+                        continue;
+                    }
+                    if ((int)packet[2] > entity.getY() + entity.getHitboxHeight()/2 || entity.getY() - entity.getHitboxHeight()/2 > (int)packet[2] + 1) {
+                        continue;
+                    }
+                    return;
+                }
                 model.addAbilityInstance(
-                        new SpawnBombAbilityInstance((int)packet[1], (int)packet[2], null)
+                        new SpawnBombAbilityInstance((int)packet[1], (int)packet[2], playerEntity)
                 );
                 break;
             }

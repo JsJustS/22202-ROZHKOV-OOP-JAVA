@@ -8,5 +8,6 @@ public class CobblestoneBlock extends Block {
         this.blastResistance = 1;
         this.isCollidable = true;
         this.sprite = ResourceManager.loadImage("img/block/cobblestone.png");
+        this.points = 1;
     }
 }

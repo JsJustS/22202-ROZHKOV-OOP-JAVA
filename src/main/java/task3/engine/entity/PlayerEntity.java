@@ -14,6 +14,7 @@ public class PlayerEntity extends Entity {
     private final Map<String, List<BufferedImage>> spriteSheets = new HashMap<>();
     private int animationTick;
     private int animationStep;
+    private int points;
 
     public PlayerEntity() {
         this(0, 0);
@@ -24,6 +25,7 @@ public class PlayerEntity extends Entity {
         this.y = y;
         setWidth(0.9);
         setHeight(0.9);
+        points = 0;
 
         this.animationTick = 0;
         loadSpriteSheets();
@@ -64,5 +66,13 @@ public class PlayerEntity extends Entity {
         spriteSheet.add(ResourceManager.loadImage("img/entity/player/player_"+ spriteName +"_1.png"));
         spriteSheet.add(ResourceManager.loadImage("img/entity/player/player_"+ spriteName +"_2.png"));
         this.spriteSheets.put(spriteName, spriteSheet);
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 }

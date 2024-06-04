@@ -25,7 +25,8 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
         ENTITY_MOVED,
         ENTITY_PLAYED_ANIMATION,
         BLOCK_PLACED,
-        BLOCK_REMOVED
+        BLOCK_REMOVED,
+        PLAYER_STATUS
     }
 
     public <T> void execute(PacketType packetType, T value) {
@@ -97,6 +98,17 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
                 entity.setY(packet[2]);
                 entity.setVelocity(packet[3]);
                 entity.setDirection(Entity.Direction.values()[(int)packet[4]]);
+                break;
+            }
+            case PLAYER_STATUS: {
+                int[] packet = (int[]) value;
+                int id = packet[0];
+                Entity entity = model.getEntity(id);
+                if (!(entity instanceof PlayerEntity)) {
+                    LOGGER.error("Wrong Entity id");
+                    break;
+                }
+                ((PlayerEntity)entity).setPoints(packet[1]);
                 break;
             }
         }

@@ -2,10 +2,7 @@ package task3.engine.ability;
 
 import task3.controller.NetworkS2CController;
 import task3.engine.block.Block;
-import task3.engine.entity.BombEntity;
-import task3.engine.entity.Entity;
-import task3.engine.entity.EntityRegistry;
-import task3.engine.entity.ExplosionEntity;
+import task3.engine.entity.*;
 import task3.model.GameModel;
 
 public class ExplosionAbilityInstance extends AbstractAbilityInstance {
@@ -33,6 +30,14 @@ public class ExplosionAbilityInstance extends AbstractAbilityInstance {
                     powerLeft -= block.getBlastResistance();
                     model.removeBlock(x, y);
                     block.onExplosion(model);
+                    Entity entity = ((BombEntity)this.parent).getParent();
+                    if (entity instanceof PlayerEntity) {
+                        ((PlayerEntity)entity).setPoints(((PlayerEntity)entity).getPoints() + block.getPoints());
+                        networkController.execute(
+                                NetworkS2CController.PacketType.PLAYER_STATUS,
+                                new int[]{entity.getId(), ((PlayerEntity)entity).getPoints()}
+                        );
+                    }
                     networkController.execute(
                             NetworkS2CController.PacketType.BLOCK_REMOVED,
                             new int[]{x, y}

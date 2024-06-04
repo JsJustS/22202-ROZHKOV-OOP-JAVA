@@ -12,21 +12,15 @@ import java.awt.event.ActionListener;
 public class MainGameplayWindow extends JPanel implements ActionListener {
     private final FieldPanel field;
     private final KeyBindManager keyBindManager;
+    private final ClientModel clientModel;
 
     public MainGameplayWindow(JFrame parent, ClientController controller, ClientModel model) {
         Timer timer = new Timer(1000/60, this);
         timer.start();
+        this.clientModel = model;
 
         this.setBackground(Color.DARK_GRAY);
         this.setLayout(new GridBagLayout());
-        /*GridBagConstraints gbc = new GridBagConstraints();
-        gbc.weightx = 0.1;
-        gbc.weighty = 0.1;
-        gbc.insets = new Insets(50, 50, 50, 50);
-        gbc.fill = GridBagConstraints.BOTH;
-
-        field = new FieldPanel(model);
-        this.add(field, gbc);*/
 
         this.setLayout(new GridBagLayout());
         field = new FieldPanel(model);
@@ -43,6 +37,13 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        if (clientModel != null && clientModel.getMainPlayer() != null) {
+            g.setColor(new Color(255, 255, 255));
+            g.setFont(new Font("Times New Roman", Font.BOLD, 25));
+            int x = 10;
+            int y = 30;
 
+            g.drawString("POINTS: " + clientModel.getMainPlayer().getPoints(), x, y);
+        }
     }
 }

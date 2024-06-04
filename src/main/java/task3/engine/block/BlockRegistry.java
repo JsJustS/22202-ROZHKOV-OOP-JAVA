@@ -16,7 +16,8 @@ public class BlockRegistry {
         BRICK,
         STONE,
         COBBLESTONE,
-        LUCKYBLOCK
+        LUCKYBLOCK,
+        DIAMOND
     }
 
     static {
@@ -26,6 +27,7 @@ public class BlockRegistry {
         register(Blocks.STONE, StoneBlock.class);
         register(Blocks.COBBLESTONE, CobblestoneBlock.class);
         register(Blocks.LUCKYBLOCK, LuckyBlock.class);
+        register(Blocks.DIAMOND, DiamondOreBlock.class);
     }
 
     public static List<Blocks> getWallBlocks() {
@@ -40,6 +42,7 @@ public class BlockRegistry {
         pathable.add(Blocks.STONE);
         pathable.add(Blocks.COBBLESTONE);
         pathable.add(Blocks.LUCKYBLOCK);
+        pathable.add(Blocks.DIAMOND);
         return pathable;
     }
 
