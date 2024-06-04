@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import task3.controller.NetworkS2CController;
 import task3.engine.ability.AbstractAbilityInstance;
 import task3.engine.block.BlockRegistry;
+import task3.engine.entity.BotPlayerEntity;
 import task3.engine.entity.Entity;
 import task3.engine.entity.EntityRegistry;
 import task3.engine.entity.PlayerEntity;
@@ -28,6 +29,8 @@ public class GameEngine implements ISubscriber {
 
     private final Random random = new Random();
     private long seed;
+
+    private byte[][] botMap;
 
     public GameEngine(Config cfg, GameModel gameModel, NetworkS2CController networkS2CController) {
         this.config = cfg;
@@ -77,6 +80,37 @@ public class GameEngine implements ISubscriber {
                 NetworkS2CController.PacketType.BIND_PLAYER,
                 playerEntity.getId()
         );
+
+        this.populateMapWithBots(config.getBots());
+    }
+
+    private void populateMapWithBots(int bots) {
+        for (int i = 0; i < bots; ++i) {
+            double x;
+            double y;
+            switch (i) {
+                case 0:
+                    x = this.botMap.length - 2.5;
+                    y = 2.5;
+                    break;
+                case 1:
+                    x = 2.5;
+                    y = this.botMap[0].length - 2.5;
+                    break;
+                default:
+                    x = this.botMap.length - 2.5;
+                    y = this.botMap[0].length - 2.5;
+            }
+            BotPlayerEntity bot = new BotPlayerEntity(x, y, this.botMap);
+            bot.setId(gameModel.getLastEntityId()+1);
+            gameModel.setLastEntityId(bot.getId());
+            gameModel.spawnEntity(bot);
+
+            networkS2CController.execute(
+                    NetworkS2CController.PacketType.ENTITY_SPAWNED,
+                    new double[]{EntityRegistry.Entities.PLAYER.ordinal(), bot.getX(), bot.getY(), bot.getId()}
+            );
+        }
     }
 
     public void resetGame(long seed) {
@@ -126,6 +160,12 @@ public class GameEngine implements ISubscriber {
         }
         for (Entity entity : entitiesToBeRemoved) {
             gameModel.removeEntity(entity);
+            if (entity instanceof PlayerEntity) {
+                networkS2CController.execute(
+                        NetworkS2CController.PacketType.PLAYER_STATUS,
+                        new int[]{entity.getId(), ((PlayerEntity)entity).getPoints(), ((PlayerEntity)entity).getBombsLeft()}
+                );
+            }
             networkS2CController.execute(
                     NetworkS2CController.PacketType.ENTITY_DESPAWNED,
                     entity.getId()
@@ -139,7 +179,8 @@ public class GameEngine implements ISubscriber {
                 gameModel.getFieldWidthInBlock(),
                 gameModel.getFieldHeightInBlocks()
         );
-        byte[][] field = generator.generateField();
+        this.botMap = new byte[gameModel.getFieldWidthInBlock()][gameModel.getFieldHeightInBlocks()];
+        byte[][] field = generator.generateField(this.botMap);
 
         this.random.setSeed(this.seed);
         for (int i = 0; i < gameModel.getFieldWidthInBlock(); ++i) {

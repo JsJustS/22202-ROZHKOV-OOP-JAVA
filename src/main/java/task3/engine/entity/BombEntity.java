@@ -42,6 +42,10 @@ public class BombEntity extends Entity {
         }
     }
 
+    public int getPower() {
+        return power;
+    }
+
     public Entity getParent() {
         return parent;
     }

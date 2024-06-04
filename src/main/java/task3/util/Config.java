@@ -27,11 +27,14 @@ public class Config {
     private String moveRightKey;
     private String changeAbilityKey;
 
+    private int bots;
+
     static {
         GENERAL = new ConfigBuilder()
                 .withWinWidth(1000).withWinHeight(1000)
                 .withSeed(0)
-                .withFieldWidth(25).withFieldHeight(25)
+                .withFieldWidth(15).withFieldHeight(15)
+                .withBots(3)
                 .withAbilityKey("Space")
                 .withMoveUpKey("W")
                 .withMoveLeftKey("A")
@@ -63,6 +66,10 @@ public class Config {
     }
     public String getChangeAbilityKey() {
         return changeAbilityKey;
+    }
+
+    public int getBots() {
+        return bots;
     }
 
     public int getWinWidth() {
@@ -140,6 +147,9 @@ public class Config {
                     case "keybind_change_ability":
                         builder = builder.withChangeAbilityKey(pair[1]);
                         break;
+                    case "bots":
+                        builder = builder.withBots(Integer.parseInt(pair[1]));
+                        break;
                 }
             } catch (NumberFormatException e) {
                 LOGGER.error(e.toString());
@@ -174,6 +184,11 @@ public class Config {
 
         public ConfigBuilder withFieldHeight(int value) {
             config.fieldHeight = value;
+            return this;
+        }
+
+        public ConfigBuilder withBots(int value) {
+            config.bots = value;
             return this;
         }
 
