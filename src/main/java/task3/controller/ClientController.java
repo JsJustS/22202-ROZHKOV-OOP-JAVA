@@ -18,7 +18,7 @@ public class ClientController implements IController<ClientController.OP, Client
 
     @Override
     public <T> void execute(OP operation, ClientModel model, T value) {
-        LOGGER.info(operation.name() + " | " + value.toString());
+        //LOGGER.info(operation.name() + " | " + value.toString());
 
         switch (operation) {
             case CHANGE_GAMESTATE: {

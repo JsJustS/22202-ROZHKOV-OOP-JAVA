@@ -2,6 +2,7 @@ package task3.engine.entity;
 
 import task3.controller.NetworkS2CController;
 import task3.engine.ability.SpawnBombAbilityInstance;
+import task3.engine.ability.SpawnSuperBombAbilityInstance;
 import task3.model.GameModel;
 import task3.util.ResourceManager;
 
@@ -12,6 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayerEntity extends Entity {
+
+    public enum Abilities {
+        SIMPLE_BOMB,
+        SUPER_BOMB
+    }
 
     private final Map<String, List<BufferedImage>> spriteSheets = new HashMap<>();
     private int animationTick;
@@ -44,7 +50,7 @@ public class PlayerEntity extends Entity {
         loadSpriteSheets();
     }
 
-    public void useAbility(GameModel model) {
+    public void useAbility(GameModel model, Abilities ability) {
         if (this.bombsLeft <= 0) {
             return;
         }
@@ -61,10 +67,24 @@ public class PlayerEntity extends Entity {
             }
             return;
         }
-        model.addAbilityInstance(
-                new SpawnBombAbilityInstance((int)this.getX(), (int)this.getY(), this)
-        );
-        this.bombsLeft--;
+
+        switch (ability) {
+            case SIMPLE_BOMB:
+                model.addAbilityInstance(
+                        new SpawnBombAbilityInstance((int)this.getX(), (int)this.getY(), this)
+                );
+                this.bombsLeft--;
+                break;
+            case SUPER_BOMB:
+                if (this.bombsLeft != 3) {
+                    break;
+                }
+                model.addAbilityInstance(
+                        new SpawnSuperBombAbilityInstance((int)this.getX(), (int)this.getY(), this)
+                );
+                this.bombsLeft-=3;
+        }
+
     }
 
     @Override

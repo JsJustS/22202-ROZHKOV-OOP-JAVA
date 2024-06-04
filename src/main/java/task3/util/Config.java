@@ -25,6 +25,7 @@ public class Config {
     private String moveDownKey;
     private String moveLeftKey;
     private String moveRightKey;
+    private String changeAbilityKey;
 
     static {
         GENERAL = new ConfigBuilder()
@@ -36,6 +37,7 @@ public class Config {
                 .withMoveLeftKey("A")
                 .withMoveDownKey("S")
                 .withMoveRightKey("D")
+                .withChangeAbilityKey("E")
                 .build();
     }
 
@@ -58,6 +60,9 @@ public class Config {
     }
     public String getMoveRightKey() {
         return moveRightKey;
+    }
+    public String getChangeAbilityKey() {
+        return changeAbilityKey;
     }
 
     public int getWinWidth() {
@@ -132,6 +137,9 @@ public class Config {
                     case "keybind_move_right":
                         builder = builder.withMoveRightKey(pair[1]);
                         break;
+                    case "keybind_change_ability":
+                        builder = builder.withChangeAbilityKey(pair[1]);
+                        break;
                 }
             } catch (NumberFormatException e) {
                 LOGGER.error(e.toString());
@@ -191,6 +199,11 @@ public class Config {
 
         public ConfigBuilder withMoveRightKey(String key) {
             config.moveRightKey = key;
+            return this;
+        }
+
+        public ConfigBuilder withChangeAbilityKey(String key) {
+            config.changeAbilityKey = key;
             return this;
         }
 

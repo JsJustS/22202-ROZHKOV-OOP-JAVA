@@ -13,12 +13,13 @@ public class EntityRegistry {
         PLAYER,
         BOMB,
         EXPLOSION,
-        POWER_UP
+        SUPER_BOMB
     }
 
     static {
         register(Entities.PLAYER, PlayerEntity.class);
         register(Entities.BOMB, BombEntity.class);
+        register(Entities.SUPER_BOMB, SuperBombEntity.class);
         register(Entities.EXPLOSION, ExplosionEntity.class);
     }
 

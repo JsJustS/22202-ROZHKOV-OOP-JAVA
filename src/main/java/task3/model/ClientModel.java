@@ -11,13 +11,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ClientModel extends Publisher implements IModel {
     public enum GAMESTATE {
         MENU,
         INGAME
     }
+
+    private PlayerEntity.Abilities chosenAbility = PlayerEntity.Abilities.SIMPLE_BOMB;
 
     private final Map<String, KeyBindManager.KeyAction> keyBinds = new HashMap<>();
     private final Set<KeyBindManager.KeyAction> keysPressed = new HashSet<>();
@@ -169,5 +170,13 @@ public class ClientModel extends Publisher implements IModel {
 
     public void setMapReady(boolean flagMapReady) {
         this.flagMapReady = flagMapReady;
+    }
+
+    public PlayerEntity.Abilities getChosenAbility() {
+        return chosenAbility;
+    }
+
+    public void setChosenAbility(PlayerEntity.Abilities chosenAbility) {
+        this.chosenAbility = chosenAbility;
     }
 }

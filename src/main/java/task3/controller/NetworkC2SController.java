@@ -52,13 +52,13 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
                 break;
             }
             case PLAYER_ABILITY_USED: {
-                double[] packet = (double[]) value;
-                Entity playerEntity = model.getEntity((int)packet[0]);
+                int[] packet = (int[]) value;
+                Entity playerEntity = model.getEntity(packet[0]);
                 if(!(playerEntity instanceof PlayerEntity)) {
                     LOGGER.error("Wrong entity id");
                     break;
                 }
-                ((PlayerEntity) playerEntity).useAbility(model);
+                ((PlayerEntity) playerEntity).useAbility(model, PlayerEntity.Abilities.values()[packet[1]]);
                 break;
             }
         }

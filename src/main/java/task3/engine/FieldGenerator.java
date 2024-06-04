@@ -52,6 +52,9 @@ public class FieldGenerator {
                 if ((0 < i && i < 3) && (0 < j && j < 3)) {
                     value = empty;
                 }
+                if (i == 0 || j == 0) {
+                    value = (byte)BlockRegistry.Blocks.BEDROCK.ordinal();
+                }
 
                 field[i][j] = value;
                 field[row-i-1][j] = value;

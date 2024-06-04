@@ -15,7 +15,6 @@ import task3.util.pubsub.ISubscriber;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class MainWindow extends JFrame implements ISubscriber {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainWindow.class);
@@ -61,6 +60,10 @@ public class MainWindow extends JFrame implements ISubscriber {
                 ClientController.OP.UPDATE_KEYBINDS, model,
                 new Pair<>(cfg.getMoveRightKey(), KeyBindManager.KeyAction.MOVE_RIGHT)
         );
+        controller.execute(
+                ClientController.OP.UPDATE_KEYBINDS, model,
+                new Pair<>(cfg.getChangeAbilityKey(), KeyBindManager.KeyAction.CHANGE_ABILITY)
+        );
     }
 
     @Override
@@ -78,11 +81,16 @@ public class MainWindow extends JFrame implements ISubscriber {
                 case USE_ABILITY:
                     network.execute(
                             NetworkC2SController.PacketType.PLAYER_ABILITY_USED,
-                            new double[]{model.getMainPlayer().getId(), model.getMainPlayer().getX(), model.getMainPlayer().getY()}
+                            new int[]{model.getMainPlayer().getId(), model.getChosenAbility().ordinal()}
                     );
                     break;
-                case SWAP_ABILITY:
-                    //todo: ability manager for client
+                case CHANGE_ABILITY:
+                    model.setChosenAbility(
+                            PlayerEntity.Abilities.values()[
+                                    (model.getChosenAbility().ordinal() + 1) % PlayerEntity.Abilities.values().length
+                                    ]
+                    );
+                    break;
                 case MOVE_UP:
                     network.execute(
                             NetworkC2SController.PacketType.PLAYER_MOVED,
@@ -121,7 +129,7 @@ public class MainWindow extends JFrame implements ISubscriber {
             switch (keyAction) {
                 case USE_ABILITY:
                     break;
-                case SWAP_ABILITY:
+                case CHANGE_ABILITY:
                     break;
                 case LEAVE:
                     break;

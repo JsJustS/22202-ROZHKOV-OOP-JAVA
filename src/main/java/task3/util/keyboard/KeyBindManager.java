@@ -17,7 +17,7 @@ public class KeyBindManager {
 
     public enum KeyAction {
         USE_ABILITY,
-        SWAP_ABILITY,
+        CHANGE_ABILITY,
         MOVE_UP,
         MOVE_DOWN,
         MOVE_RIGHT,
@@ -40,7 +40,6 @@ public class KeyBindManager {
         @Override
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
-            System.out.println(e.getActionCommand());
             if (command.endsWith("_pressed")) {
                 KeyBindManager.this.clientController.execute(
                         ClientController.OP.ON_KEY_PRESSED,

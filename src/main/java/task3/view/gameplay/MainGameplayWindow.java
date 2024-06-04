@@ -1,6 +1,7 @@
 package task3.view.gameplay;
 
 import task3.controller.ClientController;
+import task3.engine.entity.PlayerEntity;
 import task3.util.ResourceManager;
 import task3.util.keyboard.KeyBindManager;
 import task3.model.ClientModel;
@@ -16,6 +17,7 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
     private final KeyBindManager keyBindManager;
     private final ClientModel clientModel;
     private final BufferedImage bombSprite = ResourceManager.loadImage("img/entity/bomb/bomb.png");
+    private final BufferedImage superBombSprite = ResourceManager.loadImage("img/entity/bomb/super_bomb.png");
 
     public MainGameplayWindow(JFrame parent, ClientController controller, ClientModel model) {
         Timer timer = new Timer(1000/60, this);
@@ -58,7 +60,10 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
             y = 5;
             int size = 30;
             for (int i = 0; i < clientModel.getMainPlayer().getBombsLeft(); ++i) {
-                g.drawImage(bombSprite, x-size*(i+1)-size/5*i, y, size, size, this);
+                g.drawImage(
+                        (clientModel.getChosenAbility().equals(PlayerEntity.Abilities.SIMPLE_BOMB)) ? bombSprite: superBombSprite,
+                        x-size*(i+1)-size/5*i, y, size, size, this
+                );
             }
 
         }
