@@ -115,7 +115,7 @@ public class GameEngine implements ISubscriber {
         for (Entity entity : gameModel.getEntities()) {
             double x = entity.getX();
             double y = entity.getY();
-            entity.tick(gameModel);
+            entity.tick(gameModel, networkS2CController);
             if (x != entity.getX() || y != entity.getY()) {
                 networkS2CController.execute(
                         NetworkS2CController.PacketType.ENTITY_MOVED,

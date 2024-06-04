@@ -6,7 +6,6 @@ import task3.engine.block.BlockRegistry;
 import task3.engine.entity.Entity;
 import task3.util.pubsub.Publisher;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 

@@ -1,6 +1,7 @@
 package task3.view.gameplay;
 
 import task3.controller.ClientController;
+import task3.util.ResourceManager;
 import task3.util.keyboard.KeyBindManager;
 import task3.model.ClientModel;
 
@@ -8,11 +9,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 public class MainGameplayWindow extends JPanel implements ActionListener {
     private final FieldPanel field;
     private final KeyBindManager keyBindManager;
     private final ClientModel clientModel;
+    private final BufferedImage bombSprite = ResourceManager.loadImage("img/entity/bomb/bomb.png");
 
     public MainGameplayWindow(JFrame parent, ClientController controller, ClientModel model) {
         Timer timer = new Timer(1000/60, this);
@@ -49,6 +52,13 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
             } else {
                 g.setColor(Color.RED);
                 g.drawString("YOU DIED!", x, y);
+            }
+
+            x = this.getWidth() - 5;
+            y = 5;
+            int size = 30;
+            for (int i = 0; i < clientModel.getMainPlayer().getBombsLeft(); ++i) {
+                g.drawImage(bombSprite, x-size*(i+1)-size/5*i, y, size, size, this);
             }
 
         }

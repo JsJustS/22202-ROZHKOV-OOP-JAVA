@@ -1,7 +1,6 @@
 package task3.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.engine.ability.SpawnBombAbilityInstance;
 import task3.engine.entity.Entity;
 import task3.engine.entity.PlayerEntity;
 import task3.model.GameModel;
@@ -45,11 +44,6 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
                     LOGGER.error("Wrong entity id");
                     break;
                 }
-                //LOGGER.info(packet[0]+"|"+packet[1]+"|"+packet[2]);
-//                if (entity.getVelocityX() == 0 && entity.getVelocityY() == 0) {
-//                    entity.setVelocityX(entity.getVelocityX() + entity.getSpeedX()*packet[1]);
-//                    entity.setVelocityY(entity.getVelocityY() + entity.getSpeedY()*packet[2]);
-//                }
                 PlayerEntity playerEntity = (PlayerEntity) entity;
                 playerEntity.setMoving(packet[1] != 0);
                 if (packet[1] != 0) {
@@ -59,27 +53,12 @@ public class NetworkC2SController implements IController<NetworkC2SController.Pa
             }
             case PLAYER_ABILITY_USED: {
                 double[] packet = (double[]) value;
-                // todo: ability registry?
                 Entity playerEntity = model.getEntity((int)packet[0]);
                 if(!(playerEntity instanceof PlayerEntity)) {
                     LOGGER.error("Wrong entity id");
                     break;
                 }
-                for (Entity entity : model.getEntities()) {
-                    if (entity.equals(playerEntity)) {
-                        continue;
-                    }
-                    if ((int)packet[1] > entity.getX() + entity.getHitboxWidth()/2 || entity.getX() - entity.getHitboxWidth()/2 > (int)packet[1] + 1) {
-                        continue;
-                    }
-                    if ((int)packet[2] > entity.getY() + entity.getHitboxHeight()/2 || entity.getY() - entity.getHitboxHeight()/2 > (int)packet[2] + 1) {
-                        continue;
-                    }
-                    return;
-                }
-                model.addAbilityInstance(
-                        new SpawnBombAbilityInstance((int)packet[1], (int)packet[2], playerEntity)
-                );
+                ((PlayerEntity) playerEntity).useAbility(model);
                 break;
             }
         }

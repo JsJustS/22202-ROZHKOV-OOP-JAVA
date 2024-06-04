@@ -1,5 +1,7 @@
 package task3.engine.entity;
 
+import task3.controller.NetworkS2CController;
+import task3.engine.ability.SpawnBombAbilityInstance;
 import task3.model.GameModel;
 import task3.util.ResourceManager;
 
@@ -17,6 +19,11 @@ public class PlayerEntity extends Entity {
     private int points;
     private int allTimePoints;
 
+    private int bombsLeft;
+    private int ticksUntilNextBombGranted;
+    private final int bombsMax = 3;
+    private final int ticksMaxUntilNextBombGranted = 60;
+
     private final double pointUponDeathCoefficient = 0.5;
 
     public PlayerEntity() {
@@ -30,9 +37,51 @@ public class PlayerEntity extends Entity {
         setHeight(0.9);
         points = 0;
         allTimePoints = 0;
+        bombsLeft = bombsMax;
+        ticksUntilNextBombGranted = ticksMaxUntilNextBombGranted;
 
         this.animationTick = 0;
         loadSpriteSheets();
+    }
+
+    public void useAbility(GameModel model) {
+        if (this.bombsLeft <= 0) {
+            return;
+        }
+
+        for (Entity entity : model.getEntities()) {
+            if (entity.equals(this)) {
+                continue;
+            }
+            if ((int)this.getX() > entity.getX() + entity.getHitboxWidth()/2 || entity.getX() - entity.getHitboxWidth()/2 > (int)this.getX() + 1) {
+                continue;
+            }
+            if ((int)this.getY() > entity.getY() + entity.getHitboxHeight()/2 || entity.getY() - entity.getHitboxHeight()/2 > (int)this.getY() + 1) {
+                continue;
+            }
+            return;
+        }
+        model.addAbilityInstance(
+                new SpawnBombAbilityInstance((int)this.getX(), (int)this.getY(), this)
+        );
+        this.bombsLeft--;
+    }
+
+    @Override
+    public void tick(GameModel model, NetworkS2CController network) {
+        super.tick(model, network);
+        if (this.bombsLeft < this.bombsMax) {
+            if (this.ticksUntilNextBombGranted > 0) {
+                this.ticksUntilNextBombGranted--;
+            } else {
+                this.ticksUntilNextBombGranted = this.ticksMaxUntilNextBombGranted;
+                this.bombsLeft++;
+                network.execute(
+                        NetworkS2CController.PacketType.PLAYER_STATUS,
+                        new int[]{this.getId(), this.getPoints(), this.getBombsLeft()}
+                );
+            }
+        }
     }
 
     @Override
@@ -100,6 +149,14 @@ public class PlayerEntity extends Entity {
 
     public int getPoints() {
         return points;
+    }
+
+    public int getBombsLeft() {
+        return bombsLeft;
+    }
+
+    public void setBombsLeft(int bombsLeft) {
+        this.bombsLeft = bombsLeft;
     }
 
     public void setPoints(int points) {

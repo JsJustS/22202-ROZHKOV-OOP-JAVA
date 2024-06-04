@@ -1,5 +1,6 @@
 package task3.engine.entity;
 
+import task3.controller.NetworkS2CController;
 import task3.engine.ability.ExplosionAbilityInstance;
 import task3.model.GameModel;
 import task3.util.ResourceManager;
@@ -33,8 +34,8 @@ public class BombEntity extends Entity {
     }
 
     @Override
-    public void tick(GameModel model) {
-        super.tick(model);
+    public void tick(GameModel model, NetworkS2CController networkS2CController) {
+        super.tick(model, networkS2CController);
         this.timeToLive--;
         if (this.timeToLive <= 0) {
             this.explode();

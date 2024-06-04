@@ -82,7 +82,7 @@ public class ExplosionAbilityInstance extends AbstractAbilityInstance {
         if (entity instanceof PlayerEntity) {
             networkController.execute(
                     NetworkS2CController.PacketType.PLAYER_STATUS,
-                    new int[]{entity.getId(), ((PlayerEntity)entity).getPoints()}
+                    new int[]{entity.getId(), ((PlayerEntity)entity).getPoints(), ((PlayerEntity)entity).getBombsLeft()}
             );
         }
     }

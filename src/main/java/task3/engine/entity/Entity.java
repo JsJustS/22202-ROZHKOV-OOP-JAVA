@@ -1,5 +1,6 @@
 package task3.engine.entity;
 
+import task3.controller.NetworkS2CController;
 import task3.engine.block.Block;
 import task3.model.GameModel;
 
@@ -113,7 +114,7 @@ public abstract class Entity {
         this.hitboxHeight = h;
     }
 
-    public void tick(GameModel model) {
+    public void tick(GameModel model, NetworkS2CController network) {
         this.tickMovement(model);
     }
 

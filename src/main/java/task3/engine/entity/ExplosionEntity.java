@@ -1,5 +1,6 @@
 package task3.engine.entity;
 
+import task3.controller.NetworkS2CController;
 import task3.model.GameModel;
 import task3.util.ResourceManager;
 
@@ -21,8 +22,8 @@ public class ExplosionEntity extends Entity {
     }
 
     @Override
-    public void tick(GameModel model) {
-        super.tick(model);
+    public void tick(GameModel model, NetworkS2CController networkS2CController) {
+        super.tick(model, networkS2CController);
         this.timeToLive--;
         if (this.timeToLive <= 0) {
             this.kill();

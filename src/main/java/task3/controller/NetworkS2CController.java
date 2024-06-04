@@ -109,6 +109,7 @@ public class NetworkS2CController implements IController<NetworkS2CController.Pa
                     break;
                 }
                 ((PlayerEntity)entity).setPoints(packet[1]);
+                ((PlayerEntity)entity).setBombsLeft(packet[2]);
                 break;
             }
         }

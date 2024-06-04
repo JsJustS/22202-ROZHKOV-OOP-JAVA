@@ -4,6 +4,7 @@ import task3.controller.NetworkS2CController;
 import task3.engine.entity.BombEntity;
 import task3.engine.entity.Entity;
 import task3.engine.entity.EntityRegistry;
+import task3.engine.entity.PlayerEntity;
 import task3.model.GameModel;
 
 public class SpawnBombAbilityInstance extends AbstractAbilityInstance {
@@ -27,6 +28,11 @@ public class SpawnBombAbilityInstance extends AbstractAbilityInstance {
                 NetworkS2CController.PacketType.ENTITY_SPAWNED,
                 new double[]{EntityRegistry.Entities.BOMB.ordinal(), x+0.5, y+0.5, bomb.getId()}
         );
-
+        if (this.parent instanceof PlayerEntity) {
+            networkController.execute(
+                    NetworkS2CController.PacketType.PLAYER_STATUS,
+                    new int[]{this.parent.getId(), ((PlayerEntity)this.parent).getPoints(), ((PlayerEntity)this.parent).getBombsLeft()}
+            );
+        }
     }
 }
