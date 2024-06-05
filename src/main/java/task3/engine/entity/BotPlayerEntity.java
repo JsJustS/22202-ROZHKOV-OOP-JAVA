@@ -23,6 +23,7 @@ public class BotPlayerEntity extends PlayerEntity {
         this.path = new Stack<>();
         this.map = map;
         random = new Random();
+        this.addPoints(100);
     }
 
     @Override
@@ -38,6 +39,7 @@ public class BotPlayerEntity extends PlayerEntity {
                 model.addAbilityInstance(
                         new ExplosionAbilityInstance(3, (int)this.getX(), (int)this.getY(), this)
                 );
+                this.kill();
             }
             updateGoal(new Pair<>((int)player.getX(), (int)player.getY()));
         }

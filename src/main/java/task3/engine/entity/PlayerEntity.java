@@ -32,6 +32,8 @@ public class PlayerEntity extends Entity {
 
     private final double pointUponDeathCoefficient = 0.5;
 
+    private boolean isDirty;
+
     public PlayerEntity() {
         this(0, 0);
     }
@@ -47,7 +49,16 @@ public class PlayerEntity extends Entity {
         ticksUntilNextBombGranted = ticksMaxUntilNextBombGranted;
 
         this.animationTick = 0;
+        this.isDirty = true;
         loadSpriteSheets();
+    }
+
+    public void markDirty(boolean dirty) {
+        this.isDirty = dirty;
+    }
+
+    public boolean isDirty() {
+        return isDirty;
     }
 
     public void useAbility(GameModel model, Abilities ability) {
@@ -96,10 +107,7 @@ public class PlayerEntity extends Entity {
             } else {
                 this.ticksUntilNextBombGranted = this.ticksMaxUntilNextBombGranted;
                 this.bombsLeft++;
-                network.execute(
-                        NetworkS2CController.PacketType.PLAYER_STATUS,
-                        new int[]{this.getId(), this.getPoints(), this.getBombsLeft()}
-                );
+                this.markDirty(true);
             }
         }
     }
@@ -124,6 +132,7 @@ public class PlayerEntity extends Entity {
     public void damage(Entity source) {
         super.damage(source);
         this.setPoints(this.getPoints() - 100);
+        this.markDirty(true);
         if (this.points >= 0) return;
 
         if (source instanceof BombEntity) {
@@ -132,6 +141,7 @@ public class PlayerEntity extends Entity {
                 PlayerEntity playerSource = (PlayerEntity) bomb.getParent();
                 if (!playerSource.equals(this)) {
                     playerSource.addPoints((int)(this.allTimePoints * this.pointUponDeathCoefficient));
+                    playerSource.markDirty(true);
                 }
             }
         }

@@ -157,15 +157,19 @@ public class GameEngine implements ISubscriber {
                 );
             }
             if (!entity.isAlive()) entitiesToBeRemoved.add(entity);
+
+            if (entity instanceof PlayerEntity) {
+                if (((PlayerEntity) entity).isDirty()) {
+                    networkS2CController.execute(
+                            NetworkS2CController.PacketType.PLAYER_STATUS,
+                            new int[]{entity.getId(), ((PlayerEntity)entity).getPoints(), ((PlayerEntity)entity).getBombsLeft()}
+                    );
+                    ((PlayerEntity) entity).markDirty(false);
+                }
+            }
         }
         for (Entity entity : entitiesToBeRemoved) {
             gameModel.removeEntity(entity);
-            if (entity instanceof PlayerEntity) {
-                networkS2CController.execute(
-                        NetworkS2CController.PacketType.PLAYER_STATUS,
-                        new int[]{entity.getId(), ((PlayerEntity)entity).getPoints(), ((PlayerEntity)entity).getBombsLeft()}
-                );
-            }
             networkS2CController.execute(
                     NetworkS2CController.PacketType.ENTITY_DESPAWNED,
                     entity.getId()

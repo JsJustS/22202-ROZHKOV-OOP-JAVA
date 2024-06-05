@@ -24,10 +24,7 @@ public class SpawnSuperBombAbilityInstance extends SpawnBombAbilityInstance {
                 new double[]{EntityRegistry.Entities.SUPER_BOMB.ordinal(), x+0.5, y+0.5, bomb.getId()}
         );
         if (this.parent instanceof PlayerEntity) {
-            networkController.execute(
-                    NetworkS2CController.PacketType.PLAYER_STATUS,
-                    new int[]{this.parent.getId(), ((PlayerEntity)this.parent).getPoints(), ((PlayerEntity)this.parent).getBombsLeft()}
-            );
+            ((PlayerEntity) this.parent).markDirty(true);
         }
     }
 }

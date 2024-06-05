@@ -80,10 +80,7 @@ public class ExplosionAbilityInstance extends AbstractAbilityInstance {
         }
         Entity entity = ((BombEntity)this.parent).getParent();
         if (entity instanceof PlayerEntity) {
-            networkController.execute(
-                    NetworkS2CController.PacketType.PLAYER_STATUS,
-                    new int[]{entity.getId(), ((PlayerEntity)entity).getPoints(), ((PlayerEntity)entity).getBombsLeft()}
-            );
+            ((PlayerEntity) entity).markDirty(true);
         }
     }
 }
