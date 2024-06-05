@@ -114,7 +114,7 @@ public abstract class Entity {
         this.hitboxHeight = h;
     }
 
-    public void tick(GameModel model, NetworkS2CController network) {
+    public void tick(GameModel model) {
         this.tickMovement(model);
     }
 

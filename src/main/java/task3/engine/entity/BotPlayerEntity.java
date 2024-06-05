@@ -27,9 +27,9 @@ public class BotPlayerEntity extends PlayerEntity {
     }
 
     @Override
-    public void tick(GameModel model, NetworkS2CController network) {
+    public void tick(GameModel model) {
         this.tickBrain(model);
-        super.tick(model, network);
+        super.tick(model);
     }
 
     private void tickBrain(GameModel model) {

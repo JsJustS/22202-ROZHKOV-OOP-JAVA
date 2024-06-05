@@ -99,8 +99,8 @@ public class PlayerEntity extends Entity {
     }
 
     @Override
-    public void tick(GameModel model, NetworkS2CController network) {
-        super.tick(model, network);
+    public void tick(GameModel model) {
+        super.tick(model);
         if (this.bombsLeft < this.bombsMax) {
             if (this.ticksUntilNextBombGranted > 0) {
                 this.ticksUntilNextBombGranted--;

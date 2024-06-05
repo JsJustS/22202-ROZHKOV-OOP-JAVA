@@ -34,8 +34,8 @@ public class BombEntity extends Entity {
     }
 
     @Override
-    public void tick(GameModel model, NetworkS2CController networkS2CController) {
-        super.tick(model, networkS2CController);
+    public void tick(GameModel model) {
+        super.tick(model);
         this.timeToLive--;
         if (this.timeToLive <= 0) {
             this.explode();
