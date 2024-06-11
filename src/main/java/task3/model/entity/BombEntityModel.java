@@ -5,7 +5,7 @@ import java.util.List;
 
 public class BombEntityModel extends EntityModel {
     protected int timeToLive = 60;
-    protected final int power = 3;
+    protected int power = 3;
     private final EntityModel parent;
 
     public BombEntityModel(EntityModel parent) {
@@ -39,5 +39,9 @@ public class BombEntityModel extends EntityModel {
 
     public int getPower() {
         return power;
+    }
+
+    protected void setPower(int power) {
+        this.power = power;
     }
 }

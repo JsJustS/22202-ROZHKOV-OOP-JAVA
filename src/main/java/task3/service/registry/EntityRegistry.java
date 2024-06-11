@@ -29,6 +29,7 @@ public class EntityRegistry {
         registerEntityService(PlayerEntityModel.class, PlayerService.class);
         registerEntityService(BotEntityModel.class, BotService.class);
         registerEntityService(BombEntityModel.class, BombService.class);
+        registerEntityService(SuperBombEntityModel.class, BombService.class);
         registerEntityService(ExplosionEntityModel.class, ExplosionService.class);
         registerEntityService(BlockEntityModel.class, BlockService.class);
     }

@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 import task3.model.abilityInstance.AbstractAbilityInstanceModel;
 import task3.model.abilityInstance.SpawnBombAbilityInstanceModel;
 import task3.model.abilityInstance.SpawnExplosionAbilityInstanceModel;
+import task3.model.abilityInstance.SpawnSuperBombAbilityInstanceModel;
 import task3.service.engine.ability.AbstractAbilityExecutor;
 import task3.service.engine.ability.SpawnBombAbilityExecutor;
 import task3.service.engine.ability.SpawnExplosionAbilityExecutor;
+import task3.service.engine.ability.SpawnSuperBombAbilityExecutor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ public class AbilityRegistry {
     static {
         register(SpawnBombAbilityInstanceModel.class, SpawnBombAbilityExecutor.class);
         register(SpawnExplosionAbilityInstanceModel.class, SpawnExplosionAbilityExecutor.class);
+        register(SpawnSuperBombAbilityInstanceModel.class, SpawnSuperBombAbilityExecutor.class);
     }
 
     private static void register(Class<? extends AbstractAbilityInstanceModel> abilityClass, Class<? extends AbstractAbilityExecutor> executorClass) {
