@@ -78,6 +78,13 @@ public class EntityService {
 
     }
 
+    /**
+     * Used when entity kills someone
+     * */
+    public void onKill(EntityModel attacked, EntityModel attacker) {
+
+    }
+
     public Set<EntityModel> getCollidingEntities(EntityModel entity, GameModel model) {
         Set<EntityModel> collidingEntities = new HashSet<>();
         for (EntityModel other : model.getEntities()) {

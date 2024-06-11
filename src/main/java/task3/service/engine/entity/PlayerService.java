@@ -85,4 +85,12 @@ public class PlayerService extends EntityService {
 
         super.tickMovement(entity, model);
     }
+
+    @Override
+    public void onKill(EntityModel attacked, EntityModel attacker) {
+        super.onKill(attacked, attacker);
+        if (!(attacker instanceof PlayerEntityModel)) return;
+        PlayerEntityModel player = (PlayerEntityModel) attacker;
+        player.setPoints(player.getPoints() + 100);
+    }
 }

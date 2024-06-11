@@ -6,6 +6,7 @@ import task3.model.GameModel;
 import task3.model.abilityInstance.SpawnExplosionAbilityInstanceModel;
 import task3.model.entity.BombEntityModel;
 import task3.model.entity.EntityModel;
+import task3.service.registry.EntityRegistry;
 
 public class BombService extends EntityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BombService.class);
@@ -40,5 +41,18 @@ public class BombService extends EntityService {
         model.addAbilityInstance(
                 new SpawnExplosionAbilityInstanceModel(bomb.getPower(), bomb.getX(), bomb.getY(), bomb)
         );
+    }
+
+    @Override
+    public void onKill(EntityModel attacked, EntityModel attacker) {
+        super.onKill(attacked, attacker);
+        if (!(attacker instanceof BombEntityModel)) return;
+        BombEntityModel bomb = (BombEntityModel)attacker;
+
+        if (bomb.getParent() == null) return;
+        EntityService service = EntityRegistry.getService(bomb.getParent());
+
+        if (service == null) return;
+        service.onKill(attacked, bomb.getParent());
     }
 }
