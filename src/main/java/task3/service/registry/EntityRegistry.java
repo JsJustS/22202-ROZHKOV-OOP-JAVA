@@ -2,14 +2,10 @@ package task3.service.registry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.model.entity.BotEntityModel;
-import task3.model.entity.EntityModel;
-import task3.model.entity.PlayerEntityModel;
+import task3.model.entity.*;
 import task3.model.entity.blockentity.Block;
 import task3.model.entity.blockentity.BlockEntityModel;
-import task3.service.engine.entity.BotService;
-import task3.service.engine.entity.EntityService;
-import task3.service.engine.entity.PlayerService;
+import task3.service.engine.entity.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -32,6 +28,8 @@ public class EntityRegistry {
         registerEntityService(EntityModel.class, EntityService.class);
         registerEntityService(PlayerEntityModel.class, PlayerService.class);
         registerEntityService(BotEntityModel.class, BotService.class);
+        registerEntityService(BombEntityModel.class, BombService.class);
+        registerEntityService(ExplosionEntityModel.class, ExplosionService.class);
     }
 
     private static void registerEntityService(Class<? extends EntityModel> modelClass, Class<? extends EntityService> serviceClass) {

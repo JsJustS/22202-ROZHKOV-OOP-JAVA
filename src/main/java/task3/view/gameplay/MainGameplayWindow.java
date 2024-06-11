@@ -15,8 +15,8 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
     private final FieldPanel field;
     private final KeyBindManager keyBindManager;
     private final GameModel clientModel;
-    private final String bombSprite = "img/entity/bomb/bomb.png";
-    private final String superBombSprite = "img/entity/bomb/super_bomb.png";
+    private final String bombSprite = "img/entity/bomb/bomb_1.png";
+    private final String superBombSprite = "img/entity/bomb/super_bomb_1.png";
 
     public MainGameplayWindow(JFrame parent, ClientController controller, GameModel model) {
         Timer timer = new Timer(1000/60, this);

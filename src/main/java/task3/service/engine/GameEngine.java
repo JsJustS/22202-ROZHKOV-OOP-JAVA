@@ -108,7 +108,6 @@ public class GameEngine {
     private void tickAbilityInstances() {
         Set<AbstractAbilityInstanceModel> abilitiesToBeRemoved = new HashSet<>();
         for (AbstractAbilityInstanceModel abilityInstance : model.getAbilityInstances()) {
-            LOGGER.info("ticked");
             AbstractAbilityExecutor executor = AbilityRegistry.getExecutor(abilityInstance);
             if (executor == null) {
                 LOGGER.warn(String.format("Could not generate executor for \"%s\"", abilityInstance.getClass().getName()));
@@ -125,14 +124,17 @@ public class GameEngine {
     private void tickEntities() {
         Set<EntityModel> entitiesToBeRemoved = new HashSet<>();
         for (EntityModel entity : model.getEntities()) {
+            if (!entity.isAlive()) {
+                entitiesToBeRemoved.add(entity);
+                continue;
+            }
+            
             EntityService entityService = EntityRegistry.getService(entity);
             if (entityService == null) {
                 //LOGGER.warn(String.format("Could not generate service for \"%s\"", entity.getClass().getName()));
                 continue;
             }
             entityService.tick(entity, model);
-
-            if (!entity.isAlive()) entitiesToBeRemoved.add(entity);
         }
         for (EntityModel entity : entitiesToBeRemoved) {
             model.removeEntity(entity);

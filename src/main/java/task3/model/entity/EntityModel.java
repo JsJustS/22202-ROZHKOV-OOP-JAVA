@@ -19,6 +19,8 @@ public class EntityModel implements IModel {
     protected boolean alive;
     private int id;
     protected boolean isCollidable;
+    protected int receivedDamage;
+    protected EntityModel attacker;
 
     protected Ability ability;
 
@@ -29,6 +31,7 @@ public class EntityModel implements IModel {
     protected RenderLayer layer;
     private int animationTick = 0;
     private int animationStep = 0;
+    private int animationPerTick = 10;
 
     public EntityModel() {
         setAlive(true);
@@ -84,7 +87,8 @@ public class EntityModel implements IModel {
 
     public String getSpritePath() {
         if (!this.spriteSheets.containsKey(this.getDirection())) return null;
-        return this.spriteSheets.get(this.getDirection()).get(this.animationStep % 2);
+        List<String> sheet = this.spriteSheets.get(this.getDirection());
+        return sheet.get(this.animationStep % sheet.size());
     }
 
     protected void addSpriteSheet(Direction direction, List<String> sheet) {
@@ -108,6 +112,22 @@ public class EntityModel implements IModel {
 
     public void setAnimationStep(int animationStep) {
         this.animationStep = animationStep;
+    }
+
+    public int getReceivedDamage() {
+        return receivedDamage;
+    }
+
+    public void setReceivedDamage(int receivedDamage) {
+        this.receivedDamage = receivedDamage;
+    }
+
+    public EntityModel getAttacker() {
+        return attacker;
+    }
+
+    public void setAttacker(EntityModel attacker) {
+        this.attacker = attacker;
     }
 
     public void setId(int id) {
@@ -188,5 +208,13 @@ public class EntityModel implements IModel {
 
     public RenderLayer getRenderLayer() {
         return layer;
+    }
+
+    public int getAnimationPerTick() {
+        return animationPerTick;
+    }
+
+    public void setAnimationPerTick(int animationPerTick) {
+        this.animationPerTick = animationPerTick;
     }
 }

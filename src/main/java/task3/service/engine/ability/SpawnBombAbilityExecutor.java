@@ -9,8 +9,11 @@ public class SpawnBombAbilityExecutor extends AbstractAbilityExecutor {
     public void execute(AbstractAbilityInstanceModel abilityInstance, GameModel model) {
         super.execute(abilityInstance, model);
 
-        BombEntityModel bomb = new BombEntityModel();
+        BombEntityModel bomb = new BombEntityModel(abilityInstance.getParent());
+        bomb.setX(abilityInstance.getX());
+        bomb.setY(abilityInstance.getY());
         bomb.setId(model.getLastEntityId() + 1);
         model.setLastEntityId(bomb.getId());
+        model.addEntity(bomb);
     }
 }

@@ -28,7 +28,7 @@ public class EntityService {
     public void tick(EntityModel entity, GameModel model) {
         tickMovement(entity, model);
         entity.setAnimationTick(entity.getAnimationTick()+1);
-        if (entity.getAnimationTick() % 10 == 0) {
+        if (entity.getAnimationTick() % entity.getAnimationPerTick() == 0) {
             entity.setAnimationStep(entity.getAnimationStep()+1);
         }
     }
@@ -74,10 +74,18 @@ public class EntityService {
 
     }
 
+    public<T> void onFinishAbility(EntityModel entity, T value) {
+
+    }
+
     public Set<EntityModel> getCollidingEntities(EntityModel entity, GameModel model) {
         Set<EntityModel> collidingEntities = new HashSet<>();
         for (EntityModel other : model.getEntities()) {
             if (other.equals(entity)) {
+                continue;
+            }
+
+            if (!other.isCollidable()) {
                 continue;
             }
 
