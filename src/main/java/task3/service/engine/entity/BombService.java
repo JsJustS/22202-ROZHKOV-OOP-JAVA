@@ -26,6 +26,13 @@ public class BombService extends EntityService {
         if (bomb.getTimeToLive() <= 0) {
             useAbility(bomb, model);
             kill(bomb);
+            return;
+        }
+
+        if (bomb.getReceivedDamage() > 0) {
+            bomb.setReceivedDamage(0);
+            useAbility(bomb, model);
+            kill(bomb);
         }
     }
 
