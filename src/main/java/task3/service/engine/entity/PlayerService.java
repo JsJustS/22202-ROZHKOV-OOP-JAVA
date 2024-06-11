@@ -5,8 +5,11 @@ import org.slf4j.LoggerFactory;
 import task3.model.GameModel;
 import task3.model.abilityInstance.SpawnBombAbilityInstanceModel;
 import task3.model.abilityInstance.SpawnSuperBombAbilityInstanceModel;
+import task3.model.entity.BotEntityModel;
 import task3.model.entity.EntityModel;
 import task3.model.entity.PlayerEntityModel;
+import task3.model.entity.blockentity.BlockEntityModel;
+import task3.service.registry.EntityRegistry;
 
 import java.util.Set;
 
@@ -69,6 +72,14 @@ public class PlayerService extends EntityService {
                 player.setBombsLeft(player.getBombsLeft()+1);
             }
         }
+
+        if (player.getReceivedDamage() > 0) {
+            player.setPoints(player.getPoints() - 100);
+            if (player.getPoints() < 0) {
+                kill(player);
+            }
+            player.setReceivedDamage(0);
+        }
     }
 
     @Override
@@ -91,6 +102,10 @@ public class PlayerService extends EntityService {
         super.onKill(attacked, attacker);
         if (!(attacker instanceof PlayerEntityModel)) return;
         PlayerEntityModel player = (PlayerEntityModel) attacker;
-        player.setPoints(player.getPoints() + 100);
+        if (attacked instanceof BotEntityModel) {
+            player.setPoints(player.getPoints() + 100);
+        } else if (attacked instanceof BlockEntityModel) {
+            player.setPoints(player.getPoints() + ((BlockEntityModel)attacked).getPoints());
+        }
     }
 }

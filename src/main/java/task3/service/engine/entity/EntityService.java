@@ -74,10 +74,6 @@ public class EntityService {
 
     }
 
-    public<T> void onFinishAbility(EntityModel entity, T value) {
-
-    }
-
     /**
      * Used when entity kills someone
      * */

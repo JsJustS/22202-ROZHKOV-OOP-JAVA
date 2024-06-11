@@ -38,13 +38,13 @@ public class BotService extends EntityService {
         super.tick(entity, model);
 
         if (bot.getReceivedDamage() > 0) {
-            LOGGER.warn(bot.getAttacker()+"");
             if (bot.getAttacker() != null) {
                 EntityService service = EntityRegistry.getService(bot.getAttacker());
                 if (service != null) {
                     service.onKill(bot, bot.getAttacker());
                 }
             }
+            bot.setReceivedDamage(0);
             kill(bot);
         }
     }

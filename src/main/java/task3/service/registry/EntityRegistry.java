@@ -30,6 +30,7 @@ public class EntityRegistry {
         registerEntityService(BotEntityModel.class, BotService.class);
         registerEntityService(BombEntityModel.class, BombService.class);
         registerEntityService(ExplosionEntityModel.class, ExplosionService.class);
+        registerEntityService(BlockEntityModel.class, BlockService.class);
     }
 
     private static void registerEntityService(Class<? extends EntityModel> modelClass, Class<? extends EntityService> serviceClass) {
@@ -60,6 +61,7 @@ public class EntityRegistry {
         block.setBlastResistance(settings.getBlastResistance());
         block.setCollidable(settings.isCollidable());
         block.setSpritePath(settings.getSpritePath());
+        block.setPoints(settings.getPoints());
         return block;
     }
 

@@ -16,7 +16,6 @@ public class SpawnExplosionAbilityExecutor extends AbstractAbilityExecutor {
             return;
         }
         SpawnExplosionAbilityInstanceModel explosionAbility = (SpawnExplosionAbilityInstanceModel) abilityInstance;
-        int collectedPoints = 0;
         for (int direction = 0; direction < 4; ++direction) {
             int x = (int) explosionAbility.getX();
             int y = (int) explosionAbility.getY();
@@ -26,11 +25,14 @@ public class SpawnExplosionAbilityExecutor extends AbstractAbilityExecutor {
                 if (block != null) {
                     if (block.getBlastResistance() > powerLeft) break;
                     powerLeft -= block.getBlastResistance();
-                    block.setAlive(false);
-                    collectedPoints += block.getPoints();
+                    block.setAttacker(explosionAbility.getParent());
+                    block.setReceivedDamage(1);
                 } else {
                     for (EntityModel entity : model.getEntities()) {
                         if (entity instanceof ExplosionEntityModel) {
+                            continue;
+                        }
+                        if (entity instanceof BlockEntityModel) {
                             continue;
                         }
                         if (x > entity.getX() + entity.getHitboxWidth()/2 || entity.getX() - entity.getHitboxWidth()/2 > x + 1) {
@@ -61,6 +63,5 @@ public class SpawnExplosionAbilityExecutor extends AbstractAbilityExecutor {
                 }
             }
         }
-        explosionAbility.onFinish(collectedPoints);
     }
 }
