@@ -1,9 +1,6 @@
 package task3.model.entity;
 
 import task3.model.abilityInstance.Ability;
-import task3.util.ResourceManager;
-
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

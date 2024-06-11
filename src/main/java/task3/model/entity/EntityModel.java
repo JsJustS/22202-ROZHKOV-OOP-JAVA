@@ -28,6 +28,11 @@ public class EntityModel implements IModel {
         setAlive(true);
         setRenderLayer(RenderLayer.values()[RenderLayer.values().length-1]);
         setMoving(false);
+        setSpeed(1);
+        setFriction(0.5);
+        setMaxVelocity(0.5);
+        setCollidable(false);
+        setDirection(Direction.DOWN);
     }
 
     public Ability getAbility() {
@@ -40,6 +45,22 @@ public class EntityModel implements IModel {
 
     public boolean isCollidable() {
         return isCollidable;
+    }
+
+    public double getMaxVelocity() {
+        return maxVelocity;
+    }
+
+    public void setMaxVelocity(double maxVelocity) {
+        this.maxVelocity = maxVelocity;
+    }
+
+    public double getFriction() {
+        return friction;
+    }
+
+    public void setFriction(double friction) {
+        this.friction = friction;
     }
 
     public boolean isAlive() {

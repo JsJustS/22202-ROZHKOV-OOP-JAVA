@@ -51,4 +51,43 @@ public class PlayerService extends EntityService {
                 LOGGER.warn("Trying to generate ability not applicable to player");
         }
     }
+
+    @Override
+    public void tick(EntityModel entity, GameModel model) {
+        super.tick(entity, model);
+        if (!(entity instanceof PlayerEntityModel)) {
+            LOGGER.warn("Trying to use PlayerService.useAbility() for other entity");
+            return;
+        }
+
+        PlayerEntityModel player = (PlayerEntityModel) entity;
+        if (player.getBombsLeft() < player.getBombsMax()) {
+            if (player.getTicksUntilNextBombGranted() > 0) {
+                player.setTicksUntilNextBombGranted(player.getTicksUntilNextBombGranted() - 1);
+            } else {
+                player.setTicksUntilNextBombGranted(player.getTicksMaxUntilNextBombGranted());
+                player.setBombsLeft(player.getBombsLeft()+1);
+            }
+        }
+
+        player.setAnimationTick(player.getAnimationTick()+1);
+        if (player.getAnimationTick() % 10 == 0) {
+            player.setAnimationStep(player.getAnimationStep()+1);
+        }
+    }
+
+    @Override
+    public void tickMovement(EntityModel entity, GameModel model) {
+        if (!(entity instanceof PlayerEntityModel)) {
+            LOGGER.warn("Trying to use PlayerService.useAbility() for other entity");
+            return;
+        }
+
+        PlayerEntityModel player = (PlayerEntityModel) entity;
+        if (player.isMoving() && player.getVelocity() == 0) {
+            player.setVelocity(player.getSpeed());
+        }
+
+        super.tickMovement(entity, model);
+    }
 }

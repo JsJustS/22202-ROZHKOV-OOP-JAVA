@@ -21,7 +21,44 @@ public class EntityService {
     }
 
     public void tick(EntityModel entity, GameModel model) {
+        tickMovement(entity, model);
+    }
 
+    public void tickMovement(EntityModel entity, GameModel model) {
+        if (Math.abs(entity.getVelocity()) > entity.getMaxVelocity()) {
+            entity.setVelocity(entity.getMaxVelocity()*Math.signum(entity.getVelocity()));
+        }
+
+        double prevX = entity.getX();
+        double prevY = entity.getY();
+
+        switch (entity.getDirection()) {
+            case UP:
+                entity.setY(entity.getY()-entity.getVelocity());
+                break;
+            case LEFT:
+                entity.setX(entity.getX()-entity.getVelocity());
+                break;
+            case DOWN:
+                entity.setY(entity.getY()+entity.getVelocity());
+                break;
+            case RIGHT:
+                entity.setX(entity.getX()+entity.getVelocity());
+                break;
+        }
+
+        if (!this.getCollidingEntities(entity, model).isEmpty()) {
+            entity.setX(prevX);
+            entity.setY(prevY);
+            entity.setVelocity(entity.getVelocity() * entity.getFriction());
+        }
+
+        entity.setVelocity(entity.getVelocity() * entity.getFriction());
+        if (entity.getVelocity() < 0.001 && entity.getVelocity() > -0.001) {
+            entity.setVelocity(0);
+            entity.setX((int)entity.getX()+0.5);
+            entity.setY((int)entity.getY()+0.5);
+        }
     }
 
     public void useAbility(EntityModel entity, GameModel model) {
