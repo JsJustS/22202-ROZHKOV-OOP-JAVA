@@ -1,25 +1,24 @@
 package task3.view.gameplay;
 
 import task3.controller.ClientController;
-import task3.engine.entity.PlayerEntity;
+import task3.model.GameModel;
+import task3.model.abilityInstance.Ability;
 import task3.util.ResourceManager;
 import task3.util.keyboard.KeyBindManager;
-import task3.model.ClientModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 
 public class MainGameplayWindow extends JPanel implements ActionListener {
     private final FieldPanel field;
     private final KeyBindManager keyBindManager;
-    private final ClientModel clientModel;
-    private final BufferedImage bombSprite = ResourceManager.loadImage("img/entity/bomb/bomb.png");
-    private final BufferedImage superBombSprite = ResourceManager.loadImage("img/entity/bomb/super_bomb.png");
+    private final GameModel clientModel;
+    private final String bombSprite = "img/entity/bomb/bomb.png";
+    private final String superBombSprite = "img/entity/bomb/super_bomb.png";
 
-    public MainGameplayWindow(JFrame parent, ClientController controller, ClientModel model) {
+    public MainGameplayWindow(JFrame parent, ClientController controller, GameModel model) {
         Timer timer = new Timer(1000/60, this);
         timer.start();
         this.clientModel = model;
@@ -59,11 +58,17 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
             x = this.getWidth() - 5;
             y = 5;
             int size = 30;
+
+            Ability chosenAbility = clientModel.getMainPlayer().getAbility();
             for (int i = 0; i < clientModel.getMainPlayer().getBombsLeft(); ++i) {
-                g.drawImage(
-                        (clientModel.getChosenAbility().equals(PlayerEntity.Abilities.SIMPLE_BOMB)) ? bombSprite: superBombSprite,
-                        x-size*(i+1)-size/5*i, y, size, size, this
-                );
+                switch (chosenAbility) {
+                    case SIMPLE_BOMB:
+                        g.drawImage(ResourceManager.getSprite(bombSprite),x-size*(i+1)-size/5*i, y, size, size, this);
+                        break;
+                    case SUPER_BOMB:
+                        g.drawImage(ResourceManager.getSprite(superBombSprite),x-size*(i+1)-size/5*i, y, size, size, this);
+                        break;
+                }
             }
 
         }

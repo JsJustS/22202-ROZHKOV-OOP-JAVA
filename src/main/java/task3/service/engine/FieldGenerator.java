@@ -1,9 +1,11 @@
-package task3.engine;
+package task3.service.engine;
 
-import task3.engine.block.BlockRegistry;
+import task3.model.entity.blockentity.Block;
 import task3.util.Pair;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.Stack;
 
 public class FieldGenerator {
     private final Random random;
@@ -42,14 +44,17 @@ public class FieldGenerator {
                 }
                 //quarter[i][j] = (byte) ((quarter[i][j] + 1) % 2);
 
-                List<BlockRegistry.Blocks> blocksToChooseFrom;
+                List<Block> blocksToChooseFrom;
                 if (value == wall) {
-                    blocksToChooseFrom = BlockRegistry.getWallBlocks();
+                    blocksToChooseFrom = Block.getWallBlocks();
                 } else {
-                    blocksToChooseFrom = BlockRegistry.getPathBlocks();
+                    blocksToChooseFrom = Block.getPathBlocks();
                 }
-                byte blockId = (byte)blocksToChooseFrom.get(random.nextInt(blocksToChooseFrom.size())).ordinal();
-                value = blockId;
+                value = (byte)blocksToChooseFrom.get(random.nextInt(blocksToChooseFrom.size())).ordinal();
+
+                if (value == Block.BRICK.ordinal()) {
+                    this.updateBotMap(botMap, i, j, empty);
+                }
 
                 // 2x2 free space
                 if ((0 < i && i < 3) && (0 < j && j < 3)) {
@@ -57,7 +62,8 @@ public class FieldGenerator {
                     this.updateBotMap(botMap, i, j, value);
                 }
                 if (i == 0 || j == 0) {
-                    value = (byte)BlockRegistry.Blocks.BEDROCK.ordinal();
+                    value = (byte)Block.BEDROCK.ordinal();
+                    this.updateBotMap(botMap, i, j, wall);
                 }
 
                 field[i][j] = value;

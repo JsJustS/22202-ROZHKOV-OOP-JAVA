@@ -1,7 +1,7 @@
 package task3.util.keyboard;
 
 import task3.controller.ClientController;
-import task3.model.ClientModel;
+import task3.model.GameModel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
  * */
 public class KeyBindManager {
     private final ClientController clientController;
-    private final ClientModel clientModel;
+    private final GameModel clientModel;
     private final JPanel parent;
 
     public enum KeyAction {
@@ -25,7 +25,7 @@ public class KeyBindManager {
         LEAVE
     }
 
-    public KeyBindManager(JPanel parent, ClientController clientController, ClientModel clientModel) {
+    public KeyBindManager(JPanel parent, ClientController clientController, GameModel clientModel) {
         this.parent = parent;
         this.clientController = clientController;
         this.clientModel = clientModel;

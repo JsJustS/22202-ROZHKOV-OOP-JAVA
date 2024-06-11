@@ -3,9 +3,10 @@ package task3.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task3.controller.ClientController;
-import task3.controller.NetworkC2SController;
-import task3.engine.entity.PlayerEntity;
-import task3.model.ClientModel;
+import task3.controller.PlayerController;
+import task3.model.GameModel;
+import task3.model.abilityInstance.Ability;
+import task3.model.entity.Direction;
 import task3.util.Config;
 import task3.util.Pair;
 import task3.util.keyboard.KeyBindManager;
@@ -18,14 +19,13 @@ import java.awt.*;
 
 public class MainWindow extends JFrame implements ISubscriber {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainWindow.class);
-    private final NetworkC2SController network;
     private final ClientController controller;
-    private final ClientModel model;
+    private final GameModel model;
+    private final PlayerController playerController;
 
-    public MainWindow(ClientController controller, ClientModel model, NetworkC2SController network, Config cfg) {
+    public MainWindow(ClientController controller, GameModel model, Config cfg) {
         this.controller = controller;
         this.model = model;
-        this.network = network;
         model.subscribe(this);
 
         this.setSize(new Dimension(cfg.getWinWidth(), cfg.getWinHeight()));
@@ -37,6 +37,7 @@ public class MainWindow extends JFrame implements ISubscriber {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.initKeyBinds(cfg);
+        this.playerController = new PlayerController();
     }
 
     public void initKeyBinds(Config cfg) {
@@ -69,6 +70,7 @@ public class MainWindow extends JFrame implements ISubscriber {
     @Override
     public void onNotification() {
         if (model.isGameStateDirty()) {
+            model.setGameStateDirty(false);
             changeClientState();
         }
 
@@ -79,48 +81,50 @@ public class MainWindow extends JFrame implements ISubscriber {
         for (KeyBindManager.KeyAction keyAction : model.getPressedKeys()) {
             switch (keyAction) {
                 case USE_ABILITY:
-                    network.execute(
-                            NetworkC2SController.PacketType.PLAYER_ABILITY_USED,
-                            new int[]{model.getMainPlayer().getId(), model.getChosenAbility().ordinal()}
-                    );
-                    break;
-                case CHANGE_ABILITY:
-                    model.setChosenAbility(
-                            PlayerEntity.Abilities.values()[
-                                    (model.getChosenAbility().ordinal() + 1) % PlayerEntity.Abilities.values().length
-                                    ]
-                    );
-                    break;
-                case MOVE_UP:
-                    network.execute(
-                            NetworkC2SController.PacketType.PLAYER_MOVED,
-                            new int[]{model.getMainPlayer().getId(), PlayerEntity.Direction.UP.ordinal()+1}
-                    );
-                    break;
-                case MOVE_DOWN:
-                    network.execute(
-                            NetworkC2SController.PacketType.PLAYER_MOVED,
-                            new int[]{model.getMainPlayer().getId(), PlayerEntity.Direction.DOWN.ordinal()+1}
-                    );
-                    break;
-                case MOVE_RIGHT:
-                    network.execute(
-                            NetworkC2SController.PacketType.PLAYER_MOVED,
-                            new int[]{model.getMainPlayer().getId(), PlayerEntity.Direction.RIGHT.ordinal()+1}
-                    );
-                    break;
-                case MOVE_LEFT:
-                    network.execute(
-                            NetworkC2SController.PacketType.PLAYER_MOVED,
-                            new int[]{model.getMainPlayer().getId(), PlayerEntity.Direction.LEFT.ordinal()+1}
-                    );
-                    break;
-                case LEAVE:
-                    network.execute(
-                            NetworkC2SController.PacketType.PLAYER_LEFT,
+                    playerController.execute(
+                            PlayerController.OP.USE_ABILITY, model,
                             model.getMainPlayer().getId()
                     );
                     break;
+                case CHANGE_ABILITY:
+                    int abilityOrdinal = (model.getMainPlayer().getAbility() == Ability.SIMPLE_BOMB) ?
+                            Ability.SUPER_BOMB.ordinal() :
+                            Ability.SIMPLE_BOMB.ordinal();
+                    playerController.execute(
+                            PlayerController.OP.CHANGE_ABILITY, model,
+                            new int[]{model.getMainPlayer().getId(), abilityOrdinal}
+                    );
+                    break;
+                case MOVE_UP:
+                    playerController.execute(
+                            PlayerController.OP.MOVE, model,
+                            new int[]{model.getMainPlayer().getId(), Direction.UP.ordinal()}
+                    );
+                    break;
+                case MOVE_DOWN:
+                    playerController.execute(
+                            PlayerController.OP.MOVE, model,
+                            new int[]{model.getMainPlayer().getId(), Direction.DOWN.ordinal()}
+                    );
+                    break;
+                case MOVE_RIGHT:
+                    playerController.execute(
+                            PlayerController.OP.MOVE, model,
+                            new int[]{model.getMainPlayer().getId(), Direction.RIGHT.ordinal()}
+                    );
+                    break;
+                case MOVE_LEFT:
+                    playerController.execute(
+                            PlayerController.OP.MOVE, model,
+                            new int[]{model.getMainPlayer().getId(), Direction.LEFT.ordinal()}
+                    );
+                    break;
+                case LEAVE:
+                    //todo: change game state to MENU
+                    break;
+                default: {
+                    LOGGER.error(String.format("Unsupported KeyAction \"%s:pressed\"", keyAction.name()));
+                }
             }
         }
         model.clearPressedKeys();
@@ -137,11 +141,14 @@ public class MainWindow extends JFrame implements ISubscriber {
                 case MOVE_DOWN:
                 case MOVE_RIGHT:
                 case MOVE_LEFT:
-                    network.execute(
-                            NetworkC2SController.PacketType.PLAYER_MOVED,
-                            new int[]{model.getMainPlayer().getId(), 0}
+                    playerController.execute(
+                            PlayerController.OP.MOVE, model,
+                            new int[]{model.getMainPlayer().getId(), -1}
                     );
                     break;
+                default: {
+                    LOGGER.error(String.format("Unsupported KeyAction \"%s:released\"", keyAction.name()));
+                }
             }
         }
         model.clearReleasedKeys();
@@ -151,13 +158,21 @@ public class MainWindow extends JFrame implements ISubscriber {
         this.getContentPane().removeAll();
         switch (model.getGameState()) {
             case MENU: {
+                this.getContentPane().removeAll();
                 this.getContentPane().add(new MainMenu(this, controller, model));
-                this.network.execute(NetworkC2SController.PacketType.PLAYER_LEFT, null);
+                playerController.execute(
+                        PlayerController.OP.LEAVE, model,
+                        null
+                );
                 break;
             }
             case INGAME: {
+                this.getContentPane().removeAll();
                 this.getContentPane().add(new MainGameplayWindow(this, controller, model));
-                this.network.execute(NetworkC2SController.PacketType.PLAYER_JOINED, null);
+                playerController.execute(
+                        PlayerController.OP.JOIN, model,
+                        null
+                );
                 break;
             }
             default: {

@@ -1,7 +1,7 @@
 package task3.view.menu;
 
 import task3.controller.ClientController;
-import task3.model.ClientModel;
+import task3.model.GameModel;
 import task3.util.ResourceManager;
 
 import javax.swing.*;
@@ -13,8 +13,8 @@ public class MainMenu extends JPanel {
     private final BufferedImage bgImage;
     private final double buttonRatioCoefficient = 0.3;
 
-    public MainMenu(JFrame parent, ClientController controller, ClientModel model) {
-        bgImage = ResourceManager.loadImage(bgImageFilename);
+    public MainMenu(JFrame parent, ClientController controller, GameModel model) {
+        bgImage = ResourceManager.getSprite(bgImageFilename);
         this.setLayout(new GridBagLayout());
 
         JPanel buttonsPanel = new JPanel();
@@ -25,7 +25,7 @@ public class MainMenu extends JPanel {
         int buttonWidth = (int)(parent.getWidth() * buttonRatioCoefficient);
         startButton.setPreferredSize(new Dimension(buttonWidth, (int)(buttonWidth * buttonRatioCoefficient)));
         startButton.addActionListener((event)->{
-            controller.execute(ClientController.OP.CHANGE_GAMESTATE, model, ClientModel.GAMESTATE.INGAME);
+            controller.execute(ClientController.OP.CHANGE_GAMESTATE, model, GameModel.GAMESTATE.INGAME);
         });
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         startButton.setHorizontalTextPosition(SwingConstants.CENTER);

@@ -19,7 +19,7 @@ public class ResourceManager {
         return texture;
     }
 
-    public static BufferedImage loadImage(String filename) {
+    public static BufferedImage getSprite(String filename) {
         if (loadedResources.containsKey(filename)) {
             return loadedResources.get(filename);
         }

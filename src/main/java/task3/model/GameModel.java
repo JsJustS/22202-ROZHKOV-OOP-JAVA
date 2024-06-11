@@ -1,33 +1,64 @@
 package task3.model;
 
-import task3.engine.ability.AbstractAbilityInstance;
-import task3.engine.block.Block;
-import task3.engine.block.BlockRegistry;
-import task3.engine.entity.Entity;
+import task3.model.abilityInstance.AbstractAbilityInstanceModel;
+import task3.model.entity.EntityModel;
+import task3.model.entity.PlayerEntityModel;
+import task3.util.keyboard.KeyBindManager;
 import task3.util.pubsub.Publisher;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class GameModel extends Publisher implements IModel {
-    private int fieldWidthInBlock;
+    private int fieldWidthInBlocks;
     private int fieldHeightInBlocks;
+    private byte[][] botMap;
+
+    public byte[][] getBotMap() {
+        return botMap;
+    }
+
+    public void setBotMap(byte[][] botMap) {
+        this.botMap = botMap;
+    }
+
     private boolean gameIsRunning;
 
     private int lastEntityId;
-    private final Set<Entity> entities = new CopyOnWriteArraySet<>();
-    private final Set<Block> blocks = new CopyOnWriteArraySet<>();
-    private final Set<AbstractAbilityInstance> abilityInstances = new CopyOnWriteArraySet<>();
+    private final Set<EntityModel> entities = new CopyOnWriteArraySet<>();
+    private final Set<AbstractAbilityInstanceModel> abilityInstances = new CopyOnWriteArraySet<>();
 
+    private boolean flagMapReady = false;
+
+    public PlayerEntityModel getMainPlayer() {
+        return mainPlayer;
+    }
+
+    public void setMainPlayer(PlayerEntityModel mainPlayer) {
+        this.mainPlayer = mainPlayer;
+    }
+
+    private PlayerEntityModel mainPlayer = null;
     private boolean hasPlayerJoined;
 
-    public void setHasPlayer(boolean value) {
+    public void setPlayerJoined(boolean value) {
         this.hasPlayerJoined = value;
         notifySubscribers();
     }
 
     public boolean hasPlayer() {
-        return this.hasPlayerJoined;
+        return hasPlayerJoined;
+    }
+
+    public boolean isMapReady() {
+        return flagMapReady;
+    }
+
+    public void setMapReady(boolean flagMapReady) {
+        this.flagMapReady = flagMapReady;
     }
 
     public void setGameRunning(boolean value) {
@@ -42,8 +73,8 @@ public class GameModel extends Publisher implements IModel {
         return fieldHeightInBlocks;
     }
 
-    public int getFieldWidthInBlock() {
-        return fieldWidthInBlock;
+    public int getFieldWidthInBlocks() {
+        return fieldWidthInBlocks;
     }
 
     public int getLastEntityId() {
@@ -53,71 +84,28 @@ public class GameModel extends Publisher implements IModel {
     public void setLastEntityId(int value) {
         this.lastEntityId = value;
     }
-    public Set<Entity> getEntities() {
+    public Set<EntityModel> getEntities() {
         return entities;
-    }
-
-    public Set<Block> getBlocks() {
-        return blocks;
-    }
-    public Block getBlock(int x, int y) {
-        for (Block block : blocks) {
-            if (block.getX() == x && block.getY() == y) {
-                return block;
-            }
-        }
-        return null;
     }
 
     public void setFieldHeightInBlocks(int fieldHeightInBlocks) {
         this.fieldHeightInBlocks = fieldHeightInBlocks;
     }
 
-    public void setFieldWidthInBlock(int fieldWidthInBlock) {
-        this.fieldWidthInBlock = fieldWidthInBlock;
+    public void setFieldWidthInBlocks(int fieldWidthInBlocks) {
+        this.fieldWidthInBlocks = fieldWidthInBlocks;
     }
 
-    public Entity getEntity(int id) {
-        for (Entity entity : entities) {
-            if (entity.getId() == id) {
-                return entity;
-            }
-        }
-        return null;
-    }
 
-    public void spawnEntity(Entity entity) {
+    public void addEntity(EntityModel entity) {
         this.entities.add(entity);
     }
 
-    public void removeEntity(Entity entity) {
+    public void removeEntity(EntityModel entity) {
         this.entities.remove(entity);
     }
-    public void removeEntity(int id) {
-        for (Entity entity : entities) {
-            if (entity.getId() == id) {
-                entities.remove(entity);
-                break;
-            }
-        }
-    }
 
-    public void addBlock(int x, int y, BlockRegistry.Blocks id) {
-        Block block = BlockRegistry.getBlockById(x, y, id);
-        if (block == null) return;
-        blocks.add(block);
-    }
-
-    public void removeBlock(int x, int y) {
-        for (Block block : blocks) {
-            if (block.getX() == x && y == block.getY()) {
-                blocks.remove(block);
-                break;
-            }
-        }
-    }
-
-    public void addAbilityInstance(AbstractAbilityInstance abilityInstance) {
+    public void addAbilityInstance(AbstractAbilityInstanceModel abilityInstance) {
         abilityInstances.add(abilityInstance);
     }
 
@@ -125,11 +113,87 @@ public class GameModel extends Publisher implements IModel {
         abilityInstances.clear();
     }
 
-    public Set<AbstractAbilityInstance> getAbilityInstances() {
+    public void clearEntities() {
+        entities.clear();
+    }
+
+    public Set<AbstractAbilityInstanceModel> getAbilityInstances() {
         return abilityInstances;
     }
 
-    public void removeAbilityInstance(AbstractAbilityInstance abilityInstance) {
+    public void removeAbilityInstance(AbstractAbilityInstanceModel abilityInstance) {
         abilityInstances.remove(abilityInstance);
+    }
+
+
+    public enum GAMESTATE {
+        MENU,
+        INGAME
+    }
+    private GAMESTATE gameState;
+    private boolean gameStateMark;
+
+    private final Map<String, KeyBindManager.KeyAction> keyBinds = new HashMap<>();
+    private final Set<KeyBindManager.KeyAction> keysPressed = new HashSet<>();
+    private final Set<KeyBindManager.KeyAction> keysReleased = new HashSet<>();
+
+    public void setGameState(GAMESTATE value) {
+        gameState = value;
+        this.setGameStateDirty(true);
+    }
+
+    public void setGameStateDirty(boolean gameStateMark) {
+        this.gameStateMark = gameStateMark;
+        notifySubscribers();
+    }
+
+    public GAMESTATE getGameState() {
+        return gameState;
+    }
+
+    public boolean isGameStateDirty() {
+        return gameStateMark;
+    }
+
+    public void setKeyBind(String key, KeyBindManager.KeyAction bind) {
+        keyBinds.put(key.toUpperCase(), bind);
+    }
+
+    public Map<String, KeyBindManager.KeyAction> getKeyBinds() {
+        return keyBinds;
+    }
+
+    public Set<KeyBindManager.KeyAction> getPressedKeys() {
+        return this.keysPressed;
+    }
+
+    public Set<KeyBindManager.KeyAction> getReleasedKeys() {
+        return this.keysReleased;
+    }
+
+    public boolean isKeyPressed(KeyBindManager.KeyAction keyAction) {
+        return this.keysPressed.contains(keyAction);
+    }
+
+    public boolean isKeyReleased(KeyBindManager.KeyAction keyAction) {
+        return this.keysReleased.contains(keyAction);
+    }
+
+    public void setKeyPressed(KeyBindManager.KeyAction keyAction) {
+        this.keysPressed.add(keyAction);
+        notifySubscribers();
+    }
+
+    public void setKeyReleased(KeyBindManager.KeyAction keyAction) {
+        this.keysReleased.add(keyAction);
+        notifySubscribers();
+    }
+
+    public void clearPressedKeys() {
+        this.keysPressed.clear();
+    }
+
+    public void clearReleasedKeys() {
+        this.keysReleased.clear();
     }
 }

@@ -1,16 +1,18 @@
 package task3.view.gameplay;
 
-import task3.engine.block.Block;
-import task3.engine.entity.Entity;
-import task3.model.ClientModel;
+import task3.model.GameModel;
+import task3.model.entity.EntityModel;
+import task3.model.entity.RenderLayer;
+import task3.util.ResourceManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class FieldPanel extends JPanel {
-    private final ClientModel model;
+    private final GameModel model;
     private final int intents = 75;
-    public FieldPanel(ClientModel model) {
+    public FieldPanel(GameModel model) {
         this.model = model;
     }
 
@@ -33,17 +35,25 @@ public class FieldPanel extends JPanel {
 
         if (!model.isMapReady()) return;
 
-        renderBlocksLayer(g);
-        renderEntitiesLayer(g);
+        renderEntities(g);
     }
 
-    private void renderEntitiesLayer(Graphics g) {
+    private void renderEntities(Graphics g) {
+        RenderLayer[] layersToRender = RenderLayer.values();
+        for (RenderLayer layer : layersToRender) {
+            renderEntitiesLayer(g, layer);
+        }
+    }
+
+    private void renderEntitiesLayer(Graphics g, RenderLayer layer) {
         int widthPerBlock = getWidth() / model.getFieldWidthInBlocks();
         int heightPerBlock = getHeight() / model.getFieldHeightInBlocks();
         int spareVerticalPixels = getWidth() - (widthPerBlock * model.getFieldWidthInBlocks());
         int spareHorizontalPixels = getHeight() - (heightPerBlock * model.getFieldHeightInBlocks());
 
-        for (Entity entity : model.getClientEntities()) {
+        for (EntityModel entity : model.getEntities()) {
+            if (entity.getRenderLayer() != layer) continue;
+
             int w = (entity.getX() < spareVerticalPixels) ? widthPerBlock + 1 : widthPerBlock;
             int h = (entity.getY() < spareHorizontalPixels) ? heightPerBlock + 1 : heightPerBlock;
             int x = widthPerBlock * (int)entity.getX() + Math.min((int)entity.getX(), spareVerticalPixels);
@@ -52,22 +62,11 @@ public class FieldPanel extends JPanel {
             int spriteHeight = (int)(h*entity.getHitboxHeight());
             int spriteX = (int)(x+w*(entity.getX()-(int)entity.getX())-spriteWidth/2);
             int spriteY = (int)(y+h*(entity.getY()-(int)entity.getY())-spriteHeight/2);
-            g.drawImage(entity.getSprite(), spriteX, spriteY, spriteWidth, spriteHeight,this);
-        }
-    }
 
-    private void renderBlocksLayer(Graphics g) {
-        int widthPerBlock = getWidth() / model.getFieldWidthInBlocks();
-        int heightPerBlock = getHeight() / model.getFieldHeightInBlocks();
-        int spareVerticalPixels = getWidth() - (widthPerBlock * model.getFieldWidthInBlocks());
-        int spareHorizontalPixels = getHeight() - (heightPerBlock * model.getFieldHeightInBlocks());
-
-        for (Block block : model.getBlocks()) {
-            int w = (block.getX() < spareVerticalPixels) ? widthPerBlock + 1 : widthPerBlock;
-            int h = (block.getY() < spareHorizontalPixels) ? heightPerBlock + 1 : heightPerBlock;
-            int x = widthPerBlock * block.getX() + Math.min(block.getX(), spareVerticalPixels);
-            int y = heightPerBlock * block.getY() + Math.min(block.getY(), spareHorizontalPixels);
-            g.drawImage(block.getSprite(), x, y, w, h, this);
+            BufferedImage sprite = (entity.getSpritePath() != null) ?
+                    ResourceManager.getSprite(entity.getSpritePath()) :
+                    ResourceManager.getMissingTexture();
+            g.drawImage(sprite, spriteX, spriteY, spriteWidth, spriteHeight,this);
         }
     }
 }

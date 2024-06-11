@@ -1,13 +1,10 @@
 package task3.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import task3.model.ClientModel;
+import task3.model.GameModel;
 import task3.util.Pair;
 import task3.util.keyboard.KeyBindManager;
 
-public class ClientController implements IController<ClientController.OP, ClientModel>{
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
+public class ClientController implements IController<ClientController.OP, GameModel> {
 
     public enum OP {
         ON_KEY_PRESSED,
@@ -17,12 +14,10 @@ public class ClientController implements IController<ClientController.OP, Client
     }
 
     @Override
-    public <T> void execute(OP operation, ClientModel model, T value) {
-        //LOGGER.info(operation.name() + " | " + value.toString());
-
+    public <T> void execute(OP operation, GameModel model, T value) {
         switch (operation) {
             case CHANGE_GAMESTATE: {
-                ClientModel.GAMESTATE state = (ClientModel.GAMESTATE) value;
+                GameModel.GAMESTATE state = (GameModel.GAMESTATE) value;
                 model.setGameState(state);
                 break;
             }
@@ -43,6 +38,4 @@ public class ClientController implements IController<ClientController.OP, Client
             }
         }
     }
-
-
 }
