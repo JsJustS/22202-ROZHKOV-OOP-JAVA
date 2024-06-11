@@ -27,6 +27,10 @@ public class EntityService {
 
     public void tick(EntityModel entity, GameModel model) {
         tickMovement(entity, model);
+        entity.setAnimationTick(entity.getAnimationTick()+1);
+        if (entity.getAnimationTick() % 10 == 0) {
+            entity.setAnimationStep(entity.getAnimationStep()+1);
+        }
     }
 
     public void tickMovement(EntityModel entity, GameModel model) {

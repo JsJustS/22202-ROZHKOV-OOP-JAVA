@@ -3,6 +3,10 @@ package task3.model.entity;
 import task3.model.IModel;
 import task3.model.abilityInstance.Ability;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class EntityModel implements IModel {
     protected double x;
     protected double y;
@@ -21,8 +25,10 @@ public class EntityModel implements IModel {
     protected boolean isMoving;
     protected Direction direction;
 
-    protected String spritePath;
+    private final Map<Direction, List<String>> spriteSheets = new HashMap<>();
     protected RenderLayer layer;
+    private int animationTick = 0;
+    private int animationStep = 0;
 
     public EntityModel() {
         setAlive(true);
@@ -33,6 +39,7 @@ public class EntityModel implements IModel {
         setMaxVelocity(0.5);
         setCollidable(false);
         setDirection(Direction.DOWN);
+        loadSpriteSheets();
     }
 
     public Ability getAbility() {
@@ -76,11 +83,31 @@ public class EntityModel implements IModel {
     }
 
     public String getSpritePath() {
-        return spritePath;
+        if (!this.spriteSheets.containsKey(this.getDirection())) return null;
+        return this.spriteSheets.get(this.getDirection()).get(this.animationStep % 2);
     }
 
-    public void setSpritePath(String path) {
-        this.spritePath = path;
+    protected void addSpriteSheet(Direction direction, List<String> sheet) {
+        this.spriteSheets.put(direction, sheet);
+    }
+
+    public void loadSpriteSheets() {
+    }
+
+    public int getAnimationTick() {
+        return animationTick;
+    }
+
+    public void setAnimationTick(int animationTick) {
+        this.animationTick = animationTick;
+    }
+
+    public int getAnimationStep() {
+        return animationStep;
+    }
+
+    public void setAnimationStep(int animationStep) {
+        this.animationStep = animationStep;
     }
 
     public void setId(int id) {

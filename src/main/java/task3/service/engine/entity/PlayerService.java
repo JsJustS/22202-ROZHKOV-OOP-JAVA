@@ -69,11 +69,6 @@ public class PlayerService extends EntityService {
                 player.setBombsLeft(player.getBombsLeft()+1);
             }
         }
-
-        player.setAnimationTick(player.getAnimationTick()+1);
-        if (player.getAnimationTick() % 10 == 0) {
-            player.setAnimationStep(player.getAnimationStep()+1);
-        }
     }
 
     @Override

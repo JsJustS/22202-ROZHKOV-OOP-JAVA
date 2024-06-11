@@ -6,9 +6,6 @@ import task3.util.Pair;
 import java.util.*;
 
 public class BotEntityModel extends EntityModel {
-    private final Map<Direction, List<String>> spriteSheets = new HashMap<>();
-    private int animationTick = 0;
-    private int animationStep = 0;
     private Stack<Pair<Integer, Integer>> path = new Stack<>();
     private Pair<Integer, Integer> goal;
 
@@ -21,10 +18,7 @@ public class BotEntityModel extends EntityModel {
     }
 
     @Override
-    public String getSpritePath() {
-        return this.spriteSheets.get(this.getDirection()).get(this.animationStep % 2);
-    }
-    private void loadSpriteSheets() {
+    public void loadSpriteSheets() {
         loadSprites(Direction.LEFT, "left");
         loadSprites(Direction.RIGHT, "right");
         loadSprites(Direction.UP, "up");
@@ -35,23 +29,7 @@ public class BotEntityModel extends EntityModel {
         List<String> spriteSheet = new ArrayList<>();
         spriteSheet.add(String.format("img/entity/bot/bot_%s_1.png", spriteName));
         spriteSheet.add(String.format("img/entity/bot/bot_%s_2.png", spriteName));
-        this.spriteSheets.put(direction, spriteSheet);
-    }
-
-    public int getAnimationTick() {
-        return animationTick;
-    }
-
-    public void setAnimationTick(int animationTick) {
-        this.animationTick = animationTick;
-    }
-
-    public int getAnimationStep() {
-        return animationStep;
-    }
-
-    public void setAnimationStep(int animationStep) {
-        this.animationStep = animationStep;
+        this.addSpriteSheet(direction, spriteSheet);
     }
 
     public Stack<Pair<Integer, Integer>> getPath() {

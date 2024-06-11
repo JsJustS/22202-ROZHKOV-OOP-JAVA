@@ -34,11 +34,6 @@ public class BotService extends EntityService {
         BotEntityModel bot = (BotEntityModel) entity;
 
         tickBrain(bot, model);
-        bot.setAnimationTick(bot.getAnimationTick()+1);
-        if (bot.getAnimationTick() % 10 == 0) {
-            bot.setAnimationStep(bot.getAnimationStep()+1);
-        }
-
         super.tick(entity, model);
     }
 

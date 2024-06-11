@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayerEntityModel extends EntityModel {
-    private final Map<Direction, List<String>> spriteSheets = new HashMap<>();
-    private int animationTick = 0;
-    private int animationStep = 0;
     private int points = 0;
     private int allTimePoints = 0;
 
@@ -28,12 +25,8 @@ public class PlayerEntityModel extends EntityModel {
         setRenderLayer(RenderLayer.PLAYERS);
         setDirection(Direction.DOWN);
     }
-
     @Override
-    public String getSpritePath() {
-        return this.spriteSheets.get(this.getDirection()).get(this.animationStep % 2);
-    }
-    private void loadSpriteSheets() {
+    public void loadSpriteSheets() {
         loadSprites(Direction.LEFT, "left");
         loadSprites(Direction.RIGHT, "right");
         loadSprites(Direction.UP, "up");
@@ -44,23 +37,7 @@ public class PlayerEntityModel extends EntityModel {
         List<String> spriteSheet = new ArrayList<>();
         spriteSheet.add(String.format("img/entity/player/player_%s_1.png", spriteName));
         spriteSheet.add(String.format("img/entity/player/player_%s_2.png", spriteName));
-        this.spriteSheets.put(direction, spriteSheet);
-    }
-
-    public int getAnimationTick() {
-        return animationTick;
-    }
-
-    public void setAnimationTick(int animationTick) {
-        this.animationTick = animationTick;
-    }
-
-    public int getAnimationStep() {
-        return animationStep;
-    }
-
-    public void setAnimationStep(int animationStep) {
-        this.animationStep = animationStep;
+        this.addSpriteSheet(direction, spriteSheet);
     }
 
     public int getPoints() {
