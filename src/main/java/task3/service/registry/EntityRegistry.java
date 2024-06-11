@@ -2,10 +2,12 @@ package task3.service.registry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import task3.model.entity.BotEntityModel;
 import task3.model.entity.EntityModel;
 import task3.model.entity.PlayerEntityModel;
 import task3.model.entity.blockentity.Block;
 import task3.model.entity.blockentity.BlockEntityModel;
+import task3.service.engine.entity.BotService;
 import task3.service.engine.entity.EntityService;
 import task3.service.engine.entity.PlayerService;
 
@@ -29,6 +31,7 @@ public class EntityRegistry {
 
         registerEntityService(EntityModel.class, EntityService.class);
         registerEntityService(PlayerEntityModel.class, PlayerService.class);
+        registerEntityService(BotEntityModel.class, BotService.class);
     }
 
     private static void registerEntityService(Class<? extends EntityModel> modelClass, Class<? extends EntityService> serviceClass) {

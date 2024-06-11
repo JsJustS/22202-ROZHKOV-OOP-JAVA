@@ -1,16 +1,16 @@
 package task3.model.entity;
 
 import task3.model.abilityInstance.Ability;
+import task3.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BotEntityModel extends EntityModel {
     private final Map<Direction, List<String>> spriteSheets = new HashMap<>();
     private int animationTick = 0;
     private int animationStep = 0;
+    private Stack<Pair<Integer, Integer>> path = new Stack<>();
+    private Pair<Integer, Integer> goal;
 
     public BotEntityModel() {
         setWidth(0.9);
@@ -52,5 +52,21 @@ public class BotEntityModel extends EntityModel {
 
     public void setAnimationStep(int animationStep) {
         this.animationStep = animationStep;
+    }
+
+    public Stack<Pair<Integer, Integer>> getPath() {
+        return path;
+    }
+
+    public Pair<Integer, Integer> getGoal() {
+        return goal;
+    }
+
+    public void setGoal(Pair<Integer, Integer> goal) {
+        this.goal = goal;
+    }
+
+    public void setPath(Stack<Pair<Integer, Integer>> path) {
+        this.path = path;
     }
 }

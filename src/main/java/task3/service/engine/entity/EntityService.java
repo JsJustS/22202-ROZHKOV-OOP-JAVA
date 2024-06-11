@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task3.model.entity.EntityModel;
 import task3.model.GameModel;
+import task3.model.entity.blockentity.BlockEntityModel;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,10 @@ public class EntityService {
             }
         }
         return null;
+    }
+
+    public void kill(EntityModel entity) {
+        entity.setAlive(false);
     }
 
     public void tick(EntityModel entity, GameModel model) {
@@ -84,5 +89,18 @@ public class EntityService {
             collidingEntities.add(other);
         }
         return collidingEntities;
+    }
+
+    public static BlockEntityModel getBlockEntityByCoordinates(int x, int y, GameModel model) {
+        for (EntityModel entity : model.getEntities()) {
+            if (!(entity instanceof BlockEntityModel)) {
+                continue;
+            }
+
+            if ((int)entity.getX() == x && (int)entity.getY() == y) {
+                return (BlockEntityModel) entity;
+            }
+        }
+        return null;
     }
 }

@@ -79,7 +79,7 @@ public class PlayerService extends EntityService {
     @Override
     public void tickMovement(EntityModel entity, GameModel model) {
         if (!(entity instanceof PlayerEntityModel)) {
-            LOGGER.warn("Trying to use PlayerService.useAbility() for other entity");
+            LOGGER.warn("Trying to use PlayerService.tickMovement() for other entity");
             return;
         }
 
