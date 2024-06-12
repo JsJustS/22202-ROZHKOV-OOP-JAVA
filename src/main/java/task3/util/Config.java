@@ -16,6 +16,7 @@ public class Config {
     private int winWidth;
     private int winHeight;
 
+    private double difficultyModifier;
     private long seed;
     private int fieldWidth;
     private int fieldHeight;
@@ -32,6 +33,7 @@ public class Config {
     static {
         GENERAL = new ConfigBuilder()
                 .withWinWidth(1000).withWinHeight(1000)
+                .withDifficultyModifier(0.5)
                 .withSeed(0)
                 .withFieldWidth(15).withFieldHeight(15)
                 .withBots(3)
@@ -92,6 +94,10 @@ public class Config {
         return fieldHeight;
     }
 
+    public double getDifficultyModifier() {
+        return difficultyModifier;
+    }
+
     public static Config load(String filepath) {
         ConfigBuilder builder = new ConfigBuilder();
 
@@ -122,6 +128,9 @@ public class Config {
                         break;
                     case "seed":
                         builder = builder.withSeed(Long.parseLong(pair[1]));
+                        break;
+                    case "difficulty_modifier":
+                        builder = builder.withDifficultyModifier(Double.parseDouble(pair[1]));
                         break;
                     case "field_width":
                         builder = builder.withFieldWidth(Integer.parseInt(pair[1]));
@@ -174,6 +183,11 @@ public class Config {
 
         public ConfigBuilder withSeed(long value) {
             config.seed = value;
+            return this;
+        }
+
+        public ConfigBuilder withDifficultyModifier(double value) {
+            config.difficultyModifier = value;
             return this;
         }
 

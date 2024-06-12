@@ -50,6 +50,13 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
             if (clientModel.getMainPlayer().getPoints() >= 0) {
                 g.setColor(Color.WHITE);
                 g.drawString("POINTS: " + clientModel.getMainPlayer().getPoints(), x, y);
+                x = this.getParent().getWidth() / 2 - 20;
+                if (clientModel.getMainPlayer().getPoints() < clientModel.getPointsForWin()) {
+                    g.drawString("POINTS FOR WIN: " + clientModel.getPointsForWin(), x, y);
+                } else {
+                    g.setColor(Color.GREEN);
+                    g.drawString("YOU WON!", x, y);
+                }
             } else {
                 g.setColor(Color.RED);
                 g.drawString("YOU DIED!", x, y);

@@ -80,7 +80,7 @@ public class GameEngine {
         model.clearEntities();
         model.clearAbilityInstances();
 
-        this.generateField();
+        int pointsForWin = this.generateField();
 
         PlayerEntityModel playerEntity = new PlayerEntityModel();
         playerEntity.setX(2.5);
@@ -93,6 +93,10 @@ public class GameEngine {
         model.setMainPlayer(playerEntity);
 
         this.populateMapWithBots(config.getBots());
+        pointsForWin += 100 * config.getBots();
+
+        pointsForWin  = (int)(pointsForWin * config.getDifficultyModifier());
+        model.setPointsForWin(pointsForWin);
     }
 
     public void tick() {
@@ -103,18 +107,22 @@ public class GameEngine {
         // ###################
         // Entities (live, die, etc)
         tickEntities();
+
+        if (model.getMainPlayer().getPoints() >= model.getPointsForWin()) {
+            this.stopGame();
+        }
     }
 
     private void tickAbilityInstances() {
         Set<AbstractAbilityInstanceModel> abilitiesToBeRemoved = new HashSet<>();
         for (AbstractAbilityInstanceModel abilityInstance : model.getAbilityInstances()) {
             AbstractAbilityExecutor executor = AbilityRegistry.getExecutor(abilityInstance);
+            abilitiesToBeRemoved.add(abilityInstance);
             if (executor == null) {
                 LOGGER.warn(String.format("Could not generate executor for \"%s\"", abilityInstance.getClass().getName()));
                 continue;
             }
             executor.execute(abilityInstance, model);
-            abilitiesToBeRemoved.add(abilityInstance);
         }
         for (AbstractAbilityInstanceModel abilityInstance : abilitiesToBeRemoved) {
             model.removeAbilityInstance(abilityInstance);
@@ -141,7 +149,7 @@ public class GameEngine {
         }
     }
 
-    private void generateField() {
+    private int generateField() {
         FieldGenerator generator = new FieldGenerator(
                 this.seed,
                 model.getFieldWidthInBlocks(),
@@ -151,6 +159,7 @@ public class GameEngine {
         model.setBotMap(new byte[model.getFieldWidthInBlocks()][model.getFieldHeightInBlocks()]);
         byte[][] field = generator.generateField(model.getBotMap());
 
+        int maxPointsOnField = 0;
         this.random.setSeed(this.seed);
         for (int i = 0; i < model.getFieldWidthInBlocks(); ++i) {
             for (int j = 0; j < model.getFieldHeightInBlocks(); ++j) {
@@ -160,10 +169,12 @@ public class GameEngine {
                     block.setX(i + .5);
                     block.setY(j + .5);
                     model.addEntity(block);
+                    maxPointsOnField += block.getPoints();
                 }
             }
         }
         model.setMapReady(true);
+        return maxPointsOnField;
     }
 
     private void populateMapWithBots(int bots) {

@@ -16,6 +16,7 @@ public class GameModel extends Publisher implements IModel {
     private int fieldWidthInBlocks;
     private int fieldHeightInBlocks;
     private byte[][] botMap;
+    private int pointsForWin;
 
     public byte[][] getBotMap() {
         return botMap;
@@ -195,5 +196,13 @@ public class GameModel extends Publisher implements IModel {
 
     public void clearReleasedKeys() {
         this.keysReleased.clear();
+    }
+
+    public int getPointsForWin() {
+        return pointsForWin;
+    }
+
+    public void setPointsForWin(int pointsForWin) {
+        this.pointsForWin = pointsForWin;
     }
 }
