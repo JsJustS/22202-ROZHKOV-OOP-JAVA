@@ -7,6 +7,7 @@ import task3.util.keyboard.KeyBindManager;
 public class ClientController implements IController<ClientController.OP, GameModel> {
 
     public enum OP {
+        SET_SEED,
         ON_KEY_PRESSED,
         ON_KEY_RELEASED,
         CHANGE_GAMESTATE,
@@ -16,6 +17,11 @@ public class ClientController implements IController<ClientController.OP, GameMo
     @Override
     public <T> void execute(OP operation, GameModel model, T value) {
         switch (operation) {
+            case SET_SEED: {
+                long seed = (long) value;
+                model.setCurrentSeed(seed);
+                break;
+            }
             case CHANGE_GAMESTATE: {
                 GameModel.GAMESTATE state = (GameModel.GAMESTATE) value;
                 model.setGameState(state);

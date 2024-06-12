@@ -30,7 +30,7 @@ public class GameEngine {
         this.config = config;
         this.model = model;
 
-        model.setCurrentSeed((config.getSeed() != 0) ? config.getSeed() : random.nextLong());
+        //model.setCurrentSeed((model.getCurrentSeed() != 0) ? config.getSeed() : random.nextLong());
     }
 
     public void start() {
@@ -42,7 +42,7 @@ public class GameEngine {
             }
 
             if (model.hasPlayer() && !hadPlayer) {
-                if (config.getSeed() == 0) {
+                if (model.getCurrentSeed() == 0) {
                     resetGame(random.nextLong());
                 } else {
                     resetGame();
@@ -67,6 +67,7 @@ public class GameEngine {
 
     public void stopGame() {
         model.setGameRunning(false);
+        model.setCurrentSeed((config.getSeed() != 0) ? config.getSeed() : random.nextLong());
     }
 
     public void resetGame(long seed) {
