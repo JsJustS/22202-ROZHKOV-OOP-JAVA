@@ -17,6 +17,7 @@ public class GameModel extends Publisher implements IModel {
     private int fieldHeightInBlocks;
     private byte[][] botMap;
     private int pointsForWin;
+    private long currentSeed;
 
     public byte[][] getBotMap() {
         return botMap;
@@ -48,6 +49,14 @@ public class GameModel extends Publisher implements IModel {
     public void setPlayerJoined(boolean value) {
         this.hasPlayerJoined = value;
         notifySubscribers();
+    }
+
+    public long getCurrentSeed() {
+        return currentSeed;
+    }
+
+    public void setCurrentSeed(long currentSeed) {
+        this.currentSeed = currentSeed;
     }
 
     public boolean hasPlayer() {

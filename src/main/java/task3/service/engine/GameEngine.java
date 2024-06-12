@@ -25,14 +25,12 @@ public class GameEngine {
     private final GameModel model;
 
     private final Random random = new Random();
-    private long seed;
 
     public GameEngine(Config config, GameModel model) {
         this.config = config;
         this.model = model;
 
-        this.seed = (config.getSeed() != 0) ? config.getSeed() : random.nextLong();
-        this.random.setSeed(this.seed);
+        model.setCurrentSeed((config.getSeed() != 0) ? config.getSeed() : random.nextLong());
     }
 
     public void start() {
@@ -44,7 +42,11 @@ public class GameEngine {
             }
 
             if (model.hasPlayer() && !hadPlayer) {
-                resetGame();
+                if (config.getSeed() == 0) {
+                    resetGame(random.nextLong());
+                } else {
+                    resetGame();
+                }
                 startGame();
                 hadPlayer = true;
             } else if (!model.hasPlayer() && hadPlayer) {
@@ -68,8 +70,8 @@ public class GameEngine {
     }
 
     public void resetGame(long seed) {
-        this.seed = seed;
-        this.random.setSeed(this.seed);
+        model.setCurrentSeed(seed);
+        this.random.setSeed(model.getCurrentSeed());
         resetGame();
     }
 
@@ -151,7 +153,7 @@ public class GameEngine {
 
     private int generateField() {
         FieldGenerator generator = new FieldGenerator(
-                this.seed,
+                model.getCurrentSeed(),
                 model.getFieldWidthInBlocks(),
                 model.getFieldHeightInBlocks()
         );
@@ -160,7 +162,7 @@ public class GameEngine {
         byte[][] field = generator.generateField(model.getBotMap());
 
         int maxPointsOnField = 0;
-        this.random.setSeed(this.seed);
+        this.random.setSeed(model.getCurrentSeed());
         for (int i = 0; i < model.getFieldWidthInBlocks(); ++i) {
             for (int j = 0; j < model.getFieldHeightInBlocks(); ++j) {
                 if (field[i][j] > 0) {

@@ -41,43 +41,49 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (clientModel != null && clientModel.getMainPlayer() != null) {
+        if (clientModel == null || clientModel.getMainPlayer() == null) return;
 
-            g.setFont(new Font("Times New Roman", Font.BOLD, 25));
-            int x = 10;
-            int y = 30;
+        g.setFont(new Font("Times New Roman", Font.BOLD, 25));
+        int x = 10;
+        int y = 30;
 
-            if (clientModel.getMainPlayer().getPoints() >= 0) {
-                g.setColor(Color.WHITE);
-                g.drawString("POINTS: " + clientModel.getMainPlayer().getPoints(), x, y);
-                x = this.getParent().getWidth() / 2 - 20;
-                if (clientModel.getMainPlayer().getPoints() < clientModel.getPointsForWin()) {
-                    g.drawString("POINTS FOR WIN: " + clientModel.getPointsForWin(), x, y);
-                } else {
-                    g.setColor(Color.GREEN);
-                    g.drawString("YOU WON!", x, y);
-                }
+        // Points UI
+        if (clientModel.getMainPlayer().getPoints() >= 0) {
+            g.setColor(Color.WHITE);
+            g.drawString("POINTS: " + clientModel.getMainPlayer().getPoints(), x, y);
+            x = this.getParent().getWidth() / 2 - 20;
+            if (clientModel.getMainPlayer().getPoints() < clientModel.getPointsForWin()) {
+                g.drawString("POINTS FOR WIN: " + clientModel.getPointsForWin(), x, y);
             } else {
-                g.setColor(Color.RED);
-                g.drawString("YOU DIED!", x, y);
+                g.setColor(Color.GREEN);
+                g.drawString("YOU WON!", x, y);
             }
-
-            x = this.getWidth() - 5;
-            y = 5;
-            int size = 30;
-
-            Ability chosenAbility = clientModel.getMainPlayer().getAbility();
-            for (int i = 0; i < clientModel.getMainPlayer().getBombsLeft(); ++i) {
-                switch (chosenAbility) {
-                    case SIMPLE_BOMB:
-                        g.drawImage(ResourceManager.getSprite(bombSprite),x-size*(i+1)-size/5*i, y, size, size, this);
-                        break;
-                    case SUPER_BOMB:
-                        g.drawImage(ResourceManager.getSprite(superBombSprite),x-size*(i+1)-size/5*i, y, size, size, this);
-                        break;
-                }
-            }
-
+        } else {
+            g.setColor(Color.RED);
+            g.drawString("YOU DIED!", x, y);
         }
+
+        // Ability UI
+        x = this.getWidth() - 5;
+        y = 5;
+        int size = 30;
+
+        Ability chosenAbility = clientModel.getMainPlayer().getAbility();
+        for (int i = 0; i < clientModel.getMainPlayer().getBombsLeft(); ++i) {
+            switch (chosenAbility) {
+                case SIMPLE_BOMB:
+                    g.drawImage(ResourceManager.getSprite(bombSprite), x - size * (i + 1) - size / 5 * i, y, size, size, this);
+                    break;
+                case SUPER_BOMB:
+                    g.drawImage(ResourceManager.getSprite(superBombSprite), x - size * (i + 1) - size / 5 * i, y, size, size, this);
+                    break;
+            }
+        }
+
+        // Seed UI
+        x = 10;
+        y = this.getParent().getHeight() - 10;
+        g.setColor(Color.WHITE);
+        g.drawString("SEED: " + clientModel.getCurrentSeed(), x, y);
     }
 }
