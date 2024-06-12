@@ -29,8 +29,6 @@ public class GameEngine {
     public GameEngine(Config config, GameModel model) {
         this.config = config;
         this.model = model;
-
-        //model.setCurrentSeed((model.getCurrentSeed() != 0) ? config.getSeed() : random.nextLong());
     }
 
     public void start() {
@@ -67,7 +65,6 @@ public class GameEngine {
 
     public void stopGame() {
         model.setGameRunning(false);
-        model.setCurrentSeed((config.getSeed() != 0) ? config.getSeed() : random.nextLong());
     }
 
     public void resetGame(long seed) {

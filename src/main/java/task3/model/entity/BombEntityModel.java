@@ -13,7 +13,7 @@ public class BombEntityModel extends EntityModel {
         setHeight(0.75);
         setWidth(0.75);
         this.parent = parent;
-        setCollidable(false);
+        setCollidable(true);
         setAnimationPerTick(5);
     }
 

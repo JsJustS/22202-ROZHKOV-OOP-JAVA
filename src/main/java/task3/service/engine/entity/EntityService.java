@@ -81,6 +81,10 @@ public class EntityService {
 
     }
 
+    public boolean shouldCollideWith(EntityModel entity, EntityModel other) {
+        return other.isCollidable();
+    }
+
     public Set<EntityModel> getCollidingEntities(EntityModel entity, GameModel model) {
         Set<EntityModel> collidingEntities = new HashSet<>();
         for (EntityModel other : model.getEntities()) {
@@ -88,7 +92,7 @@ public class EntityService {
                 continue;
             }
 
-            if (!other.isCollidable()) {
+            if (!shouldCollideWith(entity, other)) {
                 continue;
             }
 

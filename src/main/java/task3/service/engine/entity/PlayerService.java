@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import task3.model.GameModel;
 import task3.model.abilityInstance.SpawnBombAbilityInstanceModel;
 import task3.model.abilityInstance.SpawnSuperBombAbilityInstanceModel;
+import task3.model.entity.BombEntityModel;
 import task3.model.entity.BotEntityModel;
 import task3.model.entity.EntityModel;
 import task3.model.entity.PlayerEntityModel;
@@ -80,6 +81,14 @@ public class PlayerService extends EntityService {
             }
             player.setReceivedDamage(0);
         }
+    }
+
+    @Override
+    public boolean shouldCollideWith(EntityModel entity, EntityModel other) {
+        if (other instanceof BombEntityModel && ((BombEntityModel)other).getParent().equals(entity)) {
+            return false;
+        }
+        return super.shouldCollideWith(entity, other);
     }
 
     @Override
