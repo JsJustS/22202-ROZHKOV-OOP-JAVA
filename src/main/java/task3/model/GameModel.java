@@ -18,6 +18,8 @@ public class GameModel extends Publisher implements IModel {
     private byte[][] botMap;
     private int pointsForWin;
     private long currentSeed;
+    private int roundTicksLeft;
+    private int ticksPerSecond;
 
     public byte[][] getBotMap() {
         return botMap;
@@ -45,6 +47,22 @@ public class GameModel extends Publisher implements IModel {
 
     private PlayerEntityModel mainPlayer = null;
     private boolean hasPlayerJoined;
+
+    public int getRoundTicksLeft() {
+        return roundTicksLeft;
+    }
+
+    public void setRoundTicksLeft(int roundTicksLeft) {
+        this.roundTicksLeft = roundTicksLeft;
+    }
+
+    public int getTicksPerSecond() {
+        return ticksPerSecond;
+    }
+
+    public void setTicksPerSecond(int ticksPerSecond) {
+        this.ticksPerSecond = ticksPerSecond;
+    }
 
     public void setPlayerJoined(boolean value) {
         this.hasPlayerJoined = value;

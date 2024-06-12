@@ -48,7 +48,7 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
         int y = 30;
 
         // Points UI
-        if (clientModel.getMainPlayer().getPoints() >= 0) {
+        if (clientModel.getMainPlayer().isAlive()) {
             g.setColor(Color.WHITE);
             g.drawString("POINTS: " + clientModel.getMainPlayer().getPoints(), x, y);
             x = this.getParent().getWidth() / 2 - 20;
@@ -85,5 +85,11 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
         y = this.getParent().getHeight() - 10;
         g.setColor(Color.WHITE);
         g.drawString("SEED: " + clientModel.getCurrentSeed(), x, y);
+
+        // Time UI
+        x = this.getParent().getWidth() - 250;
+        y = this.getParent().getHeight() - 10;
+        g.setColor(Color.WHITE);
+        g.drawString("TIME LEFT: " + clientModel.getRoundTicksLeft() / clientModel.getTicksPerSecond(), x, y);
     }
 }

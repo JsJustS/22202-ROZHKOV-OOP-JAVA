@@ -20,6 +20,7 @@ public class Config {
     private long seed;
     private int fieldWidth;
     private int fieldHeight;
+    private int roundSeconds;
 
     private String abilityKey;
     private String moveUpKey;
@@ -38,6 +39,7 @@ public class Config {
                 .withSeed(350152266986067041L)
                 .withFieldWidth(15).withFieldHeight(15)
                 .withBots(3)
+                .withRoundSeconds(300) // 5 min
                 .withAbilityKey("Space")
                 .withMoveUpKey("W")
                 .withMoveLeftKey("A")
@@ -77,6 +79,10 @@ public class Config {
 
     public int getBots() {
         return bots;
+    }
+
+    public int getRoundSeconds() {
+        return roundSeconds;
     }
 
     public int getWinWidth() {
@@ -143,6 +149,9 @@ public class Config {
                     case "field_height":
                         builder = builder.withFieldHeight(Integer.parseInt(pair[1]));
                         break;
+                    case "round_seconds":
+                        builder = builder.withRoundSeconds(Integer.parseInt(pair[1]));
+                        break;
                     case "keybind_ability":
                         builder = builder.withAbilityKey(pair[1]);
                         break;
@@ -191,6 +200,11 @@ public class Config {
 
         public ConfigBuilder withSeed(long value) {
             config.seed = value;
+            return this;
+        }
+
+        public ConfigBuilder withRoundSeconds(int value) {
+            config.roundSeconds = value;
             return this;
         }
 

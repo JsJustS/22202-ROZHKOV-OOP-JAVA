@@ -29,13 +29,14 @@ public class GameEngine {
     public GameEngine(Config config, GameModel model) {
         this.config = config;
         this.model = model;
+        model.setTicksPerSecond(20);
     }
 
     public void start() {
         long last = System.currentTimeMillis();
         boolean hadPlayer = false;
         while (true) {
-            if (System.currentTimeMillis() - last < 50) {
+            if (System.currentTimeMillis() - last < 1000 / model.getTicksPerSecond()) {
                 continue;
             }
 
@@ -79,6 +80,7 @@ public class GameEngine {
 
         model.clearEntities();
         model.clearAbilityInstances();
+        model.setRoundTicksLeft(config.getRoundSeconds() * model.getTicksPerSecond());
 
         int pointsForWin = this.generateField();
 
@@ -110,6 +112,12 @@ public class GameEngine {
 
         if (model.getMainPlayer().getPoints() >= model.getPointsForWin()) {
             this.stopGame();
+        }
+
+        model.setRoundTicksLeft(model.getRoundTicksLeft() - 1);
+        if (model.getRoundTicksLeft() <= 0) {
+            model.getMainPlayer().setAlive(false);
+            stopGame();
         }
     }
 
@@ -194,7 +202,6 @@ public class GameEngine {
                     x = model.getBotMap().length - 2.5;
                     y = model.getBotMap()[0].length - 2.5;
             }
-            if (i != bots-2) continue; //todo: remove
             BotEntityModel bot = new BotEntityModel();
             bot.setX(x);
             bot.setY(y);
