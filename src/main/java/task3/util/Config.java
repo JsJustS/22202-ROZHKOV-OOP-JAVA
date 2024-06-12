@@ -36,16 +36,16 @@ public class Config {
         GENERAL = new ConfigBuilder()
                 .withWinWidth(1000).withWinHeight(1000)
                 .withDifficultyModifier(0.5)
-                .withSeed(350152266986067041L)
+                .withSeed(0)
                 .withFieldWidth(15).withFieldHeight(15)
                 .withBots(3)
                 .withRoundSeconds(300) // 5 min
                 .withAbilityKey("Space")
-                .withMoveUpKey("W")
-                .withMoveLeftKey("A")
-                .withMoveDownKey("S")
-                .withMoveRightKey("D")
-                .withChangeAbilityKey("E")
+                .withMoveUpKey("Up")
+                .withMoveLeftKey("Left")
+                .withMoveDownKey("Down")
+                .withMoveRightKey("Right")
+                .withChangeAbilityKey("Enter")
                 .withLeaveKey("Escape")
                 .build();
     }

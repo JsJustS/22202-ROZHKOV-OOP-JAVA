@@ -1,5 +1,7 @@
 package task3.util.keyboard;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import task3.controller.ClientController;
 import task3.model.GameModel;
 
@@ -11,6 +13,7 @@ import java.awt.event.KeyEvent;
  * Intermediate class between SWING KeyStrokes and custom client controller
  * */
 public class KeyBindManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeyBindManager.class);
     private final ClientController clientController;
     private final GameModel clientModel;
     private final JPanel parent;
@@ -58,7 +61,12 @@ public class KeyBindManager {
 
     private void setKeyBindings() {
         for (String keyName : clientModel.getKeyBinds().keySet()) {
-            setKeyBind(KeyStroke.getKeyStroke(keyName.toUpperCase()).getKeyCode());
+            KeyStroke stroke = KeyStroke.getKeyStroke(keyName.toUpperCase());
+            if (stroke != null) {
+                setKeyBind(stroke.getKeyCode());
+            } else {
+                LOGGER.warn("Could not set keybind for " + keyName.toUpperCase());
+            }
         }
     }
 
