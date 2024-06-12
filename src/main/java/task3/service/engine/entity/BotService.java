@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task3.model.GameModel;
 import task3.model.abilityInstance.SpawnExplosionAbilityInstanceModel;
-import task3.model.entity.BotEntityModel;
-import task3.model.entity.Direction;
-import task3.model.entity.EntityModel;
-import task3.model.entity.PlayerEntityModel;
+import task3.model.entity.*;
 import task3.model.entity.blockentity.BlockEntityModel;
 import task3.service.registry.EntityRegistry;
 import task3.util.Pair;
@@ -65,6 +62,32 @@ public class BotService extends EntityService {
     }
 
     private void tickBrain(BotEntityModel bot, GameModel model) {
+        Set<BombEntityModel> bombsNear = lookForBombs(bot, model);
+        if (!bombsNear.isEmpty()) {
+            BombEntityModel nearestBomb = findNearestBomb(bot, bombsNear);
+            Pair<Integer, Integer> coordinateToRunFrom;
+            if ((int)nearestBomb.getX() < (int)bot.getX()) {
+                coordinateToRunFrom = new Pair<>((int)bot.getX()-1, (int)bot.getY());
+            } else if ((int)nearestBomb.getX() > (int)bot.getX()) {
+                coordinateToRunFrom = new Pair<>((int)bot.getX()+1, (int)bot.getY());
+            } else if ((int)nearestBomb.getY() < (int)bot.getY()) {
+                coordinateToRunFrom = new Pair<>((int)bot.getX(), (int)bot.getY()-1);
+            } else {
+                coordinateToRunFrom = new Pair<>((int)bot.getX(), (int)bot.getY()+1);
+            }
+            int triesLeft = 16;
+            while (triesLeft-- != 0) {
+                Pair<Integer, Integer> goal = randomNeighbourBlock(bot);
+                if (!goal.equals(coordinateToRunFrom)) {
+                    if (EntityService.getBlockEntityByCoordinates(goal.getFirst(), goal.getSecond(), model) == null) {
+                        updateGoal(bot, model);
+                        moveTo(bot, goal);
+                        return;
+                    }
+                }
+            }
+            return;
+        }
 
         PlayerEntityModel player = lookForPlayer(bot, model);
         if (player != null) {
@@ -88,6 +111,10 @@ public class BotService extends EntityService {
                 updateGoal(bot, model);
                 return;
             }
+        } else if (Math.abs(top.getFirst() - (int)bot.getX()) + Math.abs(top.getSecond() - (int)bot.getY()) > 0) {
+            // too far from start point
+            updateGoal(bot, model);
+            return;
         }
 
         if (bot.isMoving()) return;
@@ -148,6 +175,60 @@ public class BotService extends EntityService {
             }
         }
         return null;
+    }
+
+    private Set<BombEntityModel> lookForBombs(BotEntityModel bot, GameModel model) {
+        Set<BombEntityModel> bombsSeen = new HashSet<>();
+        for (EntityModel entity : model.getEntities()) {
+            if (!(entity instanceof BombEntityModel)) {
+                continue;
+            }
+            if ((int)entity.getX() == (int)bot.getX()) {
+                boolean isClear = true;
+                for (int y = Math.min((int)entity.getY(), (int)bot.getY()); y < Math.max((int)entity.getY(), (int)bot.getY()); ++y) {
+                    BlockEntityModel block = EntityService.getBlockEntityByCoordinates((int)bot.getX(), y, model);
+                    if (block != null && block.isCollidable()) {
+                        isClear = false;
+                        break;
+                    }
+                }
+                if (isClear && Math.abs((int)entity.getY() - (int)bot.getY()) <= ((BombEntityModel)entity).getPower()) {
+                    bombsSeen.add((BombEntityModel) entity);
+                }
+            }
+
+            if ((int)entity.getY() == (int)bot.getY()) {
+                boolean isClear = true;
+                for (int x = Math.min((int)entity.getX(), (int)bot.getX()); x < Math.max((int)entity.getX(), (int)bot.getX()); ++x) {
+                    BlockEntityModel block = EntityService.getBlockEntityByCoordinates(x, (int)bot.getY(), model);
+                    if (block != null && block.isCollidable()) {
+                        isClear = false;
+                        break;
+                    }
+                }
+                if (isClear && Math.abs((int)entity.getX() - (int)bot.getX()) <= ((BombEntityModel)entity).getPower()) {
+                    bombsSeen.add((BombEntityModel) entity);
+                }
+            }
+        }
+        return bombsSeen;
+    }
+
+    private BombEntityModel findNearestBomb(BotEntityModel bot, Set<BombEntityModel> bombsNear) {
+        BombEntityModel nearest = null;
+        int minimumDistance = Integer.MAX_VALUE;
+        for (BombEntityModel bomb : bombsNear) {
+            if (Math.abs((int)bomb.getX() - (int)bot.getX()) < minimumDistance) {
+                nearest = bomb;
+                minimumDistance = Math.abs((int)bomb.getX() - (int)bot.getX());
+            }
+
+            if (Math.abs((int)bomb.getY() - (int)bot.getY()) < minimumDistance) {
+                nearest = bomb;
+                minimumDistance = Math.abs((int)bomb.getY() - (int)bot.getY());
+            }
+        }
+        return nearest;
     }
 
     private void updateGoal(BotEntityModel bot, GameModel model, Pair<Integer, Integer> goal) {

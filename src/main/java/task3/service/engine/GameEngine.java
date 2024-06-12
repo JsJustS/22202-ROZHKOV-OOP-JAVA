@@ -194,6 +194,7 @@ public class GameEngine {
                     x = model.getBotMap().length - 2.5;
                     y = model.getBotMap()[0].length - 2.5;
             }
+            if (i != bots-2) continue; //todo: remove
             BotEntityModel bot = new BotEntityModel();
             bot.setX(x);
             bot.setY(y);

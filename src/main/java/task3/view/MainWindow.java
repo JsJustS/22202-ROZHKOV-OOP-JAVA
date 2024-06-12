@@ -33,6 +33,7 @@ public class MainWindow extends JFrame implements ISubscriber {
         this.setSize(new Dimension(cfg.getWinWidth(), cfg.getWinHeight()));
         this.setTitle(cfg.getGameTitle());
 
+        model.setCurrentSeed(cfg.getSeed());
         this.getContentPane().add(new MainMenu(this, controller, model));
 
         this.setVisible(true);

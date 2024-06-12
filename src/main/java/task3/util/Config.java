@@ -35,7 +35,7 @@ public class Config {
         GENERAL = new ConfigBuilder()
                 .withWinWidth(1000).withWinHeight(1000)
                 .withDifficultyModifier(0.5)
-                .withSeed(0)
+                .withSeed(350152266986067041L)
                 .withFieldWidth(15).withFieldHeight(15)
                 .withBots(3)
                 .withAbilityKey("Space")
