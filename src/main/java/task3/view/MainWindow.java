@@ -16,6 +16,8 @@ import task3.util.pubsub.ISubscriber;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainWindow extends JFrame implements ISubscriber {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainWindow.class);
@@ -65,6 +67,10 @@ public class MainWindow extends JFrame implements ISubscriber {
                 ClientController.OP.UPDATE_KEYBINDS, model,
                 new Pair<>(cfg.getChangeAbilityKey(), KeyBindManager.KeyAction.CHANGE_ABILITY)
         );
+        controller.execute(
+                ClientController.OP.UPDATE_KEYBINDS, model,
+                new Pair<>(cfg.getLeaveKey(), KeyBindManager.KeyAction.LEAVE)
+        );
     }
 
     @Override
@@ -78,7 +84,9 @@ public class MainWindow extends JFrame implements ISubscriber {
     }
 
     public void handleKeyActions() {
-        for (KeyBindManager.KeyAction keyAction : model.getPressedKeys()) {
+        Set<KeyBindManager.KeyAction> keysToHandle = new HashSet<>(model.getPressedKeys());
+        model.clearPressedKeys();
+        for (KeyBindManager.KeyAction keyAction : keysToHandle) {
             switch (keyAction) {
                 case USE_ABILITY:
                     playerController.execute(
@@ -120,16 +128,20 @@ public class MainWindow extends JFrame implements ISubscriber {
                     );
                     break;
                 case LEAVE:
-                    //todo: change game state to MENU
+                    controller.execute(
+                            ClientController.OP.CHANGE_GAMESTATE, model,
+                            GameModel.GAMESTATE.MENU
+                    );
                     break;
                 default: {
                     LOGGER.error(String.format("Unsupported KeyAction \"%s:pressed\"", keyAction.name()));
                 }
             }
         }
-        model.clearPressedKeys();
 
-        for (KeyBindManager.KeyAction keyAction : model.getReleasedKeys()) {
+        keysToHandle = new HashSet<>(model.getReleasedKeys());
+        model.clearReleasedKeys();
+        for (KeyBindManager.KeyAction keyAction : keysToHandle) {
             switch (keyAction) {
                 case USE_ABILITY:
                     break;
@@ -151,7 +163,6 @@ public class MainWindow extends JFrame implements ISubscriber {
                 }
             }
         }
-        model.clearReleasedKeys();
     }
 
     private void changeClientState() {

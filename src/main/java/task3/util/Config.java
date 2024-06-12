@@ -27,6 +27,7 @@ public class Config {
     private String moveLeftKey;
     private String moveRightKey;
     private String changeAbilityKey;
+    private String leaveKey;
 
     private int bots;
 
@@ -43,6 +44,7 @@ public class Config {
                 .withMoveDownKey("S")
                 .withMoveRightKey("D")
                 .withChangeAbilityKey("E")
+                .withLeaveKey("Escape")
                 .build();
     }
 
@@ -68,6 +70,9 @@ public class Config {
     }
     public String getChangeAbilityKey() {
         return changeAbilityKey;
+    }
+    public String getLeaveKey() {
+        return leaveKey;
     }
 
     public int getBots() {
@@ -156,6 +161,9 @@ public class Config {
                     case "keybind_change_ability":
                         builder = builder.withChangeAbilityKey(pair[1]);
                         break;
+                    case "keybind_leave":
+                        builder = builder.withLeaveKey(pair[1]);
+                        break;
                     case "bots":
                         builder = builder.withBots(Integer.parseInt(pair[1]));
                         break;
@@ -233,6 +241,11 @@ public class Config {
 
         public ConfigBuilder withChangeAbilityKey(String key) {
             config.changeAbilityKey = key;
+            return this;
+        }
+
+        public ConfigBuilder withLeaveKey(String key) {
+            config.leaveKey = key;
             return this;
         }
 
