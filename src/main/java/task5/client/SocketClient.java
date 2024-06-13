@@ -6,6 +6,7 @@ import task5.model.GameModel;
 import task5.util.network.Packet;
 import task5.util.network.PacketBuf;
 import task5.util.network.SocketConnection;
+import task5.util.network.c2s.PlayerJoinC2SPacket;
 import task5.util.network.s2c.ClientApproveS2CPacket;
 import task5.util.network.s2c.PacketS2CType;
 
@@ -32,6 +33,7 @@ public class SocketClient {
                     this.applyPacket(buf);
                 } catch (IOException | ClassNotFoundException e) {
                     LOGGER.error("Error while handling S2C packet: " + e.getMessage());
+                    this.disconnect();
                 }
             }
         }, "Client-S2C");
@@ -81,6 +83,7 @@ public class SocketClient {
                 case ClientApprove: {
                     ClientApproveS2CPacket packet = new ClientApproveS2CPacket(packetBuf);
                     clientModel.setClientUUID(packet.getClientUUID());
+                    this.sendPacket(new PlayerJoinC2SPacket(clientModel.getClientUUID()));
                 }
 
             }

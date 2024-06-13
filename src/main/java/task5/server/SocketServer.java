@@ -77,6 +77,7 @@ public class SocketServer {
                             new SpawnPlayerAbilityInstanceModel(packet.getClientUUID())
                     );
                     serverModel.setPlayerJoined(true);
+                    return;
                 }
 
                 case PlayerLeave: {
@@ -90,6 +91,7 @@ public class SocketServer {
                         }
                     }
                     serverModel.setPlayerJoined(hasPlayers);
+                    return;
                 }
 
             }

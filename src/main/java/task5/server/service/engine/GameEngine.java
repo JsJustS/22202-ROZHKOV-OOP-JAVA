@@ -88,21 +88,12 @@ public class GameEngine implements ISubscriber {
         serverModel.clearEntities();
         serverModel.clearAbilityInstances();
 
+        this.generateField();
+
         int maxPlayer = 4;
         this.populateMapWithBots(maxPlayer);
 
-
         //model.setRoundTicksLeft(config.getRoundSeconds() * model.getTicksPerSecond());
-
-        //int pointsForWin = this.generateField();
-
-        /*PlayerEntityModel playerEntity = new PlayerEntityModel();
-        playerEntity.setX(2.5);
-        playerEntity.setY(2.5);
-
-        playerEntity.setId(model.getLastEntityId()+1);
-        model.setLastEntityId(playerEntity.getId());
-        model.addEntity(playerEntity);*/
 
         //model.setMainPlayer(playerEntity);
 
@@ -169,7 +160,7 @@ public class GameEngine implements ISubscriber {
         }
     }
 
-    private int generateField() {
+    private void generateField() {
         FieldGenerator generator = new FieldGenerator(
                 serverModel.getCurrentSeed(),
                 serverModel.getFieldWidthInBlocks(),
@@ -179,7 +170,6 @@ public class GameEngine implements ISubscriber {
         serverModel.setBotMap(new byte[serverModel.getFieldWidthInBlocks()][serverModel.getFieldHeightInBlocks()]);
         byte[][] field = generator.generateField(serverModel.getBotMap());
 
-        int maxPointsOnField = 0;
         this.random.setSeed(serverModel.getCurrentSeed());
         for (int i = 0; i < serverModel.getFieldWidthInBlocks(); ++i) {
             for (int j = 0; j < serverModel.getFieldHeightInBlocks(); ++j) {
@@ -189,12 +179,10 @@ public class GameEngine implements ISubscriber {
                     block.setX(i + .5);
                     block.setY(j + .5);
                     serverModel.addEntity(block);
-                    maxPointsOnField += block.getPoints();
                 }
             }
         }
         serverModel.setMapReady(true);
-        return maxPointsOnField;
     }
 
     private void populateMapWithBots(int bots) {
