@@ -1,4 +1,4 @@
-package task5.view.gameplay;
+package task5.client.view.gameplay;
 
 import task5.model.GameModel;
 import task5.model.entity.EntityModel;

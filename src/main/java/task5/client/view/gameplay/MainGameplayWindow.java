@@ -1,6 +1,6 @@
-package task5.view.gameplay;
+package task5.client.view.gameplay;
 
-import task5.controller.ClientController;
+import task5.client.controller.ClientController;
 import task5.model.GameModel;
 import task5.model.abilityInstance.Ability;
 import task5.util.ResourceManager;

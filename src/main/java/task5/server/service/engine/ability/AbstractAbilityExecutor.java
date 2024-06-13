@@ -1,4 +1,4 @@
-package task5.service.engine.ability;
+package task5.server.service.engine.ability;
 
 import task5.model.GameModel;
 import task5.model.abilityInstance.AbstractAbilityInstanceModel;

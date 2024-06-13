@@ -2,7 +2,6 @@ package task5.model.abilityInstance;
 
 import task5.model.IModel;
 import task5.model.entity.EntityModel;
-import task5.service.registry.EntityRegistry;
 
 public abstract class AbstractAbilityInstanceModel implements IModel {
     protected EntityModel parent;

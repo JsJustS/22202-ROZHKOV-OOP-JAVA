@@ -1,5 +1,6 @@
-package task5.controller;
+package task5.client.controller;
 
+import task5.controller.IController;
 import task5.model.GameModel;
 import task5.util.Pair;
 import task5.util.keyboard.KeyBindManager;
@@ -7,7 +8,7 @@ import task5.util.keyboard.KeyBindManager;
 public class ClientController implements IController<ClientController.OP, GameModel> {
 
     public enum OP {
-        SET_SEED,
+        SET_IP,
         ON_KEY_PRESSED,
         ON_KEY_RELEASED,
         CHANGE_GAMESTATE,
@@ -15,31 +16,32 @@ public class ClientController implements IController<ClientController.OP, GameMo
     }
 
     @Override
-    public <T> void execute(OP operation, GameModel model, T value) {
+    public <T> void execute(OP operation, GameModel clientModel, T value) {
         switch (operation) {
-            case SET_SEED: {
-                long seed = (long) value;
-                model.setCurrentSeed(seed);
+            case SET_IP: {
+                Pair<String, Integer> address = (Pair<String, Integer>) value;
+                clientModel.setHostName(address.getFirst());
+                clientModel.setPort(address.getSecond());
                 break;
             }
             case CHANGE_GAMESTATE: {
                 GameModel.GAMESTATE state = (GameModel.GAMESTATE) value;
-                model.setGameState(state);
+                clientModel.setGameState(state);
                 break;
             }
             case UPDATE_KEYBINDS: {
                 Pair<String, KeyBindManager.KeyAction> pair = (Pair<String, KeyBindManager.KeyAction>) value;
-                model.setKeyBind(pair.getFirst(), pair.getSecond());
+                clientModel.setKeyBind(pair.getFirst(), pair.getSecond());
                 break;
             }
             case ON_KEY_PRESSED: {
                 KeyBindManager.KeyAction keyAction = (KeyBindManager.KeyAction) value;
-                model.setKeyPressed(keyAction);
+                clientModel.setKeyPressed(keyAction);
                 break;
             }
             case ON_KEY_RELEASED: {
                 KeyBindManager.KeyAction keyAction = (KeyBindManager.KeyAction) value;
-                model.setKeyReleased(keyAction);
+                clientModel.setKeyReleased(keyAction);
                 break;
             }
         }

@@ -1,4 +1,4 @@
-package task5.service.engine.entity;
+package task5.server.service.engine.entity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import task5.model.entity.BotEntityModel;
 import task5.model.entity.EntityModel;
 import task5.model.entity.PlayerEntityModel;
 import task5.model.entity.blockentity.BlockEntityModel;
-import task5.service.registry.EntityRegistry;
 
 import java.util.Set;
 

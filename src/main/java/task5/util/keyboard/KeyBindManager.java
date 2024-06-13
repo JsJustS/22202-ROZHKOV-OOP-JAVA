@@ -2,7 +2,7 @@ package task5.util.keyboard;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task5.controller.ClientController;
+import task5.client.controller.ClientController;
 import task5.model.GameModel;
 
 import javax.swing.*;

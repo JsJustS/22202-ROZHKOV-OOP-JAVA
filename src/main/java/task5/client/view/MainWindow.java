@@ -1,8 +1,8 @@
-package task5.view;
+package task5.client.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task5.controller.ClientController;
+import task5.client.controller.ClientController;
 import task5.controller.PlayerController;
 import task5.model.GameModel;
 import task5.model.abilityInstance.Ability;
@@ -10,8 +10,8 @@ import task5.model.entity.Direction;
 import task5.util.Config;
 import task5.util.Pair;
 import task5.util.keyboard.KeyBindManager;
-import task5.view.gameplay.MainGameplayWindow;
-import task5.view.menu.MainMenu;
+import task5.client.view.gameplay.MainGameplayWindow;
+import task5.client.view.menu.MainMenu;
 import task5.util.pubsub.ISubscriber;
 
 import javax.swing.*;

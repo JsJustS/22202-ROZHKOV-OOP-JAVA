@@ -7,7 +7,7 @@ import task5.model.abilityInstance.Ability;
 import task5.model.entity.Direction;
 import task5.model.entity.EntityModel;
 import task5.model.entity.PlayerEntityModel;
-import task5.service.engine.entity.PlayerService;
+import task5.server.service.engine.entity.PlayerService;
 
 public class PlayerController implements IController<PlayerController.OP, GameModel> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class);

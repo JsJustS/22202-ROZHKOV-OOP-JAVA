@@ -1,4 +1,4 @@
-package task5.service.registry;
+package task5.server.service.registry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,10 +6,10 @@ import task5.model.abilityInstance.AbstractAbilityInstanceModel;
 import task5.model.abilityInstance.SpawnBombAbilityInstanceModel;
 import task5.model.abilityInstance.SpawnExplosionAbilityInstanceModel;
 import task5.model.abilityInstance.SpawnSuperBombAbilityInstanceModel;
-import task5.service.engine.ability.AbstractAbilityExecutor;
-import task5.service.engine.ability.SpawnBombAbilityExecutor;
-import task5.service.engine.ability.SpawnExplosionAbilityExecutor;
-import task5.service.engine.ability.SpawnSuperBombAbilityExecutor;
+import task5.server.service.engine.ability.AbstractAbilityExecutor;
+import task5.server.service.engine.ability.SpawnBombAbilityExecutor;
+import task5.server.service.engine.ability.SpawnExplosionAbilityExecutor;
+import task5.server.service.engine.ability.SpawnSuperBombAbilityExecutor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

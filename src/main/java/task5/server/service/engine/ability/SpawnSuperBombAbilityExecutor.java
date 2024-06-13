@@ -1,15 +1,15 @@
-package task5.service.engine.ability;
+package task5.server.service.engine.ability;
 
 import task5.model.GameModel;
 import task5.model.abilityInstance.AbstractAbilityInstanceModel;
-import task5.model.entity.BombEntityModel;
+import task5.model.entity.SuperBombEntityModel;
 
-public class SpawnBombAbilityExecutor extends AbstractAbilityExecutor {
+public class SpawnSuperBombAbilityExecutor extends AbstractAbilityExecutor {
     @Override
     public void execute(AbstractAbilityInstanceModel abilityInstance, GameModel model) {
         super.execute(abilityInstance, model);
 
-        BombEntityModel bomb = new BombEntityModel(abilityInstance.getParent());
+        SuperBombEntityModel bomb = new SuperBombEntityModel(abilityInstance.getParent());
         bomb.setX(abilityInstance.getX());
         bomb.setY(abilityInstance.getY());
         bomb.setId(model.getLastEntityId() + 1);

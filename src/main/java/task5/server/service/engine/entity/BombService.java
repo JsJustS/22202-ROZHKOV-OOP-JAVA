@@ -1,4 +1,4 @@
-package task5.service.engine.entity;
+package task5.server.service.engine.entity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import task5.model.GameModel;
 import task5.model.abilityInstance.SpawnExplosionAbilityInstanceModel;
 import task5.model.entity.BombEntityModel;
 import task5.model.entity.EntityModel;
-import task5.service.registry.EntityRegistry;
+import task5.server.service.registry.EntityRegistry;
 
 public class BombService extends EntityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BombService.class);

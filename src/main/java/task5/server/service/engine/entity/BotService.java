@@ -1,4 +1,4 @@
-package task5.service.engine.entity;
+package task5.server.service.engine.entity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import task5.model.GameModel;
 import task5.model.abilityInstance.SpawnExplosionAbilityInstanceModel;
 import task5.model.entity.*;
 import task5.model.entity.blockentity.BlockEntityModel;
-import task5.service.registry.EntityRegistry;
+import task5.server.service.registry.EntityRegistry;
 import task5.util.Pair;
 
 import java.util.*;

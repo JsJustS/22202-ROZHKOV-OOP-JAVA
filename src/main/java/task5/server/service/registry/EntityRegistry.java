@@ -1,11 +1,11 @@
-package task5.service.registry;
+package task5.server.service.registry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task5.model.entity.*;
 import task5.model.entity.blockentity.Block;
 import task5.model.entity.blockentity.BlockEntityModel;
-import task5.service.engine.entity.*;
+import task5.server.service.engine.entity.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

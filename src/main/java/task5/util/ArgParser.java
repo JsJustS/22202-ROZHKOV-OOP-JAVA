@@ -23,6 +23,16 @@ public class ArgParser {
         return new Argument(ARGS.get(index));
     }
 
+    public Argument getAfter(Argument before) {
+        return getAfter(before.getAsString());
+    }
+
+    public Argument getAfter(String before) {
+        int index = ARGS.indexOf(before);
+        if (index == -1 || index >= ARGS.size() - 1) return null;
+        return get(index + 1);
+    }
+
     public class Argument {
         private final String value;
         Argument(String value) {

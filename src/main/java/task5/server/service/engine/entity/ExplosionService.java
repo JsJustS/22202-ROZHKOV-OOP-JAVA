@@ -1,4 +1,4 @@
-package task5.service.engine.entity;
+package task5.server.service.engine.entity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
