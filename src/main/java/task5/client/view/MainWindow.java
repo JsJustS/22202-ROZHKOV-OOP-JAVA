@@ -2,16 +2,17 @@ package task5.client.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import task5.client.SocketClient;
 import task5.client.controller.ClientController;
-import task5.controller.PlayerController;
 import task5.model.GameModel;
 import task5.model.abilityInstance.Ability;
 import task5.model.entity.Direction;
 import task5.util.Config;
 import task5.util.Pair;
-import task5.util.keyboard.KeyBindManager;
+import task5.client.keyboard.KeyBindManager;
 import task5.client.view.gameplay.MainGameplayWindow;
 import task5.client.view.menu.MainMenu;
+import task5.util.network.c2s.*;
 import task5.util.pubsub.ISubscriber;
 
 import javax.swing.*;
@@ -22,62 +23,64 @@ import java.util.Set;
 public class MainWindow extends JFrame implements ISubscriber {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainWindow.class);
     private final ClientController controller;
-    private final GameModel model;
-    private final PlayerController playerController;
+    private final GameModel clientModel;
+    //private final PlayerController playerController;
+    private final SocketClient clientNetwork;
 
-    public MainWindow(ClientController controller, GameModel model, Config cfg) {
+    public MainWindow(ClientController controller, GameModel clientModel, Config cfg) {
         this.controller = controller;
-        this.model = model;
-        model.subscribe(this);
+        this.clientModel = clientModel;
+        clientModel.subscribe(this);
 
         this.setSize(new Dimension(cfg.getWinWidth(), cfg.getWinHeight()));
         this.setTitle(cfg.getGameTitle());
 
-        model.setCurrentSeed(cfg.getSeed());
-        this.getContentPane().add(new MainMenu(this, controller, model));
+        clientModel.setCurrentSeed(cfg.getSeed());
+        this.getContentPane().add(new MainMenu(this, controller, clientModel));
 
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.initKeyBinds(cfg);
-        this.playerController = new PlayerController();
+        //this.playerController = new PlayerController();
+        this.clientNetwork = new SocketClient(clientModel);
     }
 
     public void initKeyBinds(Config cfg) {
         controller.execute(
-                ClientController.OP.UPDATE_KEYBINDS, model,
+                ClientController.OP.UPDATE_KEYBINDS, clientModel,
                 new Pair<>(cfg.getAbilityKey(), KeyBindManager.KeyAction.USE_ABILITY)
         );
         controller.execute(
-                ClientController.OP.UPDATE_KEYBINDS, model,
+                ClientController.OP.UPDATE_KEYBINDS, clientModel,
                 new Pair<>(cfg.getMoveUpKey(), KeyBindManager.KeyAction.MOVE_UP)
         );
         controller.execute(
-                ClientController.OP.UPDATE_KEYBINDS, model,
+                ClientController.OP.UPDATE_KEYBINDS, clientModel,
                 new Pair<>(cfg.getMoveDownKey(), KeyBindManager.KeyAction.MOVE_DOWN)
         );
         controller.execute(
-                ClientController.OP.UPDATE_KEYBINDS, model,
+                ClientController.OP.UPDATE_KEYBINDS, clientModel,
                 new Pair<>(cfg.getMoveLeftKey(), KeyBindManager.KeyAction.MOVE_LEFT)
         );
         controller.execute(
-                ClientController.OP.UPDATE_KEYBINDS, model,
+                ClientController.OP.UPDATE_KEYBINDS, clientModel,
                 new Pair<>(cfg.getMoveRightKey(), KeyBindManager.KeyAction.MOVE_RIGHT)
         );
         controller.execute(
-                ClientController.OP.UPDATE_KEYBINDS, model,
+                ClientController.OP.UPDATE_KEYBINDS, clientModel,
                 new Pair<>(cfg.getChangeAbilityKey(), KeyBindManager.KeyAction.CHANGE_ABILITY)
         );
         controller.execute(
-                ClientController.OP.UPDATE_KEYBINDS, model,
+                ClientController.OP.UPDATE_KEYBINDS, clientModel,
                 new Pair<>(cfg.getLeaveKey(), KeyBindManager.KeyAction.LEAVE)
         );
     }
 
     @Override
     public void onNotification() {
-        if (model.isGameStateDirty()) {
-            model.setGameStateDirty(false);
+        if (clientModel.isGameStateDirty()) {
+            clientModel.setGameStateDirty(false);
             changeClientState();
         }
 
@@ -85,52 +88,70 @@ public class MainWindow extends JFrame implements ISubscriber {
     }
 
     public void handleKeyActions() {
-        Set<KeyBindManager.KeyAction> keysToHandle = new HashSet<>(model.getPressedKeys());
-        model.clearPressedKeys();
+        Set<KeyBindManager.KeyAction> keysToHandle = new HashSet<>(clientModel.getPressedKeys());
+        clientModel.clearPressedKeys();
         for (KeyBindManager.KeyAction keyAction : keysToHandle) {
             switch (keyAction) {
                 case USE_ABILITY:
-                    playerController.execute(
-                            PlayerController.OP.USE_ABILITY, model,
-                            model.getMainPlayer().getId()
+                    /*playerController.execute(
+                            PlayerController.OP.USE_ABILITY, clientModel,
+                            clientModel.getMainPlayer().getId()
+                    );*/
+                    clientNetwork.sendPacket(
+                            new PlayerAbilityUseC2SPacket(clientModel.getMainPlayer().getId())
                     );
                     break;
                 case CHANGE_ABILITY:
-                    int abilityOrdinal = (model.getMainPlayer().getAbility() == Ability.SIMPLE_BOMB) ?
+                    int abilityOrdinal = (clientModel.getMainPlayer().getAbility() == Ability.SIMPLE_BOMB) ?
                             Ability.SUPER_BOMB.ordinal() :
                             Ability.SIMPLE_BOMB.ordinal();
-                    playerController.execute(
-                            PlayerController.OP.CHANGE_ABILITY, model,
-                            new int[]{model.getMainPlayer().getId(), abilityOrdinal}
+                    /*playerController.execute(
+                            PlayerController.OP.CHANGE_ABILITY, clientModel,
+                            new int[]{clientModel.getMainPlayer().getId(), abilityOrdinal}
+                    );*/
+                    clientNetwork.sendPacket(
+                            new PlayerAbilityChangeC2SPacket(clientModel.getMainPlayer().getId(), abilityOrdinal)
                     );
                     break;
                 case MOVE_UP:
-                    playerController.execute(
-                            PlayerController.OP.MOVE, model,
-                            new int[]{model.getMainPlayer().getId(), Direction.UP.ordinal()}
+                    /*playerController.execute(
+                            PlayerController.OP.MOVE, clientModel,
+                            new int[]{clientModel.getMainPlayer().getId(), Direction.UP.ordinal()}
+                    );*/
+                    clientNetwork.sendPacket(
+                            new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.UP, true)
                     );
                     break;
                 case MOVE_DOWN:
-                    playerController.execute(
-                            PlayerController.OP.MOVE, model,
-                            new int[]{model.getMainPlayer().getId(), Direction.DOWN.ordinal()}
+                    /*playerController.execute(
+                            PlayerController.OP.MOVE, clientModel,
+                            new int[]{clientModel.getMainPlayer().getId(), Direction.DOWN.ordinal()}
+                    );*/
+                    clientNetwork.sendPacket(
+                            new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.DOWN, true)
                     );
                     break;
                 case MOVE_RIGHT:
-                    playerController.execute(
-                            PlayerController.OP.MOVE, model,
-                            new int[]{model.getMainPlayer().getId(), Direction.RIGHT.ordinal()}
+                    /*playerController.execute(
+                            PlayerController.OP.MOVE, clientModel,
+                            new int[]{clientModel.getMainPlayer().getId(), Direction.RIGHT.ordinal()}
+                    );*/
+                    clientNetwork.sendPacket(
+                            new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.RIGHT, true)
                     );
                     break;
                 case MOVE_LEFT:
-                    playerController.execute(
-                            PlayerController.OP.MOVE, model,
-                            new int[]{model.getMainPlayer().getId(), Direction.LEFT.ordinal()}
+                    /*playerController.execute(
+                            PlayerController.OP.MOVE, clientModel,
+                            new int[]{clientModel.getMainPlayer().getId(), Direction.LEFT.ordinal()}
+                    );*/
+                    clientNetwork.sendPacket(
+                            new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.LEFT, true)
                     );
                     break;
                 case LEAVE:
                     controller.execute(
-                            ClientController.OP.CHANGE_GAMESTATE, model,
+                            ClientController.OP.CHANGE_GAMESTATE, clientModel,
                             GameModel.GAMESTATE.MENU
                     );
                     break;
@@ -140,8 +161,8 @@ public class MainWindow extends JFrame implements ISubscriber {
             }
         }
 
-        keysToHandle = new HashSet<>(model.getReleasedKeys());
-        model.clearReleasedKeys();
+        keysToHandle = new HashSet<>(clientModel.getReleasedKeys());
+        clientModel.clearReleasedKeys();
         for (KeyBindManager.KeyAction keyAction : keysToHandle) {
             switch (keyAction) {
                 case USE_ABILITY:
@@ -154,9 +175,12 @@ public class MainWindow extends JFrame implements ISubscriber {
                 case MOVE_DOWN:
                 case MOVE_RIGHT:
                 case MOVE_LEFT:
-                    playerController.execute(
-                            PlayerController.OP.MOVE, model,
-                            new int[]{model.getMainPlayer().getId(), -1}
+                    /*playerController.execute(
+                            PlayerController.OP.MOVE, clientModel,
+                            new int[]{clientModel.getMainPlayer().getId(), -1}
+                    );*/
+                    clientNetwork.sendPacket(
+                            new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.DOWN, false)
                     );
                     break;
                 default: {
@@ -168,22 +192,28 @@ public class MainWindow extends JFrame implements ISubscriber {
 
     private void changeClientState() {
         this.getContentPane().removeAll();
-        switch (model.getGameState()) {
+        switch (clientModel.getGameState()) {
             case MENU: {
                 this.getContentPane().removeAll();
-                this.getContentPane().add(new MainMenu(this, controller, model));
-                playerController.execute(
-                        PlayerController.OP.LEAVE, model,
+                this.getContentPane().add(new MainMenu(this, controller, clientModel));
+                /*playerController.execute(
+                        PlayerController.OP.LEAVE, clientModel,
                         null
+                );*/
+                clientNetwork.sendPacket(
+                        new PlayerLeaveC2SPacket(clientModel.getMainPlayer().getId())
                 );
                 break;
             }
             case INGAME: {
                 this.getContentPane().removeAll();
-                this.getContentPane().add(new MainGameplayWindow(this, controller, model));
-                playerController.execute(
-                        PlayerController.OP.JOIN, model,
+                this.getContentPane().add(new MainGameplayWindow(this, controller, clientModel));
+                /*playerController.execute(
+                        PlayerController.OP.JOIN, clientModel,
                         null
+                );*/
+                clientNetwork.sendPacket(
+                        new PlayerJoinC2SPacket()
                 );
                 break;
             }
@@ -191,7 +221,7 @@ public class MainWindow extends JFrame implements ISubscriber {
                 LOGGER.error("Unsupported GameState change");
             }
         }
-        model.setGameStateDirty(false);
+        clientModel.setGameStateDirty(false);
         this.revalidate();
         this.repaint();
     }

@@ -1,4 +1,4 @@
-package task5.util.keyboard;
+package task5.client.keyboard;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,7 +4,7 @@ import task5.client.controller.ClientController;
 import task5.model.GameModel;
 import task5.model.abilityInstance.Ability;
 import task5.util.ResourceManager;
-import task5.util.keyboard.KeyBindManager;
+import task5.client.keyboard.KeyBindManager;
 
 import javax.swing.*;
 import java.awt.*;

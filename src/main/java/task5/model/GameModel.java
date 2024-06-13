@@ -3,7 +3,7 @@ package task5.model;
 import task5.model.abilityInstance.AbstractAbilityInstanceModel;
 import task5.model.entity.EntityModel;
 import task5.model.entity.PlayerEntityModel;
-import task5.util.keyboard.KeyBindManager;
+import task5.client.keyboard.KeyBindManager;
 import task5.util.pubsub.Publisher;
 
 import java.util.HashMap;
