@@ -1,18 +1,18 @@
-package task3.view;
+package task5.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.controller.ClientController;
-import task3.controller.PlayerController;
-import task3.model.GameModel;
-import task3.model.abilityInstance.Ability;
-import task3.model.entity.Direction;
-import task3.util.Config;
-import task3.util.Pair;
-import task3.util.keyboard.KeyBindManager;
-import task3.view.gameplay.MainGameplayWindow;
-import task3.view.menu.MainMenu;
-import task3.util.pubsub.ISubscriber;
+import task5.controller.ClientController;
+import task5.controller.PlayerController;
+import task5.model.GameModel;
+import task5.model.abilityInstance.Ability;
+import task5.model.entity.Direction;
+import task5.util.Config;
+import task5.util.Pair;
+import task5.util.keyboard.KeyBindManager;
+import task5.view.gameplay.MainGameplayWindow;
+import task5.view.menu.MainMenu;
+import task5.util.pubsub.ISubscriber;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,6 +1,6 @@
-package task3.model.abilityInstance;
+package task5.model.abilityInstance;
 
-import task3.model.entity.EntityModel;
+import task5.model.entity.EntityModel;
 
 public class SpawnBombAbilityInstanceModel extends AbstractAbilityInstanceModel {
 

@@ -1,11 +1,11 @@
-package task3;
+package task5;
 
-import task3.controller.ClientController;
-import task3.model.GameModel;
-import task3.service.engine.GameEngine;
-import task3.util.ArgParser;
-import task3.util.Config;
-import task3.view.MainWindow;
+import task5.controller.ClientController;
+import task5.model.GameModel;
+import task5.service.engine.GameEngine;
+import task5.util.ArgParser;
+import task5.util.Config;
+import task5.view.MainWindow;
 
 import javax.swing.*;
 

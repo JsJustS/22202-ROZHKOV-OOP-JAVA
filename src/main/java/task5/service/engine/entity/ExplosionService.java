@@ -1,10 +1,10 @@
-package task3.service.engine.entity;
+package task5.service.engine.entity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.model.GameModel;
-import task3.model.entity.EntityModel;
-import task3.model.entity.ExplosionEntityModel;
+import task5.model.GameModel;
+import task5.model.entity.EntityModel;
+import task5.model.entity.ExplosionEntityModel;
 
 public class ExplosionService extends EntityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExplosionService.class);

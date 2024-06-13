@@ -1,7 +1,7 @@
-package task3.service.engine;
+package task5.service.engine;
 
-import task3.model.entity.blockentity.Block;
-import task3.util.Pair;
+import task5.model.entity.blockentity.Block;
+import task5.util.Pair;
 
 import java.util.List;
 import java.util.Random;

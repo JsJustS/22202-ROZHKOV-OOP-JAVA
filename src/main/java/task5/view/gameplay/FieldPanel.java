@@ -1,9 +1,9 @@
-package task3.view.gameplay;
+package task5.view.gameplay;
 
-import task3.model.GameModel;
-import task3.model.entity.EntityModel;
-import task3.model.entity.RenderLayer;
-import task3.util.ResourceManager;
+import task5.model.GameModel;
+import task5.model.entity.EntityModel;
+import task5.model.entity.RenderLayer;
+import task5.util.ResourceManager;
 
 import javax.swing.*;
 import java.awt.*;

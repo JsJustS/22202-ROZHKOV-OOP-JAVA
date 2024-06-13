@@ -1,8 +1,8 @@
-package task3.view.menu;
+package task5.view.menu;
 
-import task3.controller.ClientController;
-import task3.model.GameModel;
-import task3.util.ResourceManager;
+import task5.controller.ClientController;
+import task5.model.GameModel;
+import task5.util.ResourceManager;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.text.NumberFormat;
 
 public class MainMenu extends JPanel {
-    private final String bgImageFilename = "img/menu_bg.png";
+    private final String bgImageFilename = "task5/img/menu_bg.png";
     private final BufferedImage bgImage;
     private final double buttonRatioCoefficient = 0.3;
     private final JFormattedTextField seedField;

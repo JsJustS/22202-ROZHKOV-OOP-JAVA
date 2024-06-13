@@ -1,11 +1,11 @@
-package task3.service.registry;
+package task5.service.registry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.model.entity.*;
-import task3.model.entity.blockentity.Block;
-import task3.model.entity.blockentity.BlockEntityModel;
-import task3.service.engine.entity.*;
+import task5.model.entity.*;
+import task5.model.entity.blockentity.Block;
+import task5.model.entity.blockentity.BlockEntityModel;
+import task5.service.engine.entity.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -18,12 +18,12 @@ public class EntityRegistry {
 
     static {
         registerBlock(Block.AIR, 0, 0, false, null);
-        registerBlock(Block.BEDROCK, 100, 0, true, "img/entity/block/bedrock.png");
-        registerBlock(Block.BRICK, 5, 3, true, "img/entity/block/brick.png");
-        registerBlock(Block.STONE, 2, 2, true, "img/entity/block/stone.png");
-        registerBlock(Block.COBBLESTONE, 1,  1,true, "img/entity/block/cobblestone.png");
-        registerBlock(Block.GOLD, 1, 5,true, "img/entity/block/gold.png");
-        registerBlock(Block.DIAMOND, 1, 10, true, "img/entity/block/diamond.png");
+        registerBlock(Block.BEDROCK, 100, 0, true, "task5/img/entity/block/bedrock.png");
+        registerBlock(Block.BRICK, 5, 3, true, "task5/img/entity/block/brick.png");
+        registerBlock(Block.STONE, 2, 2, true, "task5/img/entity/block/stone.png");
+        registerBlock(Block.COBBLESTONE, 1,  1,true, "task5/img/entity/block/cobblestone.png");
+        registerBlock(Block.GOLD, 1, 5,true, "task5/img/entity/block/gold.png");
+        registerBlock(Block.DIAMOND, 1, 10, true, "task5/img/entity/block/diamond.png");
 
         registerEntityService(EntityModel.class, EntityService.class);
         registerEntityService(PlayerEntityModel.class, PlayerService.class);

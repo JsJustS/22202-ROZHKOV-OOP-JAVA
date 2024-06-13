@@ -1,8 +1,8 @@
-package task3.service.engine.ability;
+package task5.service.engine.ability;
 
-import task3.model.GameModel;
-import task3.model.abilityInstance.AbstractAbilityInstanceModel;
-import task3.model.entity.SuperBombEntityModel;
+import task5.model.GameModel;
+import task5.model.abilityInstance.AbstractAbilityInstanceModel;
+import task5.model.entity.SuperBombEntityModel;
 
 public class SpawnSuperBombAbilityExecutor extends AbstractAbilityExecutor {
     @Override

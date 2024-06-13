@@ -1,8 +1,8 @@
-package task3.controller;
+package task5.controller;
 
-import task3.model.GameModel;
-import task3.util.Pair;
-import task3.util.keyboard.KeyBindManager;
+import task5.model.GameModel;
+import task5.util.Pair;
+import task5.util.keyboard.KeyBindManager;
 
 public class ClientController implements IController<ClientController.OP, GameModel> {
 

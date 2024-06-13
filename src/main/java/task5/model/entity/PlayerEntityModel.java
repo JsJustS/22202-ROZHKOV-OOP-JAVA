@@ -1,6 +1,6 @@
-package task3.model.entity;
+package task5.model.entity;
 
-import task3.model.abilityInstance.Ability;
+import task5.model.abilityInstance.Ability;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +35,8 @@ public class PlayerEntityModel extends EntityModel {
 
     private void loadSprites(Direction direction, String spriteName) {
         List<String> spriteSheet = new ArrayList<>();
-        spriteSheet.add(String.format("img/entity/player/player_%s_1.png", spriteName));
-        spriteSheet.add(String.format("img/entity/player/player_%s_2.png", spriteName));
+        spriteSheet.add(String.format("task5/img/entity/player/player_%s_1.png", spriteName));
+        spriteSheet.add(String.format("task5/img/entity/player/player_%s_2.png", spriteName));
         this.addSpriteSheet(direction, spriteSheet);
     }
 

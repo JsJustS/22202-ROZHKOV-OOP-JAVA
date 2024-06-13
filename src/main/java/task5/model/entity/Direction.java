@@ -1,4 +1,4 @@
-package task3.model.entity;
+package task5.model.entity;
 
 public enum Direction {
     UP,

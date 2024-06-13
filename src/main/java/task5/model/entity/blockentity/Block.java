@@ -1,4 +1,4 @@
-package task3.model.entity.blockentity;
+package task5.model.entity.blockentity;
 
 import java.util.Arrays;
 import java.util.List;

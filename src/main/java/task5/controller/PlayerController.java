@@ -1,13 +1,13 @@
-package task3.controller;
+package task5.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.model.GameModel;
-import task3.model.abilityInstance.Ability;
-import task3.model.entity.Direction;
-import task3.model.entity.EntityModel;
-import task3.model.entity.PlayerEntityModel;
-import task3.service.engine.entity.PlayerService;
+import task5.model.GameModel;
+import task5.model.abilityInstance.Ability;
+import task5.model.entity.Direction;
+import task5.model.entity.EntityModel;
+import task5.model.entity.PlayerEntityModel;
+import task5.service.engine.entity.PlayerService;
 
 public class PlayerController implements IController<PlayerController.OP, GameModel> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class);

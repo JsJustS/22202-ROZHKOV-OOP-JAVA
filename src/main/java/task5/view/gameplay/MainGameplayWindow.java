@@ -1,10 +1,10 @@
-package task3.view.gameplay;
+package task5.view.gameplay;
 
-import task3.controller.ClientController;
-import task3.model.GameModel;
-import task3.model.abilityInstance.Ability;
-import task3.util.ResourceManager;
-import task3.util.keyboard.KeyBindManager;
+import task5.controller.ClientController;
+import task5.model.GameModel;
+import task5.model.abilityInstance.Ability;
+import task5.util.ResourceManager;
+import task5.util.keyboard.KeyBindManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +15,8 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
     private final FieldPanel field;
     private final KeyBindManager keyBindManager;
     private final GameModel clientModel;
-    private final String bombSprite = "img/entity/bomb/bomb_1.png";
-    private final String superBombSprite = "img/entity/bomb/super_bomb_1.png";
+    private final String bombSprite = "task5/img/entity/bomb/bomb_1.png";
+    private final String superBombSprite = "task5/img/entity/bomb/super_bomb_1.png";
 
     public MainGameplayWindow(JFrame parent, ClientController controller, GameModel model) {
         Timer timer = new Timer(1000/60, this);

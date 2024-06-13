@@ -1,19 +1,19 @@
-package task3.service.engine;
+package task5.service.engine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.model.GameModel;
-import task3.model.abilityInstance.AbstractAbilityInstanceModel;
-import task3.model.entity.BotEntityModel;
-import task3.model.entity.EntityModel;
-import task3.model.entity.PlayerEntityModel;
-import task3.model.entity.blockentity.Block;
-import task3.model.entity.blockentity.BlockEntityModel;
-import task3.service.engine.ability.AbstractAbilityExecutor;
-import task3.service.engine.entity.EntityService;
-import task3.service.registry.AbilityRegistry;
-import task3.service.registry.EntityRegistry;
-import task3.util.Config;
+import task5.model.GameModel;
+import task5.model.abilityInstance.AbstractAbilityInstanceModel;
+import task5.model.entity.BotEntityModel;
+import task5.model.entity.EntityModel;
+import task5.model.entity.PlayerEntityModel;
+import task5.model.entity.blockentity.Block;
+import task5.model.entity.blockentity.BlockEntityModel;
+import task5.service.engine.ability.AbstractAbilityExecutor;
+import task5.service.engine.entity.EntityService;
+import task5.service.registry.AbilityRegistry;
+import task5.service.registry.EntityRegistry;
+import task5.util.Config;
 
 import java.util.HashSet;
 import java.util.Random;

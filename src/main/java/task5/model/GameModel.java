@@ -1,10 +1,10 @@
-package task3.model;
+package task5.model;
 
-import task3.model.abilityInstance.AbstractAbilityInstanceModel;
-import task3.model.entity.EntityModel;
-import task3.model.entity.PlayerEntityModel;
-import task3.util.keyboard.KeyBindManager;
-import task3.util.pubsub.Publisher;
+import task5.model.abilityInstance.AbstractAbilityInstanceModel;
+import task5.model.entity.EntityModel;
+import task5.model.entity.PlayerEntityModel;
+import task5.util.keyboard.KeyBindManager;
+import task5.util.pubsub.Publisher;
 
 import java.util.HashMap;
 import java.util.HashSet;

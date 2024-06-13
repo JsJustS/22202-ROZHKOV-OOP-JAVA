@@ -1,9 +1,9 @@
-package task3.util.keyboard;
+package task5.util.keyboard;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.controller.ClientController;
-import task3.model.GameModel;
+import task5.controller.ClientController;
+import task5.model.GameModel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

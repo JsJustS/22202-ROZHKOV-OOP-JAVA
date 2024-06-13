@@ -1,4 +1,4 @@
-package task3.util;
+package task5.util;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

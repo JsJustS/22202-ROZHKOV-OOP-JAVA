@@ -1,10 +1,10 @@
-package task3.service.engine.entity;
+package task5.service.engine.entity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.model.entity.EntityModel;
-import task3.model.GameModel;
-import task3.model.entity.blockentity.BlockEntityModel;
+import task5.model.entity.EntityModel;
+import task5.model.GameModel;
+import task5.model.entity.blockentity.BlockEntityModel;
 
 import java.util.HashSet;
 import java.util.Set;

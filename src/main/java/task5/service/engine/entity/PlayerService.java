@@ -1,16 +1,16 @@
-package task3.service.engine.entity;
+package task5.service.engine.entity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task3.model.GameModel;
-import task3.model.abilityInstance.SpawnBombAbilityInstanceModel;
-import task3.model.abilityInstance.SpawnSuperBombAbilityInstanceModel;
-import task3.model.entity.BombEntityModel;
-import task3.model.entity.BotEntityModel;
-import task3.model.entity.EntityModel;
-import task3.model.entity.PlayerEntityModel;
-import task3.model.entity.blockentity.BlockEntityModel;
-import task3.service.registry.EntityRegistry;
+import task5.model.GameModel;
+import task5.model.abilityInstance.SpawnBombAbilityInstanceModel;
+import task5.model.abilityInstance.SpawnSuperBombAbilityInstanceModel;
+import task5.model.entity.BombEntityModel;
+import task5.model.entity.BotEntityModel;
+import task5.model.entity.EntityModel;
+import task5.model.entity.PlayerEntityModel;
+import task5.model.entity.blockentity.BlockEntityModel;
+import task5.service.registry.EntityRegistry;
 
 import java.util.Set;
 

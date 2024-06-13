@@ -1,4 +1,4 @@
-package task3.model.entity;
+package task5.model.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,11 @@ public class ExplosionEntityModel extends EntityModel {
     @Override
     public void loadSpriteSheets() {
         List<String> spriteSheet = new ArrayList<>();
-        spriteSheet.add("img/entity/bomb/explosion_1.png");
-        spriteSheet.add("img/entity/bomb/explosion_2.png");
-        spriteSheet.add("img/entity/bomb/explosion_3.png");
-        spriteSheet.add("img/entity/bomb/explosion_4.png");
-        spriteSheet.add("img/entity/bomb/explosion_5.png");
+        spriteSheet.add("task5/img/entity/bomb/explosion_1.png");
+        spriteSheet.add("task5/img/entity/bomb/explosion_2.png");
+        spriteSheet.add("task5/img/entity/bomb/explosion_3.png");
+        spriteSheet.add("task5/img/entity/bomb/explosion_4.png");
+        spriteSheet.add("task5/img/entity/bomb/explosion_5.png");
         this.addSpriteSheet(direction, spriteSheet);
     }
 

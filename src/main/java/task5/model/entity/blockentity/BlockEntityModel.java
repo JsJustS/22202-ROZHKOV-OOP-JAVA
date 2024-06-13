@@ -1,7 +1,7 @@
-package task3.model.entity.blockentity;
+package task5.model.entity.blockentity;
 
-import task3.model.entity.EntityModel;
-import task3.model.entity.RenderLayer;
+import task5.model.entity.EntityModel;
+import task5.model.entity.RenderLayer;
 
 public class BlockEntityModel extends EntityModel {
     protected int blastResistance = 0;

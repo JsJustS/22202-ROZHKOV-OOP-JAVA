@@ -1,7 +1,7 @@
-package task3.model.entity;
+package task5.model.entity;
 
-import task3.model.IModel;
-import task3.model.abilityInstance.Ability;
+import task5.model.IModel;
+import task5.model.abilityInstance.Ability;
 
 import java.util.HashMap;
 import java.util.List;
