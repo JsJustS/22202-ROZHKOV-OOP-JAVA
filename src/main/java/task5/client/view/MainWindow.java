@@ -17,6 +17,7 @@ import task5.util.pubsub.ISubscriber;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -194,27 +195,29 @@ public class MainWindow extends JFrame implements ISubscriber {
         this.getContentPane().removeAll();
         switch (clientModel.getGameState()) {
             case MENU: {
+                this.clientNetwork.disconnect();
                 this.getContentPane().removeAll();
                 this.getContentPane().add(new MainMenu(this, controller, clientModel));
                 /*playerController.execute(
                         PlayerController.OP.LEAVE, clientModel,
                         null
                 );*/
-                clientNetwork.sendPacket(
-                        new PlayerLeaveC2SPacket(clientModel.getMainPlayer().getId())
-                );
                 break;
             }
             case INGAME: {
-                this.getContentPane().removeAll();
-                this.getContentPane().add(new MainGameplayWindow(this, controller, clientModel));
+                try {
+                    this.clientNetwork.connect();
+                    this.clientNetwork.startS2CHandler();
+                    this.getContentPane().removeAll();
+                    this.getContentPane().add(new MainGameplayWindow(this, controller, clientModel));
+                } catch (IOException e) {
+                    LOGGER.error("Could not connect to server ("+ clientModel.getHostAddress() + ":" + clientModel.getPort() +") : " + e.getMessage());
+                    clientModel.setGameState(GameModel.GAMESTATE.MENU);
+                }
                 /*playerController.execute(
                         PlayerController.OP.JOIN, clientModel,
                         null
                 );*/
-                clientNetwork.sendPacket(
-                        new PlayerJoinC2SPacket()
-                );
                 break;
             }
             default: {

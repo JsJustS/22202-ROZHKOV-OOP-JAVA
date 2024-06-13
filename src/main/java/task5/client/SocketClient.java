@@ -4,13 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task5.model.GameModel;
 import task5.util.network.Packet;
+import task5.util.network.PacketBuf;
 import task5.util.network.SocketConnection;
-import task5.util.pubsub.ISubscriber;
+import task5.util.network.s2c.ClientApproveS2CPacket;
+import task5.util.network.s2c.PacketS2CType;
 
 import java.io.IOException;
 import java.net.Socket;
 
-public class SocketClient implements ISubscriber {
+public class SocketClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(SocketClient.class);
     private final GameModel clientModel;
     private SocketConnection connection;
@@ -21,18 +23,29 @@ public class SocketClient implements ISubscriber {
     }
 
     public void connect() throws IOException {
-        Socket socket = new Socket(clientModel.getHostName(), clientModel.getPort());
+        Socket socket = new Socket(clientModel.getHostAddress(), clientModel.getPort());
         this.connection = new SocketConnection(socket);
         this.threadS2CPackets = new Thread(() -> {
-            while (Thread.currentThread().isAlive()) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    Packet packet = this.connection.read();
-                    this.applyPacket(packet);
+                    PacketBuf buf = this.connection.read();
+                    this.applyPacket(buf);
                 } catch (IOException | ClassNotFoundException e) {
                     LOGGER.error("Error while handling S2C packet: " + e.getMessage());
                 }
             }
         }, "Client-S2C");
+    }
+
+    public void disconnect() {
+        if (this.connection == null) return;
+        this.threadS2CPackets.interrupt();
+        try {
+            this.connection.stop();
+        } catch (IOException e) {
+            LOGGER.warn("Caught error while closing socket: " + e.getMessage());
+        }
+        this.connection = null;
     }
 
     public void startS2CHandler() {
@@ -49,27 +62,30 @@ public class SocketClient implements ISubscriber {
 
     public void sendPacket(Packet packet) {
         try {
-            this.connection.write(packet);
+            this.connection.write(packet.serialize());
         } catch (IOException e) {
             LOGGER.error("Error while sending C2S packet: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void onNotification() {
-        if (!clientModel.getPressedKeys().isEmpty()) {
-            //todo: send pressed keys
-        }
-
-        if (!clientModel.getReleasedKeys().isEmpty()) {
-            //todo: send released keys
         }
     }
 
     /**
      * Applies S2C packets on client-sided GameModel instance
      * */
-    private void applyPacket(Packet packetS2C) {
+    private void applyPacket(PacketBuf packetBuf) {
+        try {
+            int packetTypeOrdinal = packetBuf.readInt();
+            PacketS2CType packetC2SType = PacketS2CType.values()[packetTypeOrdinal];
 
+            switch (packetC2SType) {
+
+                case ClientApprove: {
+                    ClientApproveS2CPacket packet = new ClientApproveS2CPacket(packetBuf);
+                    clientModel.setClientUUID(packet.getClientUUID());
+                }
+
+            }
+        } catch (IOException e) {
+            LOGGER.error("Could not apply S2C packet: " + e.getMessage());
+        }
     }
 }

@@ -12,21 +12,16 @@ public class PlayerAbilityUseC2SPacket extends Packet {
         this.playerId = id;
     }
 
-    @Override
-    public PacketBuf serialize() {
-        PacketBuf buf = super.serialize();
-        buf.writeInt(playerId);
-        return buf;
+    public PlayerAbilityUseC2SPacket(PacketBuf buf) throws IOException {
+        this.playerId = buf.readInt();
     }
 
     @Override
-    public void deserialize(PacketBuf buf) {
-        super.deserialize(buf);
-        try {
-            this.playerId = buf.readInt();
-        } catch (IOException e) {
-            LOGGER.error("Could not deserialize" + PlayerAbilityUseC2SPacket.class.getSimpleName() + " packet due to and error: " + e.getMessage());
-        }
+    public PacketBuf serialize() {
+        PacketBuf buf = super.serialize();
+        buf.writeInt(PacketC2SType.PlayerAbilityUse.ordinal());
+        buf.writeInt(playerId);
+        return buf;
     }
 
     public int getPlayerId() {

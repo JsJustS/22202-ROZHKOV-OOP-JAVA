@@ -1,21 +1,33 @@
 package task5.util.network;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 
-public class PacketBuf {
+public class PacketBuf implements Serializable {
     private ByteBuffer buffer;
+    private int rd;
 
     public PacketBuf() {
         this.buffer = null;
+        this.rd = 0;
+    }
+
+    public PacketBuf(byte[] data) {
+        this.buffer = ByteBuffer.wrap(data);
+        this.rd = 0;
+    }
+
+    public byte[] asArray() {
+        return buffer.array();
     }
 
     private void expand(int size) {
         if (buffer == null) {
             this.buffer = ByteBuffer.allocate(size);
         } else {
-            ByteBuffer old = this.buffer;
+            byte[] old = this.buffer.array();
             this.buffer = ByteBuffer.allocate(this.buffer.capacity() + size);
             this.buffer.put(old);
         }
@@ -61,9 +73,19 @@ public class PacketBuf {
         this.buffer.put((byte)((value) ? 1 : 0));
     }
 
+    public void writeString(String value) {
+        expand(Integer.BYTES + value.length() * Character.BYTES);
+        this.buffer.putInt(value.length());
+        for (char c : value.toCharArray()) {
+            this.buffer.putChar(c);
+        }
+    }
+
     public byte readByte() throws IOException {
         try {
-            return this.buffer.get();
+            byte value = this.buffer.get(this.rd);
+            this.rd += Byte.BYTES;
+            return value;
         } catch (BufferUnderflowException e) {
             throw new IOException("No data to read.");
         }
@@ -71,7 +93,9 @@ public class PacketBuf {
 
     public char readChar() throws IOException {
         try {
-            return this.buffer.getChar();
+            char value = this.buffer.getChar(this.rd);
+            this.rd += Character.BYTES;
+            return value;
         } catch (BufferUnderflowException e) {
             throw new IOException("No data to read.");
         }
@@ -79,7 +103,9 @@ public class PacketBuf {
 
     public short readShort() throws IOException {
         try {
-            return this.buffer.getShort();
+            short value = this.buffer.getShort(this.rd);
+            this.rd += Short.BYTES;
+            return value;
         } catch (BufferUnderflowException e) {
             throw new IOException("No data to read.");
         }
@@ -87,7 +113,9 @@ public class PacketBuf {
 
     public int readInt() throws IOException {
         try {
-            return this.buffer.getInt();
+            int value = this.buffer.getInt(this.rd);
+            this.rd += Integer.BYTES;
+            return value;
         } catch (BufferUnderflowException e) {
             throw new IOException("No data to read.");
         }
@@ -95,7 +123,9 @@ public class PacketBuf {
 
     public long readLong() throws IOException {
         try {
-            return this.buffer.getLong();
+            long value = this.buffer.getLong(this.rd);
+            this.rd += Long.BYTES;
+            return value;
         } catch (BufferUnderflowException e) {
             throw new IOException("No data to read.");
         }
@@ -103,7 +133,9 @@ public class PacketBuf {
 
     public float readFloat() throws IOException {
         try {
-            return this.buffer.getFloat();
+            float value = this.buffer.getFloat(this.rd);
+            this.rd += Float.BYTES;
+            return value;
         } catch (BufferUnderflowException e) {
             throw new IOException("No data to read.");
         }
@@ -111,7 +143,9 @@ public class PacketBuf {
 
     public double readDouble() throws IOException {
         try {
-            return this.buffer.getDouble();
+            double value = this.buffer.getDouble(this.rd);
+            this.rd += Double.BYTES;
+            return value;
         } catch (BufferUnderflowException e) {
             throw new IOException("No data to read.");
         }
@@ -119,9 +153,20 @@ public class PacketBuf {
 
     public boolean readBoolean() throws IOException {
         try {
-            return (this.buffer.get() != 0);
+            boolean value = (this.buffer.get(this.rd) != 0);
+            this.rd += Byte.BYTES;
+            return value;
         } catch (BufferUnderflowException e) {
             throw new IOException("No data to read.");
         }
+    }
+
+    public String readString() throws IOException {
+        int length = readInt();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; ++i) {
+            builder.append(readChar());
+        }
+        return builder.toString();
     }
 }

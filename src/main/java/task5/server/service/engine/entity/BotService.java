@@ -346,4 +346,13 @@ public class BotService extends EntityService {
         }
         return answer;
     }
+
+    public static BotEntityModel getFirstBotEntity(GameModel model) {
+        for (EntityModel entity : model.getEntities()) {
+            if (entity instanceof BotEntityModel) {
+                return (BotEntityModel) entity;
+            }
+        }
+        return null;
+    }
 }

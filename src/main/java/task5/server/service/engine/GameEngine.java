@@ -6,54 +6,61 @@ import task5.model.GameModel;
 import task5.model.abilityInstance.AbstractAbilityInstanceModel;
 import task5.model.entity.BotEntityModel;
 import task5.model.entity.EntityModel;
-import task5.model.entity.PlayerEntityModel;
 import task5.model.entity.blockentity.Block;
 import task5.model.entity.blockentity.BlockEntityModel;
+import task5.server.SocketServer;
 import task5.server.service.engine.ability.AbstractAbilityExecutor;
 import task5.server.service.engine.entity.EntityService;
 import task5.server.service.registry.AbilityRegistry;
 import task5.server.service.registry.EntityRegistry;
 import task5.util.Config;
+import task5.util.pubsub.ISubscriber;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class GameEngine {
+public class GameEngine implements ISubscriber {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameEngine.class);
     private final Config config;
-    private final GameModel model;
+    private final GameModel serverModel;
+    private final SocketServer serverNetwork;
 
     private final Random random = new Random();
 
-    public GameEngine(Config config, GameModel model) {
+    public GameEngine(Config config, GameModel serverModel, int port) throws IOException {
         this.config = config;
-        this.model = model;
-        model.setTicksPerSecond(20);
+        this.serverModel = serverModel;
+        serverModel.setTicksPerSecond(20);
+        serverModel.subscribe(this);
+
+        this.serverNetwork = new SocketServer(serverModel, port);
+        this.serverNetwork.start();
     }
 
     public void start() {
         long last = System.currentTimeMillis();
         boolean hadPlayer = false;
         while (true) {
-            if (System.currentTimeMillis() - last < 1000 / model.getTicksPerSecond()) {
+            if (System.currentTimeMillis() - last < 1000 / serverModel.getTicksPerSecond()) {
                 continue;
             }
 
-            if (model.hasPlayer() && !hadPlayer) {
-                if (model.getCurrentSeed() == 0) {
+            if (serverModel.hasPlayer() && !hadPlayer) {
+                if (serverModel.getCurrentSeed() == 0) {
                     resetGame(random.nextLong());
                 } else {
                     resetGame();
                 }
                 startGame();
                 hadPlayer = true;
-            } else if (!model.hasPlayer() && hadPlayer) {
+            } else if (!serverModel.hasPlayer() && hadPlayer) {
                 stopGame();
                 hadPlayer = false;
             }
 
-            if (model.isGameRunning()) {
+            if (serverModel.isGameRunning()) {
                 this.tick();
             }
             last = System.currentTimeMillis();
@@ -61,44 +68,49 @@ public class GameEngine {
     }
 
     public void startGame() {
-        model.setGameRunning(true);
+        serverModel.setGameRunning(true);
     }
 
     public void stopGame() {
-        model.setGameRunning(false);
+        serverModel.setGameRunning(false);
     }
 
     public void resetGame(long seed) {
-        model.setCurrentSeed(seed);
-        this.random.setSeed(model.getCurrentSeed());
+        serverModel.setCurrentSeed(seed);
+        this.random.setSeed(serverModel.getCurrentSeed());
         resetGame();
     }
 
     public void resetGame() {
-        model.setFieldWidthInBlocks(this.config.getFieldWidth());
-        model.setFieldHeightInBlocks(this.config.getFieldHeight());
+        serverModel.setFieldWidthInBlocks(this.config.getFieldWidth());
+        serverModel.setFieldHeightInBlocks(this.config.getFieldHeight());
 
-        model.clearEntities();
-        model.clearAbilityInstances();
-        model.setRoundTicksLeft(config.getRoundSeconds() * model.getTicksPerSecond());
+        serverModel.clearEntities();
+        serverModel.clearAbilityInstances();
 
-        int pointsForWin = this.generateField();
+        int maxPlayer = 4;
+        this.populateMapWithBots(maxPlayer);
 
-        PlayerEntityModel playerEntity = new PlayerEntityModel();
+
+        //model.setRoundTicksLeft(config.getRoundSeconds() * model.getTicksPerSecond());
+
+        //int pointsForWin = this.generateField();
+
+        /*PlayerEntityModel playerEntity = new PlayerEntityModel();
         playerEntity.setX(2.5);
         playerEntity.setY(2.5);
 
         playerEntity.setId(model.getLastEntityId()+1);
         model.setLastEntityId(playerEntity.getId());
-        model.addEntity(playerEntity);
+        model.addEntity(playerEntity);*/
 
-        model.setMainPlayer(playerEntity);
+        //model.setMainPlayer(playerEntity);
 
-        this.populateMapWithBots(config.getBots());
-        pointsForWin += 100 * config.getBots();
 
-        pointsForWin  = (int)(pointsForWin * config.getDifficultyModifier());
-        model.setPointsForWin(pointsForWin);
+        //pointsForWin += 100 * config.getBots();
+
+        //pointsForWin  = (int)(pointsForWin * config.getDifficultyModifier());
+        //model.setPointsForWin(pointsForWin);
     }
 
     public void tick() {
@@ -110,36 +122,36 @@ public class GameEngine {
         // Entities (live, die, etc)
         tickEntities();
 
-        if (model.getMainPlayer().getPoints() >= model.getPointsForWin()) {
+        /*if (model.getMainPlayer().getPoints() >= model.getPointsForWin()) {
             this.stopGame();
-        }
+        }*/
 
-        model.setRoundTicksLeft(model.getRoundTicksLeft() - 1);
+        /*model.setRoundTicksLeft(model.getRoundTicksLeft() - 1);
         if (model.getRoundTicksLeft() <= 0) {
             model.getMainPlayer().setAlive(false);
             stopGame();
-        }
+        }*/
     }
 
     private void tickAbilityInstances() {
         Set<AbstractAbilityInstanceModel> abilitiesToBeRemoved = new HashSet<>();
-        for (AbstractAbilityInstanceModel abilityInstance : model.getAbilityInstances()) {
+        for (AbstractAbilityInstanceModel abilityInstance : serverModel.getAbilityInstances()) {
             AbstractAbilityExecutor executor = AbilityRegistry.getExecutor(abilityInstance);
             abilitiesToBeRemoved.add(abilityInstance);
             if (executor == null) {
                 LOGGER.warn(String.format("Could not generate executor for \"%s\"", abilityInstance.getClass().getName()));
                 continue;
             }
-            executor.execute(abilityInstance, model);
+            executor.execute(abilityInstance, serverModel);
         }
         for (AbstractAbilityInstanceModel abilityInstance : abilitiesToBeRemoved) {
-            model.removeAbilityInstance(abilityInstance);
+            serverModel.removeAbilityInstance(abilityInstance);
         }
     }
 
     private void tickEntities() {
         Set<EntityModel> entitiesToBeRemoved = new HashSet<>();
-        for (EntityModel entity : model.getEntities()) {
+        for (EntityModel entity : serverModel.getEntities()) {
             if (!entity.isAlive()) {
                 entitiesToBeRemoved.add(entity);
                 continue;
@@ -150,38 +162,38 @@ public class GameEngine {
                 //LOGGER.warn(String.format("Could not generate service for \"%s\"", entity.getClass().getName()));
                 continue;
             }
-            entityService.tick(entity, model);
+            entityService.tick(entity, serverModel);
         }
         for (EntityModel entity : entitiesToBeRemoved) {
-            model.removeEntity(entity);
+            serverModel.removeEntity(entity);
         }
     }
 
     private int generateField() {
         FieldGenerator generator = new FieldGenerator(
-                model.getCurrentSeed(),
-                model.getFieldWidthInBlocks(),
-                model.getFieldHeightInBlocks()
+                serverModel.getCurrentSeed(),
+                serverModel.getFieldWidthInBlocks(),
+                serverModel.getFieldHeightInBlocks()
         );
 
-        model.setBotMap(new byte[model.getFieldWidthInBlocks()][model.getFieldHeightInBlocks()]);
-        byte[][] field = generator.generateField(model.getBotMap());
+        serverModel.setBotMap(new byte[serverModel.getFieldWidthInBlocks()][serverModel.getFieldHeightInBlocks()]);
+        byte[][] field = generator.generateField(serverModel.getBotMap());
 
         int maxPointsOnField = 0;
-        this.random.setSeed(model.getCurrentSeed());
-        for (int i = 0; i < model.getFieldWidthInBlocks(); ++i) {
-            for (int j = 0; j < model.getFieldHeightInBlocks(); ++j) {
+        this.random.setSeed(serverModel.getCurrentSeed());
+        for (int i = 0; i < serverModel.getFieldWidthInBlocks(); ++i) {
+            for (int j = 0; j < serverModel.getFieldHeightInBlocks(); ++j) {
                 if (field[i][j] > 0) {
                     Block blockType = Block.values()[field[i][j]];
                     BlockEntityModel block = EntityRegistry.getBlock(blockType);
                     block.setX(i + .5);
                     block.setY(j + .5);
-                    model.addEntity(block);
+                    serverModel.addEntity(block);
                     maxPointsOnField += block.getPoints();
                 }
             }
         }
-        model.setMapReady(true);
+        serverModel.setMapReady(true);
         return maxPointsOnField;
     }
 
@@ -191,23 +203,33 @@ public class GameEngine {
             double y;
             switch (i) {
                 case 0:
-                    x = model.getBotMap().length - 2.5;
+                    x = 2.5;
                     y = 2.5;
                     break;
                 case 1:
-                    x = 2.5;
-                    y = model.getBotMap()[0].length - 2.5;
+                    x = serverModel.getBotMap().length - 2.5;
+                    y = 2.5;
                     break;
+                case 2:
+                    x = 2.5;
+                    y = serverModel.getBotMap()[0].length - 2.5;
+                    break;
+                case 3:
                 default:
-                    x = model.getBotMap().length - 2.5;
-                    y = model.getBotMap()[0].length - 2.5;
+                    x = serverModel.getBotMap().length - 2.5;
+                    y = serverModel.getBotMap()[0].length - 2.5;
             }
             BotEntityModel bot = new BotEntityModel();
             bot.setX(x);
             bot.setY(y);
-            bot.setId(model.getLastEntityId()+1);
-            model.setLastEntityId(bot.getId());
-            model.addEntity(bot);
+            bot.setId(serverModel.getLastEntityId()+1);
+            serverModel.setLastEntityId(bot.getId());
+            serverModel.addEntity(bot);
         }
+    }
+
+    @Override
+    public void onNotification() {
+
     }
 }

@@ -2,11 +2,19 @@ package task5.model.entity;
 
 import task5.model.abilityInstance.Ability;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PlayerEntityModel extends EntityModel {
+    private String hostAddress;
+
+    public String getHostAddress() {
+        return hostAddress;
+    }
+
+    public void setHostAddress(String hostAddress) {
+        this.hostAddress = hostAddress;
+    }
+
     private int points = 0;
     private int allTimePoints = 0;
 

@@ -2,14 +2,8 @@ package task5.server.service.registry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task5.model.abilityInstance.AbstractAbilityInstanceModel;
-import task5.model.abilityInstance.SpawnBombAbilityInstanceModel;
-import task5.model.abilityInstance.SpawnExplosionAbilityInstanceModel;
-import task5.model.abilityInstance.SpawnSuperBombAbilityInstanceModel;
-import task5.server.service.engine.ability.AbstractAbilityExecutor;
-import task5.server.service.engine.ability.SpawnBombAbilityExecutor;
-import task5.server.service.engine.ability.SpawnExplosionAbilityExecutor;
-import task5.server.service.engine.ability.SpawnSuperBombAbilityExecutor;
+import task5.model.abilityInstance.*;
+import task5.server.service.engine.ability.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -23,6 +17,7 @@ public class AbilityRegistry {
         register(SpawnBombAbilityInstanceModel.class, SpawnBombAbilityExecutor.class);
         register(SpawnExplosionAbilityInstanceModel.class, SpawnExplosionAbilityExecutor.class);
         register(SpawnSuperBombAbilityInstanceModel.class, SpawnSuperBombAbilityExecutor.class);
+        register(SpawnPlayerAbilityInstanceModel.class, SpawnPlayerAbilityExecutor.class);
     }
 
     private static void register(Class<? extends AbstractAbilityInstanceModel> abilityClass, Class<? extends AbstractAbilityExecutor> executorClass) {

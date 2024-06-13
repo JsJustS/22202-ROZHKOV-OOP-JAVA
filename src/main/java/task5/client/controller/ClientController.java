@@ -20,7 +20,7 @@ public class ClientController implements IController<ClientController.OP, GameMo
         switch (operation) {
             case SET_IP: {
                 Pair<String, Integer> address = (Pair<String, Integer>) value;
-                clientModel.setHostName(address.getFirst());
+                clientModel.setHostAddress(address.getFirst());
                 clientModel.setPort(address.getSecond());
                 break;
             }

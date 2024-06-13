@@ -234,15 +234,24 @@ public class GameModel extends Publisher implements IModel {
     }
 
     // ################ network
-    private String hostName;
+    private String hostAddress = "0.0.0.0";
+    private String clientUUID;
     private int port;
 
-    public String getHostName() {
-        return hostName;
+    public String getHostAddress() {
+        return hostAddress;
     }
 
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
+    public void setHostAddress(String hostAddress) {
+        this.hostAddress = hostAddress;
+    }
+
+    public String getClientUUID() {
+        return clientUUID;
+    }
+
+    public void setClientUUID(String clientUUID) {
+        this.clientUUID = clientUUID;
     }
 
     public int getPort() {

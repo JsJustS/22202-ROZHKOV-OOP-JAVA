@@ -9,8 +9,4 @@ public abstract class Packet {
     public PacketBuf serialize() {
         return new PacketBuf();
     }
-
-    public void deserialize(PacketBuf buf) {
-
-    }
 }

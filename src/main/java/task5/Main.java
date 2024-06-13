@@ -8,6 +8,7 @@ import task5.util.Config;
 import task5.client.view.MainWindow;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,7 +29,12 @@ public class Main {
                 port = portArg.getAsInt();
             }
 
-            createServer(cfg, port);
+            try {
+                createServer(cfg, port);
+            } catch (IOException e) {
+                System.out.println("Could not start server due to an error: " + e.getMessage());
+            }
+
         } else {
             createClient(cfg);
         }
@@ -42,9 +48,9 @@ public class Main {
         });
     }
 
-    private static void createServer(Config cfg, int port) {
+    private static void createServer(Config cfg, int port) throws IOException {
         GameModel gameModel = new GameModel();
-        GameEngine gameEngine = new GameEngine(cfg, gameModel);
+        GameEngine gameEngine = new GameEngine(cfg, gameModel, port);
         gameEngine.start();
     }
 }

@@ -1,8 +1,6 @@
 package task5.util.network;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class SocketConnection {
@@ -12,15 +10,19 @@ public class SocketConnection {
 
     public SocketConnection(Socket socket) throws IOException {
         this.socket = socket;
-        this.inputStream = new ObjectInputStream(socket.getInputStream());
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
+        this.inputStream = new ObjectInputStream(socket.getInputStream());
     }
 
-    public void write(Packet packet) throws IOException {
-        this.outputStream.writeObject(packet);
+    public void write(PacketBuf packet) throws IOException {
+        this.outputStream.writeObject(packet.asArray());
     }
 
-    public Packet read() throws IOException, ClassNotFoundException {
-        return (Packet) this.inputStream.readObject();
+    public PacketBuf read() throws IOException, ClassNotFoundException {
+        return new PacketBuf((byte[]) this.inputStream.readObject());
+    }
+
+    public void stop() throws IOException {
+        this.socket.close();
     }
 }

@@ -7,9 +7,9 @@ import task5.util.network.PacketBuf;
 import java.io.IOException;
 
 public class PlayerMoveC2SPacket extends Packet {
-    private int playerId;
-    private Direction direction;
-    private boolean isMoving;
+    private final int playerId;
+    private final Direction direction;
+    private final boolean isMoving;
 
     public PlayerMoveC2SPacket(int playerId, Direction direction, boolean isMoving) {
         this.playerId = playerId;
@@ -17,25 +17,20 @@ public class PlayerMoveC2SPacket extends Packet {
         this.isMoving = isMoving;
     }
 
+    public PlayerMoveC2SPacket(PacketBuf buf) throws IOException {
+        this.playerId = buf.readInt();
+        this.direction = Direction.values()[buf.readInt()];
+        this.isMoving = buf.readBoolean();
+    }
+
     @Override
     public PacketBuf serialize() {
         PacketBuf buf = super.serialize();
+        buf.writeInt(PacketC2SType.PlayerMove.ordinal());
         buf.writeInt(playerId);
         buf.writeInt(direction.ordinal());
         buf.writeBoolean(isMoving);
         return buf;
-    }
-
-    @Override
-    public void deserialize(PacketBuf buf) {
-        super.deserialize(buf);
-        try {
-            this.playerId = buf.readInt();
-            this.direction = Direction.values()[buf.readInt()];
-            this.isMoving = buf.readBoolean();
-        } catch (IOException | IndexOutOfBoundsException e) {
-            LOGGER.error("Could not deserialize" + PlayerMoveC2SPacket.class.getSimpleName() + " packet due to and error: " + e.getMessage());
-        }
     }
 
     public int getPlayerId() {

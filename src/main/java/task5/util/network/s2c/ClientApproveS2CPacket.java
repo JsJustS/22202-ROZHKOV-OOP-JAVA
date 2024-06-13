@@ -1,25 +1,25 @@
-package task5.util.network.c2s;
+package task5.util.network.s2c;
 
 import task5.util.network.Packet;
 import task5.util.network.PacketBuf;
 
 import java.io.IOException;
 
-public class PlayerLeaveC2SPacket extends Packet {
+public class ClientApproveS2CPacket extends Packet {
     private final String clientUUID;
 
-    public PlayerLeaveC2SPacket(String clientUUID) {
+    public ClientApproveS2CPacket(String clientUUID) {
         this.clientUUID = clientUUID;
     }
 
-    public PlayerLeaveC2SPacket(PacketBuf buf) throws IOException {
+    public ClientApproveS2CPacket(PacketBuf buf) throws IOException {
         this.clientUUID = buf.readString();
     }
 
     @Override
     public PacketBuf serialize() {
         PacketBuf buf = super.serialize();
-        buf.writeInt(PacketC2SType.PlayerLeave.ordinal());
+        buf.writeInt(PacketS2CType.ClientApprove.ordinal());
         buf.writeString(clientUUID);
         return buf;
     }

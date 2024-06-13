@@ -32,14 +32,13 @@ public class MainMenu extends JPanel {
 
         addressField = new JFormattedTextField(new RegexFormatter("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5]):((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$"));
         addressField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        addressField.setText(String.valueOf(model.getCurrentSeed()));
+        addressField.setText(model.getHostAddress() + ":" + model.getPort());
         addressField.addPropertyChangeListener(
                 (evt) -> {
                     controller.execute(
                             ClientController.OP.SET_IP, model,
                             this.parseAddress()
                     );
-                    System.out.println(this.parseAddress());
                 }
         );
         buttonsPanel.add(addressField);
