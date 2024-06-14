@@ -14,9 +14,17 @@ import java.util.Map;
 public class EntityRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityRegistry.class);
     private static final Map<Block, BlockSettings> registeredBlocks = new HashMap<>();
-    private final static Map<Class<? extends EntityModel>, Class<? extends EntityService>> registeredEntityServices = new HashMap<>();
+    private static final Map<Class<? extends EntityModel>, Class<? extends EntityService>> registeredEntityServices = new HashMap<>();
+    private static final Map<EntityType, Class<? extends EntityModel>> registeredEntities = new HashMap<>();
 
     static {
+        registerEntity(EntityType.Block, BlockEntityModel.class);
+        registerEntity(EntityType.Player, PlayerEntityModel.class);
+        registerEntity(EntityType.Bomb, BombEntityModel.class);
+        registerEntity(EntityType.SuperBomb, SuperBombEntityModel.class);
+        registerEntity(EntityType.Explosion, ExplosionEntityModel.class);
+        registerEntity(EntityType.Bot, BotEntityModel.class);
+
         registerBlock(Block.AIR, 0, 0, false, null);
         registerBlock(Block.BEDROCK, 100, 0, true, "task5/img/entity/block/bedrock.png");
         registerBlock(Block.BRICK, 5, 3, true, "task5/img/entity/block/brick.png");
@@ -32,6 +40,10 @@ public class EntityRegistry {
         registerEntityService(SuperBombEntityModel.class, BombService.class);
         registerEntityService(ExplosionEntityModel.class, ExplosionService.class);
         registerEntityService(BlockEntityModel.class, BlockService.class);
+    }
+
+    private static void registerEntity(EntityType entityType, Class<? extends EntityModel> modelClass) {
+        registeredEntities.put(entityType, modelClass);
     }
 
     private static void registerEntityService(Class<? extends EntityModel> modelClass, Class<? extends EntityService> serviceClass) {
@@ -56,14 +68,28 @@ public class EntityRegistry {
         return null;
     }
 
-    public static BlockEntityModel getBlock(Block blockId) {
-        BlockSettings settings = registeredBlocks.get(blockId);
+    public static BlockEntityModel getBlock(Block blockType) {
+        BlockSettings settings = registeredBlocks.get(blockType);
         BlockEntityModel block = new BlockEntityModel();
         block.setBlastResistance(settings.getBlastResistance());
         block.setCollidable(settings.isCollidable());
         block.setSpritePath(settings.getSpritePath());
         block.setPoints(settings.getPoints());
+        block.setType(blockType);
         return block;
+    }
+
+    public static EntityModel getEntity(EntityType type) {
+        Class<? extends EntityModel> modelClass = registeredEntities.get(type);
+        if (modelClass == null) return null;
+        try {
+            EntityModel entity = modelClass.getDeclaredConstructor().newInstance();
+            entity.setEntityType(type);
+            return entity;
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            LOGGER.error(e.toString());
+        }
+        return null;
     }
 
     private static final class BlockSettings {

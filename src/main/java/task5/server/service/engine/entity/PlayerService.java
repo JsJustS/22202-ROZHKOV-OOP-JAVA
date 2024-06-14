@@ -10,6 +10,7 @@ import task5.model.entity.BotEntityModel;
 import task5.model.entity.EntityModel;
 import task5.model.entity.PlayerEntityModel;
 import task5.model.entity.blockentity.BlockEntityModel;
+import task5.server.SocketServer;
 
 import java.util.Set;
 
@@ -56,8 +57,8 @@ public class PlayerService extends EntityService {
     }
 
     @Override
-    public void tick(EntityModel entity, GameModel model) {
-        super.tick(entity, model);
+    public void tick(EntityModel entity, GameModel model, SocketServer network) {
+        super.tick(entity, model, network);
         if (!(entity instanceof PlayerEntityModel)) {
             LOGGER.warn("Trying to use PlayerService.useAbility() for other entity");
             return;

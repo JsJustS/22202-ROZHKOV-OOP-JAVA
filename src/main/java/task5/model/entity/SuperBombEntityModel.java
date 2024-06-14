@@ -7,6 +7,7 @@ public class SuperBombEntityModel extends BombEntityModel {
     public SuperBombEntityModel(EntityModel parent) {
         super(parent);
         this.setPower(9);
+        this.entityType = EntityType.SuperBomb;
     }
 
     @Override

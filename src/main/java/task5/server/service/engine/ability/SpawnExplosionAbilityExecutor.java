@@ -2,16 +2,19 @@ package task5.server.service.engine.ability;
 
 import task5.model.GameModel;
 import task5.model.abilityInstance.AbstractAbilityInstanceModel;
+import task5.model.abilityInstance.SpawnEntityAbilityInstanceModel;
 import task5.model.abilityInstance.SpawnExplosionAbilityInstanceModel;
 import task5.model.entity.EntityModel;
+import task5.model.entity.EntityType;
 import task5.model.entity.ExplosionEntityModel;
 import task5.model.entity.blockentity.BlockEntityModel;
+import task5.server.SocketServer;
 import task5.server.service.engine.entity.EntityService;
 
 public class SpawnExplosionAbilityExecutor extends AbstractAbilityExecutor {
     @Override
-    public void execute(AbstractAbilityInstanceModel abilityInstance, GameModel model) {
-        super.execute(abilityInstance, model);
+    public void execute(AbstractAbilityInstanceModel abilityInstance, GameModel model, SocketServer network) {
+        super.execute(abilityInstance, model, network);
         if (!(abilityInstance instanceof SpawnExplosionAbilityInstanceModel)) {
             return;
         }
@@ -51,9 +54,12 @@ public class SpawnExplosionAbilityExecutor extends AbstractAbilityExecutor {
                     ExplosionEntityModel explosion = new ExplosionEntityModel();
                     explosion.setX(x+.5);
                     explosion.setY(y+.5);
-                    explosion.setId(model.getLastEntityId()+1);
+                    /*explosion.setId(model.getLastEntityId()+1);
                     model.setLastEntityId(explosion.getId());
-                    model.addEntity(explosion);
+                    model.addEntity(explosion);*/
+                    model.addAbilityInstance(
+                            new SpawnEntityAbilityInstanceModel(explosion, EntityType.Explosion)
+                    );
                 }
                 switch (direction) {
                     case 0: x++; break;

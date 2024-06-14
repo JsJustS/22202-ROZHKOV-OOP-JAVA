@@ -4,6 +4,7 @@ public enum EntityType {
     Block,
     Player,
     Bomb,
+    SuperBomb,
     Explosion,
     Bot
 }

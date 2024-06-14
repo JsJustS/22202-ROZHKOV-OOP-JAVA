@@ -10,10 +10,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class FieldPanel extends JPanel {
-    private final GameModel model;
+    private final GameModel clientModel;
     private final int intents = 75;
-    public FieldPanel(GameModel model) {
-        this.model = model;
+    public FieldPanel(GameModel clientModel) {
+        this.clientModel = clientModel;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class FieldPanel extends JPanel {
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        if (!model.isMapReady()) return;
+        if (!clientModel.isMapReady()) return;
 
         renderEntities(g);
     }
@@ -46,12 +46,12 @@ public class FieldPanel extends JPanel {
     }
 
     private void renderEntitiesLayer(Graphics g, RenderLayer layer) {
-        int widthPerBlock = getWidth() / model.getFieldWidthInBlocks();
-        int heightPerBlock = getHeight() / model.getFieldHeightInBlocks();
-        int spareVerticalPixels = getWidth() - (widthPerBlock * model.getFieldWidthInBlocks());
-        int spareHorizontalPixels = getHeight() - (heightPerBlock * model.getFieldHeightInBlocks());
+        int widthPerBlock = getWidth() / clientModel.getFieldWidthInBlocks();
+        int heightPerBlock = getHeight() / clientModel.getFieldHeightInBlocks();
+        int spareVerticalPixels = getWidth() - (widthPerBlock * clientModel.getFieldWidthInBlocks());
+        int spareHorizontalPixels = getHeight() - (heightPerBlock * clientModel.getFieldHeightInBlocks());
 
-        for (EntityModel entity : model.getEntities()) {
+        for (EntityModel entity : clientModel.getEntities()) {
             if (entity.getRenderLayer() != layer) continue;
 
             int w = (entity.getX() < spareVerticalPixels) ? widthPerBlock + 1 : widthPerBlock;

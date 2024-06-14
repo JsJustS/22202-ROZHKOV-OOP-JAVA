@@ -18,19 +18,19 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
     private final String bombSprite = "task5/img/entity/bomb/bomb_1.png";
     private final String superBombSprite = "task5/img/entity/bomb/super_bomb_1.png";
 
-    public MainGameplayWindow(JFrame parent, ClientController controller, GameModel model) {
+    public MainGameplayWindow(JFrame parent, ClientController controller, GameModel clientModel) {
         Timer timer = new Timer(1000/60, this);
         timer.start();
-        this.clientModel = model;
+        this.clientModel = clientModel;
 
         this.setBackground(Color.DARK_GRAY);
         this.setLayout(new GridBagLayout());
 
         this.setLayout(new GridBagLayout());
-        field = new FieldPanel(model);
+        field = new FieldPanel(clientModel);
         this.add(field);
 
-        keyBindManager = new KeyBindManager(this, controller, model);
+        keyBindManager = new KeyBindManager(this, controller, clientModel);
     }
 
     @Override
@@ -51,13 +51,13 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
         if (clientModel.getMainPlayer().isAlive()) {
             g.setColor(Color.WHITE);
             g.drawString("POINTS: " + clientModel.getMainPlayer().getPoints(), x, y);
-            x = this.getParent().getWidth() / 2 - 20;
+            /*x = this.getParent().getWidth() / 2 - 20;
             if (clientModel.getMainPlayer().getPoints() < clientModel.getPointsForWin()) {
                 g.drawString("POINTS FOR WIN: " + clientModel.getPointsForWin(), x, y);
             } else {
                 g.setColor(Color.GREEN);
                 g.drawString("YOU WON!", x, y);
-            }
+            }*/
         } else {
             g.setColor(Color.RED);
             g.drawString("YOU DIED!", x, y);
@@ -84,12 +84,12 @@ public class MainGameplayWindow extends JPanel implements ActionListener {
         x = 10;
         y = this.getParent().getHeight() - 10;
         g.setColor(Color.WHITE);
-        g.drawString("SEED: " + clientModel.getCurrentSeed(), x, y);
+        g.drawString("SERVER: " + clientModel.getHostAddress() + ":" + clientModel.getPort(), x, y);
 
         // Time UI
-        x = this.getParent().getWidth() - 250;
+        /*x = this.getParent().getWidth() - 250;
         y = this.getParent().getHeight() - 10;
         g.setColor(Color.WHITE);
-        g.drawString("TIME LEFT: " + clientModel.getRoundTicksLeft() / clientModel.getTicksPerSecond(), x, y);
+        g.drawString("TIME LEFT: " + clientModel.getRoundTicksLeft() / clientModel.getTicksPerSecond(), x, y);*/
     }
 }

@@ -15,6 +15,7 @@ public class BotEntityModel extends EntityModel {
         setAbility(Ability.EXPLOSION);
         setRenderLayer(RenderLayer.PLAYERS);
         loadSpriteSheets();
+        this.entityType = EntityType.Bot;
     }
 
     @Override

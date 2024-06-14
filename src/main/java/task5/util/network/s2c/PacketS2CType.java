@@ -2,5 +2,9 @@ package task5.util.network.s2c;
 
 public enum PacketS2CType {
     ClientApprove,
-    EntitySpawn
+    RoundData,
+    BindPlayer,
+    EntitySpawn,
+    EntityDespawn,
+    EntityStatus
 }

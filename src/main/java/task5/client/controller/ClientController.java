@@ -12,7 +12,8 @@ public class ClientController implements IController<ClientController.OP, GameMo
         ON_KEY_PRESSED,
         ON_KEY_RELEASED,
         CHANGE_GAMESTATE,
-        UPDATE_KEYBINDS
+        UPDATE_KEYBINDS,
+        CLEAR_DATA
     }
 
     @Override
@@ -43,6 +44,11 @@ public class ClientController implements IController<ClientController.OP, GameMo
                 KeyBindManager.KeyAction keyAction = (KeyBindManager.KeyAction) value;
                 clientModel.setKeyReleased(keyAction);
                 break;
+            }
+            case CLEAR_DATA: {
+                clientModel.setMapReady(false);
+                clientModel.setMainPlayer(null);
+                clientModel.clearEntities();
             }
         }
     }

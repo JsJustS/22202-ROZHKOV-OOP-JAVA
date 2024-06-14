@@ -3,9 +3,12 @@ package task5.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task5.model.GameModel;
+import task5.model.abilityInstance.DespawnPlayerAbilityInstanceModel;
 import task5.model.abilityInstance.SpawnPlayerAbilityInstanceModel;
 import task5.model.entity.EntityModel;
+import task5.model.entity.EntityType;
 import task5.model.entity.PlayerEntityModel;
+import task5.model.entity.blockentity.BlockEntityModel;
 import task5.util.ThreadPool;
 import task5.util.network.Packet;
 import task5.util.network.PacketBuf;
@@ -14,6 +17,8 @@ import task5.util.network.c2s.PacketC2SType;
 import task5.util.network.c2s.PlayerJoinC2SPacket;
 import task5.util.network.c2s.PlayerLeaveC2SPacket;
 import task5.util.network.s2c.ClientApproveS2CPacket;
+import task5.util.network.s2c.EntitySpawnS2CPacket;
+import task5.util.network.s2c.RoundDataS2CPacket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -51,16 +56,16 @@ public class SocketServer {
     }
 
     public void send(PlayerEntityModel player, Packet packet) {
-        send(player.getHostAddress(), packet);
+        send(player.getClientUUID(), packet);
     }
 
-    public void send(String playerAddress, Packet packet) {
-        if (!connections.containsKey(playerAddress)) {
-            LOGGER.error("No connection with specified player found");
+    public void send(String clientUUID, Packet packet) {
+        if (!connections.containsKey(clientUUID)) {
+            LOGGER.error("No connection with specified player found (" + clientUUID + ")");
             return;
         }
         try {
-            connections.get(playerAddress).write(packet.serialize());
+            connections.get(clientUUID).write(packet.serialize());
         } catch (IOException ignored) {}
     }
 
@@ -77,6 +82,7 @@ public class SocketServer {
                             new SpawnPlayerAbilityInstanceModel(packet.getClientUUID())
                     );
                     serverModel.setPlayerJoined(true);
+                    LOGGER.info(packet.getClientUUID() + " joined as a Player");
                     return;
                 }
 
@@ -84,19 +90,66 @@ public class SocketServer {
                     PlayerLeaveC2SPacket packet = new PlayerLeaveC2SPacket(packetBuf);
                     connections.remove(packet.getClientUUID());
                     boolean hasPlayers = false;
+                    PlayerEntityModel player = null;
                     for (EntityModel entity : serverModel.getEntities()) {
                         if (entity instanceof PlayerEntityModel) {
                             hasPlayers = true;
-                            break;
+                            if (((PlayerEntityModel)entity).getClientUUID().equals(packet.getClientUUID())) {
+                                player = (PlayerEntityModel) entity;
+                            }
                         }
                     }
                     serverModel.setPlayerJoined(hasPlayers);
+                    if (player != null) {
+                        serverModel.addAbilityInstance(
+                                new DespawnPlayerAbilityInstanceModel(player)
+                        );
+                    }
                     return;
                 }
 
             }
         } catch (IOException e) {
             LOGGER.error("Could not apply C2S packet: " + e.getMessage());
+        }
+    }
+
+    public void broadcastGameMeta() {
+        for (String clientUUID : connections.keySet()) {
+            sendGameMeta(clientUUID);
+        }
+    }
+
+    public void sendGameMeta(String clientUUID) {
+        if (serverModel.isMapReady()) {
+            send(
+                    clientUUID,
+                    new RoundDataS2CPacket(
+                            serverModel.getFieldWidthInBlocks(),
+                            serverModel.getFieldHeightInBlocks()
+                    )
+            );
+        }
+        for (EntityModel entity : serverModel.getEntities()) {
+            EntitySpawnS2CPacket packet;
+            if (entity instanceof BlockEntityModel) {
+                BlockEntityModel blockEntity = (BlockEntityModel)entity;
+                packet = new EntitySpawnS2CPacket(
+                        EntityType.Block,
+                        blockEntity.getId(),
+                        blockEntity.getX(),
+                        blockEntity.getY(),
+                        blockEntity.getType()
+                );
+            } else {
+                packet = new EntitySpawnS2CPacket(
+                        entity.getEntityType(),
+                        entity.getId(),
+                        entity.getX(),
+                        entity.getY()
+                );
+            }
+            send(clientUUID, packet);
         }
     }
 
@@ -144,6 +197,7 @@ public class SocketServer {
         @Override
         public void run() {
             SocketServer.this.send(clientUUID, new ClientApproveS2CPacket(clientUUID));
+            SocketServer.this.sendGameMeta(clientUUID);
             while (connections.containsKey(clientUUID)) {
                 try {
                     PacketBuf packetBuf = client.read();

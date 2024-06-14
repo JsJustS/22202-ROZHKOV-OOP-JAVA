@@ -3,12 +3,16 @@ package task5.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import task5.model.GameModel;
+import task5.model.entity.EntityModel;
+import task5.model.entity.EntityType;
+import task5.model.entity.PlayerEntityModel;
+import task5.server.service.engine.entity.EntityService;
+import task5.server.service.registry.EntityRegistry;
 import task5.util.network.Packet;
 import task5.util.network.PacketBuf;
 import task5.util.network.SocketConnection;
 import task5.util.network.c2s.PlayerJoinC2SPacket;
-import task5.util.network.s2c.ClientApproveS2CPacket;
-import task5.util.network.s2c.PacketS2CType;
+import task5.util.network.s2c.*;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -83,7 +87,80 @@ public class SocketClient {
                 case ClientApprove: {
                     ClientApproveS2CPacket packet = new ClientApproveS2CPacket(packetBuf);
                     clientModel.setClientUUID(packet.getClientUUID());
+                    LOGGER.info("Client approved! UUID: " + clientModel.getClientUUID());
                     this.sendPacket(new PlayerJoinC2SPacket(clientModel.getClientUUID()));
+                    return;
+                }
+
+                case RoundData: {
+                    RoundDataS2CPacket packet = new RoundDataS2CPacket(packetBuf);
+                    clientModel.setFieldWidthInBlocks(packet.getFieldWidthInBlocks());
+                    clientModel.setFieldHeightInBlocks(packet.getFieldHeightInBlocks());
+                    LOGGER.info("Got Round Data: width " + clientModel.getFieldWidthInBlocks() + " height " + clientModel.getFieldHeightInBlocks());
+                    clientModel.setMapReady(true);
+                    return;
+                }
+
+                case EntitySpawn: {
+                    EntitySpawnS2CPacket packet = new EntitySpawnS2CPacket(packetBuf);
+                    EntityModel entity;
+                    if (packet.getEntityType() == EntityType.Block) {
+                        entity = EntityRegistry.getBlock(packet.getBlockType());
+                    } else {
+                        entity = EntityRegistry.getEntity(packet.getEntityType());
+                    }
+                    if (entity == null) {
+                        LOGGER.warn("Wrong entity type: " + packet.getEntityType().name());
+                        return;
+                    }
+                    entity.setX(packet.getX());
+                    entity.setY(packet.getY());
+                    entity.setId(packet.getEntityId());
+                    clientModel.addEntity(entity);
+                    LOGGER.info("Spawned entity " + packet.getEntityType().name() + " on (" + entity.getX() + ";" + entity.getY() + ") with id " + entity.getId());
+                    return;
+                }
+
+                case BindPlayer: {
+                    BindPlayerS2CPacket packet = new BindPlayerS2CPacket(packetBuf);
+                    EntityModel entity = EntityService.getEntityById(clientModel, packet.getPlayerId());
+                    if (!(entity instanceof PlayerEntityModel)) {
+                        LOGGER.warn("Wrong entity id for binding");
+                        return;
+                    }
+
+                    PlayerEntityModel player = (PlayerEntityModel) entity;
+                    clientModel.setMainPlayer(player);
+                    LOGGER.info("Bound client to entity with id " + player.getId());
+                    return;
+                }
+
+                case EntityDespawn: {
+                    EntityDespawnS2CPacket packet = new EntityDespawnS2CPacket(packetBuf);
+                    EntityModel entity = EntityService.getEntityById(clientModel, packet.getEntityId());
+                    if (entity == null) {
+                        LOGGER.warn("Wrong entity id for despawning");
+                        return;
+                    }
+
+                    clientModel.removeEntity(entity);
+                    return;
+                }
+
+                case EntityStatus: {
+                    EntityStatusS2CPacket packet = new EntityStatusS2CPacket(packetBuf);
+                    EntityModel entity = EntityService.getEntityById(clientModel, packet.getEntityId());
+                    if (entity == null) {
+                        LOGGER.warn("Wrong entity id for status");
+                        return;
+                    }
+
+                    entity.setX(packet.getX());
+                    entity.setY(packet.getY());
+                    entity.setDirection(packet.getDirection());
+                    entity.setAbility(packet.getAbility());
+                    entity.setAnimationStep(packet.getAnimationStep());
+                    return;
                 }
 
             }

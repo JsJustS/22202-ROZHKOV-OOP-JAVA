@@ -20,7 +20,7 @@ public class MainMenu extends JPanel {
     private final double buttonRatioCoefficient = 0.3;
     private final JFormattedTextField addressField;
 
-    public MainMenu(JFrame parent, ClientController controller, GameModel model) {
+    public MainMenu(JFrame parent, ClientController controller, GameModel clientModel) {
         bgImage = ResourceManager.getSprite(bgImageFilename);
         this.setLayout(new GridBagLayout());
 
@@ -32,11 +32,11 @@ public class MainMenu extends JPanel {
 
         addressField = new JFormattedTextField(new RegexFormatter("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5]):((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$"));
         addressField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        addressField.setText(model.getHostAddress() + ":" + model.getPort());
+        addressField.setText(clientModel.getHostAddress() + ":" + clientModel.getPort());
         addressField.addPropertyChangeListener(
                 (evt) -> {
                     controller.execute(
-                            ClientController.OP.SET_IP, model,
+                            ClientController.OP.SET_IP, clientModel,
                             this.parseAddress()
                     );
                 }
@@ -46,7 +46,7 @@ public class MainMenu extends JPanel {
         JButton startButton = new JButton("CONNECT");
         startButton.setPreferredSize(new Dimension(buttonWidth, (int)(buttonWidth * buttonRatioCoefficient)));
         startButton.addActionListener((event)->{
-            controller.execute(ClientController.OP.CHANGE_GAMESTATE, model, GameModel.GAMESTATE.INGAME);
+            controller.execute(ClientController.OP.CHANGE_GAMESTATE, clientModel, GameModel.GAMESTATE.INGAME);
         });
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         startButton.setHorizontalTextPosition(SwingConstants.CENTER);

@@ -2,30 +2,35 @@ package task5.server.service.engine.ability;
 
 import task5.model.GameModel;
 import task5.model.abilityInstance.AbstractAbilityInstanceModel;
+import task5.model.abilityInstance.SpawnEntityAbilityInstanceModel;
 import task5.model.abilityInstance.SpawnPlayerAbilityInstanceModel;
 import task5.model.entity.BotEntityModel;
 import task5.model.entity.PlayerEntityModel;
+import task5.server.SocketServer;
 import task5.server.service.engine.entity.BotService;
 
 public class SpawnPlayerAbilityExecutor extends AbstractAbilityExecutor {
     @Override
-    public void execute(AbstractAbilityInstanceModel abilityInstance, GameModel model) {
-        super.execute(abilityInstance, model);
+    public void execute(AbstractAbilityInstanceModel abilityInstance, GameModel model, SocketServer network) {
+        super.execute(abilityInstance, model, network);
 
         BotEntityModel bot = BotService.getFirstBotEntity(model);
         if (bot == null) {
             return;
         }
-        model.removeEntity(bot);
+        bot.setAlive(false);
 
         PlayerEntityModel player = new PlayerEntityModel();
-        player.setHostAddress(
+        player.setClientUUID(
                 ((SpawnPlayerAbilityInstanceModel)abilityInstance).getHostAddress()
         );
         player.setX(bot.getX());
         player.setY(bot.getY());
-        player.setId(model.getLastEntityId() + 1);
-        model.setLastEntityId(player.getId());
-        model.addEntity(player);
+        player.setVelocity(bot.getVelocity());
+        player.setDirection(bot.getDirection());
+        player.setMoving(bot.isMoving());
+        model.addAbilityInstance(
+                new SpawnEntityAbilityInstanceModel(player)
+        );
     }
 }

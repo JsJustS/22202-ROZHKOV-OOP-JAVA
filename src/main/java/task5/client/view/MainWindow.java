@@ -36,7 +36,7 @@ public class MainWindow extends JFrame implements ISubscriber {
         this.setSize(new Dimension(cfg.getWinWidth(), cfg.getWinHeight()));
         this.setTitle(cfg.getGameTitle());
 
-        clientModel.setCurrentSeed(cfg.getSeed());
+        //clientModel.setCurrentSeed(cfg.getSeed());
         this.getContentPane().add(new MainMenu(this, controller, clientModel));
 
         this.setVisible(true);
@@ -198,10 +198,9 @@ public class MainWindow extends JFrame implements ISubscriber {
                 this.clientNetwork.disconnect();
                 this.getContentPane().removeAll();
                 this.getContentPane().add(new MainMenu(this, controller, clientModel));
-                /*playerController.execute(
-                        PlayerController.OP.LEAVE, clientModel,
-                        null
-                );*/
+                controller.execute(
+                        ClientController.OP.CLEAR_DATA, clientModel, null
+                );
                 break;
             }
             case INGAME: {

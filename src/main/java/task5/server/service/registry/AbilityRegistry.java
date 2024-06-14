@@ -18,6 +18,8 @@ public class AbilityRegistry {
         register(SpawnExplosionAbilityInstanceModel.class, SpawnExplosionAbilityExecutor.class);
         register(SpawnSuperBombAbilityInstanceModel.class, SpawnSuperBombAbilityExecutor.class);
         register(SpawnPlayerAbilityInstanceModel.class, SpawnPlayerAbilityExecutor.class);
+        register(SpawnEntityAbilityInstanceModel.class, SpawnEntityAbilityExecutor.class);
+        register(DespawnPlayerAbilityInstanceModel.class, DespawnPlayerAbilityExecutor.class);
     }
 
     private static void register(Class<? extends AbstractAbilityInstanceModel> abilityClass, Class<? extends AbstractAbilityExecutor> executorClass) {

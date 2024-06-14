@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EntityModel implements IModel {
+    protected EntityType entityType;
     protected double x;
     protected double y;
     protected double speed;
@@ -43,6 +44,14 @@ public class EntityModel implements IModel {
         setCollidable(false);
         setDirection(Direction.DOWN);
         loadSpriteSheets();
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
     }
 
     public Ability getAbility() {

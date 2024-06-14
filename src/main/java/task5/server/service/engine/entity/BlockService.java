@@ -5,13 +5,14 @@ import org.slf4j.LoggerFactory;
 import task5.model.GameModel;
 import task5.model.entity.EntityModel;
 import task5.model.entity.blockentity.BlockEntityModel;
+import task5.server.SocketServer;
 import task5.server.service.registry.EntityRegistry;
 
 public class BlockService extends EntityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BlockService.class);
 
     @Override
-    public void tick(EntityModel entity, GameModel model) {
+    public void tick(EntityModel entity, GameModel model, SocketServer network) {
         if (!(entity instanceof BlockEntityModel)) {
             LOGGER.warn("Trying to use BlockService.useAbility() for other entity");
             return;

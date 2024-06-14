@@ -14,6 +14,8 @@ import task5.server.service.engine.entity.EntityService;
 import task5.server.service.registry.AbilityRegistry;
 import task5.server.service.registry.EntityRegistry;
 import task5.util.Config;
+import task5.util.network.s2c.EntityDespawnS2CPacket;
+import task5.util.network.s2c.RoundDataS2CPacket;
 import task5.util.pubsub.ISubscriber;
 
 import java.io.IOException;
@@ -86,13 +88,15 @@ public class GameEngine implements ISubscriber {
         serverModel.setFieldHeightInBlocks(this.config.getFieldHeight());
 
         serverModel.clearEntities();
-        serverModel.clearAbilityInstances();
+        //serverModel.clearAbilityInstances();
 
         this.generateField();
 
         int maxPlayer = 4;
         this.populateMapWithBots(maxPlayer);
 
+        serverModel.setMapReady(true);
+        serverNetwork.broadcastGameMeta();
         //model.setRoundTicksLeft(config.getRoundSeconds() * model.getTicksPerSecond());
 
         //model.setMainPlayer(playerEntity);
@@ -126,6 +130,7 @@ public class GameEngine implements ISubscriber {
 
     private void tickAbilityInstances() {
         Set<AbstractAbilityInstanceModel> abilitiesToBeRemoved = new HashSet<>();
+        //LOGGER.info(serverModel.getAbilityInstances().toString());
         for (AbstractAbilityInstanceModel abilityInstance : serverModel.getAbilityInstances()) {
             AbstractAbilityExecutor executor = AbilityRegistry.getExecutor(abilityInstance);
             abilitiesToBeRemoved.add(abilityInstance);
@@ -133,7 +138,7 @@ public class GameEngine implements ISubscriber {
                 LOGGER.warn(String.format("Could not generate executor for \"%s\"", abilityInstance.getClass().getName()));
                 continue;
             }
-            executor.execute(abilityInstance, serverModel);
+            executor.execute(abilityInstance, serverModel, serverNetwork);
         }
         for (AbstractAbilityInstanceModel abilityInstance : abilitiesToBeRemoved) {
             serverModel.removeAbilityInstance(abilityInstance);
@@ -153,10 +158,13 @@ public class GameEngine implements ISubscriber {
                 //LOGGER.warn(String.format("Could not generate service for \"%s\"", entity.getClass().getName()));
                 continue;
             }
-            entityService.tick(entity, serverModel);
+            entityService.tick(entity, serverModel, serverNetwork);
         }
         for (EntityModel entity : entitiesToBeRemoved) {
             serverModel.removeEntity(entity);
+            serverNetwork.broadcast(
+                    new EntityDespawnS2CPacket(entity.getId())
+            );
         }
     }
 

@@ -5,12 +5,13 @@ import org.slf4j.LoggerFactory;
 import task5.model.GameModel;
 import task5.model.entity.EntityModel;
 import task5.model.entity.ExplosionEntityModel;
+import task5.server.SocketServer;
 
 public class ExplosionService extends EntityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExplosionService.class);
     @Override
-    public void tick(EntityModel entity, GameModel model) {
-        super.tick(entity, model);
+    public void tick(EntityModel entity, GameModel model, SocketServer network) {
+        super.tick(entity, model, network);
         if (!(entity instanceof ExplosionEntityModel)) {
             LOGGER.warn("Trying to use ExplosionService.tick() for other entity");
             return;

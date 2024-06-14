@@ -6,6 +6,7 @@ import task5.model.GameModel;
 import task5.model.abilityInstance.SpawnExplosionAbilityInstanceModel;
 import task5.model.entity.*;
 import task5.model.entity.blockentity.BlockEntityModel;
+import task5.server.SocketServer;
 import task5.server.service.registry.EntityRegistry;
 import task5.util.Pair;
 
@@ -23,7 +24,7 @@ public class BotService extends EntityService {
     }
 
     @Override
-    public void tick(EntityModel entity, GameModel model) {
+    public void tick(EntityModel entity, GameModel model, SocketServer network) {
         if (!(entity instanceof BotEntityModel)) {
             LOGGER.warn("Trying to use BotService.useAbility() for other entity");
             return;
@@ -32,7 +33,7 @@ public class BotService extends EntityService {
         BotEntityModel bot = (BotEntityModel) entity;
 
         tickBrain(bot, model);
-        super.tick(entity, model);
+        super.tick(entity, model, network);
 
         if (bot.getReceivedDamage() > 0) {
             if (bot.getAttacker() != null) {

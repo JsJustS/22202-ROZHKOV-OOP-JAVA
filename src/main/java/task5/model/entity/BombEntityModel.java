@@ -15,6 +15,7 @@ public class BombEntityModel extends EntityModel {
         this.parent = parent;
         setCollidable(true);
         setAnimationPerTick(5);
+        this.entityType = EntityType.Bomb;
     }
 
     @Override

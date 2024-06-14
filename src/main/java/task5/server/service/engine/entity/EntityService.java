@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import task5.model.entity.EntityModel;
 import task5.model.GameModel;
 import task5.model.entity.blockentity.BlockEntityModel;
+import task5.server.SocketServer;
+import task5.util.network.s2c.EntityStatusS2CPacket;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,12 +27,23 @@ public class EntityService {
         entity.setAlive(false);
     }
 
-    public void tick(EntityModel entity, GameModel model) {
+    public void tick(EntityModel entity, GameModel model, SocketServer network) {
         tickMovement(entity, model);
         entity.setAnimationTick(entity.getAnimationTick()+1);
         if (entity.getAnimationTick() % entity.getAnimationPerTick() == 0) {
             entity.setAnimationStep(entity.getAnimationStep()+1);
         }
+
+        network.broadcast(
+                new EntityStatusS2CPacket(
+                        entity.getId(),
+                        entity.getX(),
+                        entity.getY(),
+                        entity.getDirection(),
+                        entity.getAbility(),
+                        entity.getAnimationStep()
+                )
+        );
     }
 
     public void tickMovement(EntityModel entity, GameModel model) {
@@ -118,6 +131,15 @@ public class EntityService {
 
             if ((int)entity.getX() == x && (int)entity.getY() == y) {
                 return (BlockEntityModel) entity;
+            }
+        }
+        return null;
+    }
+
+    public static EntityModel getEntityById(GameModel model, int id) {
+        for (EntityModel entity : model.getEntities()) {
+            if (entity.getId() == id) {
+                return entity;
             }
         }
         return null;

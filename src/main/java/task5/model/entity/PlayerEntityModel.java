@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerEntityModel extends EntityModel {
-    private String hostAddress;
+    private String clientUUID;
 
-    public String getHostAddress() {
-        return hostAddress;
+    public String getClientUUID() {
+        return clientUUID;
     }
 
-    public void setHostAddress(String hostAddress) {
-        this.hostAddress = hostAddress;
+    public void setClientUUID(String clientUUID) {
+        this.clientUUID = clientUUID;
     }
 
     private int points = 0;
@@ -32,6 +32,7 @@ public class PlayerEntityModel extends EntityModel {
         setAbility(Ability.SIMPLE_BOMB);
         setRenderLayer(RenderLayer.PLAYERS);
         setDirection(Direction.DOWN);
+        this.entityType = EntityType.Player;
     }
     @Override
     public void loadSpriteSheets() {

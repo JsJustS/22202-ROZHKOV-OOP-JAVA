@@ -12,6 +12,7 @@ public class ExplosionEntityModel extends EntityModel {
         setCollidable(false);
         setWidth(1);
         setHeight(1);
+        this.entityType = EntityType.Explosion;
     }
 
     @Override
