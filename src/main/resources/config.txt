@@ -1,0 +1,13 @@
+DEFINE=task2.command.CommandDefine
+POP=task2.command.CommandPop
+PRINT=task2.command.CommandPrint
+PUSH=task2.command.CommandPush
+PLUS=task2.command.CommandPlus
++=task2.command.CommandPlus
+MINUS=task2.command.CommandMinus
+-=task2.command.CommandMinus
+MULTIPLY=task2.command.CommandMultiply
+*=task2.command.CommandMultiply
+DIVIDE=task2.command.CommandDivide
+/=task2.command.CommandDivide
+SQRT=task2.command.CommandSquareRoot
