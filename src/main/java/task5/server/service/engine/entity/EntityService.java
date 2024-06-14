@@ -34,6 +34,10 @@ public class EntityService {
             entity.setAnimationStep(entity.getAnimationStep()+1);
         }
 
+        broadcastStatus(entity, network);
+    }
+
+    protected void broadcastStatus(EntityModel entity, SocketServer network) {
         network.broadcast(
                 new EntityStatusS2CPacket(
                         entity.getId(),

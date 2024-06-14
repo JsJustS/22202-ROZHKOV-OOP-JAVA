@@ -11,7 +11,6 @@ import task5.server.service.registry.EntityRegistry;
 import task5.util.network.Packet;
 import task5.util.network.PacketBuf;
 import task5.util.network.SocketConnection;
-import task5.util.network.c2s.PlayerJoinC2SPacket;
 import task5.util.network.s2c.*;
 
 import java.io.IOException;
@@ -88,11 +87,11 @@ public class SocketClient {
                     ClientApproveS2CPacket packet = new ClientApproveS2CPacket(packetBuf);
                     clientModel.setClientUUID(packet.getClientUUID());
                     LOGGER.info("Client approved! UUID: " + clientModel.getClientUUID());
-                    this.sendPacket(new PlayerJoinC2SPacket(clientModel.getClientUUID()));
                     return;
                 }
 
                 case RoundData: {
+                    clientModel.clearEntities();
                     RoundDataS2CPacket packet = new RoundDataS2CPacket(packetBuf);
                     clientModel.setFieldWidthInBlocks(packet.getFieldWidthInBlocks());
                     clientModel.setFieldHeightInBlocks(packet.getFieldHeightInBlocks());
@@ -144,6 +143,7 @@ public class SocketClient {
                     }
 
                     clientModel.removeEntity(entity);
+                    entity.setAlive(false);
                     return;
                 }
 
@@ -160,6 +160,10 @@ public class SocketClient {
                     entity.setDirection(packet.getDirection());
                     entity.setAbility(packet.getAbility());
                     entity.setAnimationStep(packet.getAnimationStep());
+                    if (entity instanceof PlayerEntityModel) {
+                        ((PlayerEntityModel)entity).setBombsLeft(packet.getBombsLeft());
+                        ((PlayerEntityModel)entity).setPoints(packet.getPoints());
+                    }
                     return;
                 }
 

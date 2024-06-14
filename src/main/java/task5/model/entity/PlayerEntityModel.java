@@ -32,6 +32,7 @@ public class PlayerEntityModel extends EntityModel {
         setAbility(Ability.SIMPLE_BOMB);
         setRenderLayer(RenderLayer.PLAYERS);
         setDirection(Direction.DOWN);
+        setCollidable(true);
         this.entityType = EntityType.Player;
     }
     @Override

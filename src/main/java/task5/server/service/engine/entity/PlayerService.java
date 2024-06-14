@@ -11,11 +11,28 @@ import task5.model.entity.EntityModel;
 import task5.model.entity.PlayerEntityModel;
 import task5.model.entity.blockentity.BlockEntityModel;
 import task5.server.SocketServer;
+import task5.util.network.s2c.EntityStatusS2CPacket;
 
 import java.util.Set;
 
 public class PlayerService extends EntityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerService.class);
+
+    @Override
+    protected void broadcastStatus(EntityModel entity, SocketServer network) {
+        network.broadcast(
+                new EntityStatusS2CPacket(
+                        entity.getId(),
+                        entity.getX(),
+                        entity.getY(),
+                        entity.getDirection(),
+                        entity.getAbility(),
+                        entity.getAnimationStep(),
+                        ((PlayerEntityModel)entity).getBombsLeft(),
+                        ((PlayerEntityModel)entity).getPoints()
+                )
+        );
+    }
 
     @Override
     public void useAbility(EntityModel entity, GameModel model) {

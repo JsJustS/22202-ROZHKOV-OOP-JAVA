@@ -12,7 +12,8 @@ public class SpawnSuperBombAbilityExecutor extends AbstractAbilityExecutor {
     public void execute(AbstractAbilityInstanceModel abilityInstance, GameModel model, SocketServer network) {
         super.execute(abilityInstance, model, network);
 
-        SuperBombEntityModel bomb = new SuperBombEntityModel(abilityInstance.getParent());
+        SuperBombEntityModel bomb = new SuperBombEntityModel();
+        bomb.setParent(abilityInstance.getParent());
         bomb.setX(abilityInstance.getX());
         bomb.setY(abilityInstance.getY());
         /*bomb.setId(model.getLastEntityId() + 1);

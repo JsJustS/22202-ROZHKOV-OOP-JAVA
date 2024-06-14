@@ -6,13 +6,12 @@ import java.util.List;
 public class BombEntityModel extends EntityModel {
     protected int timeToLive = 60;
     protected int power = 3;
-    private final EntityModel parent;
+    private EntityModel parent;
 
-    public BombEntityModel(EntityModel parent) {
+    public BombEntityModel() {
         setRenderLayer(RenderLayer.BOMBS);
         setHeight(0.75);
         setWidth(0.75);
-        this.parent = parent;
         setCollidable(true);
         setAnimationPerTick(5);
         this.entityType = EntityType.Bomb;
@@ -28,6 +27,10 @@ public class BombEntityModel extends EntityModel {
 
     public EntityModel getParent() {
         return parent;
+    }
+
+    public void setParent(EntityModel parent) {
+        this.parent = parent;
     }
 
     public int getTimeToLive() {

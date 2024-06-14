@@ -9,13 +9,13 @@ import task5.model.entity.EntityModel;
 import task5.model.entity.EntityType;
 import task5.model.entity.PlayerEntityModel;
 import task5.model.entity.blockentity.BlockEntityModel;
+import task5.server.service.engine.entity.EntityService;
+import task5.server.service.engine.entity.PlayerService;
 import task5.util.ThreadPool;
 import task5.util.network.Packet;
 import task5.util.network.PacketBuf;
 import task5.util.network.SocketConnection;
-import task5.util.network.c2s.PacketC2SType;
-import task5.util.network.c2s.PlayerJoinC2SPacket;
-import task5.util.network.c2s.PlayerLeaveC2SPacket;
+import task5.util.network.c2s.*;
 import task5.util.network.s2c.ClientApproveS2CPacket;
 import task5.util.network.s2c.EntitySpawnS2CPacket;
 import task5.util.network.s2c.RoundDataS2CPacket;
@@ -23,16 +23,15 @@ import task5.util.network.s2c.RoundDataS2CPacket;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class SocketServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(SocketServer.class);
     private final Map<String, SocketConnection> connections;
     private final ServerSocket socket;
     private final GameModel serverModel;
-    private ThreadPool threadPoolC2SPackets;
+    private final ThreadPool threadPoolC2SPackets;
+    private final Set<String> clientsPlaying;
 
     public SocketServer(GameModel serverModel, int port) throws IOException {
         this.socket = new ServerSocket(port);
@@ -40,6 +39,15 @@ public class SocketServer {
         this.connections = new HashMap<>();
         this.serverModel = serverModel;
         this.threadPoolC2SPackets = new ThreadPool(5, "Server-C2S");
+        this.clientsPlaying = new HashSet<>();
+    }
+
+    public void setClientAsPlaying(String clientUUID) {
+        this.clientsPlaying.add(clientUUID);
+    }
+
+    public boolean isClientPlaying(String clientUUID) {
+        return this.clientsPlaying.contains(clientUUID);
     }
 
     public void start() {
@@ -78,17 +86,22 @@ public class SocketServer {
 
                 case PlayerJoin: {
                     PlayerJoinC2SPacket packet = new PlayerJoinC2SPacket(packetBuf);
+                    if (isClientPlaying(packet.getClientUUID())) {
+                        LOGGER.info(packet.getClientUUID() + " tried to join again, ignoring");
+                        return;
+                    }
                     serverModel.addAbilityInstance(
                             new SpawnPlayerAbilityInstanceModel(packet.getClientUUID())
                     );
                     serverModel.setPlayerJoined(true);
-                    LOGGER.info(packet.getClientUUID() + " joined as a Player");
+                    LOGGER.info(packet.getClientUUID() + " tried to join as a Player");
                     return;
                 }
 
                 case PlayerLeave: {
                     PlayerLeaveC2SPacket packet = new PlayerLeaveC2SPacket(packetBuf);
                     connections.remove(packet.getClientUUID());
+                    clientsPlaying.remove(packet.getClientUUID());
                     boolean hasPlayers = false;
                     PlayerEntityModel player = null;
                     for (EntityModel entity : serverModel.getEntities()) {
@@ -104,8 +117,52 @@ public class SocketServer {
                         serverModel.addAbilityInstance(
                                 new DespawnPlayerAbilityInstanceModel(player)
                         );
+                    } else {
+                        LOGGER.error("Could not find player entity to despawn (" + packet.getClientUUID() + ")");
                     }
                     return;
+                }
+
+                case PlayerMove: {
+                    PlayerMoveC2SPacket packet = new PlayerMoveC2SPacket(packetBuf);
+                    EntityModel entity = EntityService.getEntityById(serverModel, packet.getPlayerId());
+                    if (!(entity instanceof PlayerEntityModel)) {
+                        LOGGER.warn("Wrong id for player moving packet");
+                        return;
+                    }
+
+                    PlayerEntityModel player = (PlayerEntityModel) entity;
+                    player.setMoving(packet.isMoving());
+                    if (packet.isMoving()) {
+                        player.setDirection(packet.getDirection());
+                    }
+                    return;
+                }
+
+                case PlayerAbilityUse: {
+                    PlayerAbilityUseC2SPacket packet = new PlayerAbilityUseC2SPacket(packetBuf);
+                    EntityModel entity = EntityService.getEntityById(serverModel, packet.getPlayerId());
+                    if (!(entity instanceof PlayerEntityModel)) {
+                        LOGGER.warn("Wrong id for player moving packet");
+                        return;
+                    }
+
+                    PlayerEntityModel player = (PlayerEntityModel) entity;
+                    PlayerService service = new PlayerService();
+                    service.useAbility(player, serverModel);
+                    return;
+                }
+
+                case PlayerAbilityChange: {
+                    PlayerAbilityChangeC2SPacket packet = new PlayerAbilityChangeC2SPacket(packetBuf);
+                    EntityModel entity = EntityService.getEntityById(serverModel, packet.getPlayerId());
+                    if (!(entity instanceof PlayerEntityModel)) {
+                        LOGGER.warn("Wrong id for player moving packet");
+                        return;
+                    }
+
+                    PlayerEntityModel player = (PlayerEntityModel) entity;
+                    player.setAbility(packet.getAbility());
                 }
 
             }

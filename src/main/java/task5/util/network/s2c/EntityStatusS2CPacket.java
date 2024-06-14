@@ -14,14 +14,23 @@ public class EntityStatusS2CPacket extends Packet {
     private final Direction direction;
     private final Ability ability;
     private final int animationStep;
+    // only for players
+    private final int bombsLeft;
+    private final int points;
 
     public EntityStatusS2CPacket(int entityId, double x, double y, Direction direction, Ability ability, int animationStep) {
+        this(entityId, x, y, direction, ability, animationStep, 0, 0);
+    }
+
+    public EntityStatusS2CPacket(int entityId, double x, double y, Direction direction, Ability ability, int animationStep, int bombsLeft, int points) {
         this.entityId = entityId;
         this.x = x;
         this.y = y;
         this.direction = direction;
         this.ability = ability;
         this.animationStep = animationStep;
+        this.bombsLeft = bombsLeft;
+        this.points = points;
     }
 
     public EntityStatusS2CPacket(PacketBuf buf) throws IOException {
@@ -29,8 +38,11 @@ public class EntityStatusS2CPacket extends Packet {
         this.x = buf.readDouble();
         this.y = buf.readDouble();
         this.direction = Direction.values()[buf.readInt()];
-        this.ability = Ability.values()[buf.readInt()];
+        int abilityOrdinal = buf.readInt();
+        this.ability = (abilityOrdinal == -1) ? null : Ability.values()[abilityOrdinal];
         this.animationStep = buf.readInt();
+        this.bombsLeft = buf.readInt();
+        this.points = buf.readInt();
     }
 
     @Override
@@ -41,8 +53,10 @@ public class EntityStatusS2CPacket extends Packet {
         buf.writeDouble(this.x);
         buf.writeDouble(this.y);
         buf.writeInt(this.direction.ordinal());
-        buf.writeInt(this.ability.ordinal());
+        buf.writeInt((this.ability == null) ? -1 : this.ability.ordinal());
         buf.writeInt(this.animationStep);
+        buf.writeInt(this.bombsLeft);
+        buf.writeInt(this.points);
         return buf;
     }
 
@@ -68,5 +82,13 @@ public class EntityStatusS2CPacket extends Packet {
 
     public int getAnimationStep() {
         return animationStep;
+    }
+
+    public int getBombsLeft() {
+        return bombsLeft;
+    }
+
+    public int getPoints() {
+        return points;
     }
 }

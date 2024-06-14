@@ -40,12 +40,12 @@ public class Config {
                 .withFieldWidth(15).withFieldHeight(15)
                 .withBots(3)
                 .withRoundSeconds(300) // 5 min
-                .withAbilityKey("Space")
-                .withMoveUpKey("Up")
-                .withMoveLeftKey("Left")
-                .withMoveDownKey("Down")
-                .withMoveRightKey("Right")
-                .withChangeAbilityKey("Enter")
+                .withAbilityKey("F")
+                .withMoveUpKey("W")
+                .withMoveLeftKey("A")
+                .withMoveDownKey("S")
+                .withMoveRightKey("D")
+                .withChangeAbilityKey("E")
                 .withLeaveKey("Escape")
                 .build();
     }

@@ -186,6 +186,8 @@ public class GameEngine implements ISubscriber {
                     BlockEntityModel block = EntityRegistry.getBlock(blockType);
                     block.setX(i + .5);
                     block.setY(j + .5);
+                    block.setId(serverModel.getLastEntityId() + 1);
+                    serverModel.setLastEntityId(block.getId());
                     serverModel.addEntity(block);
                 }
             }

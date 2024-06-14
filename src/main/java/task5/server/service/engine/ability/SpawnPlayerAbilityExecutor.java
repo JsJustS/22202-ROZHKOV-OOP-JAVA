@@ -14,6 +14,10 @@ public class SpawnPlayerAbilityExecutor extends AbstractAbilityExecutor {
     public void execute(AbstractAbilityInstanceModel abilityInstance, GameModel model, SocketServer network) {
         super.execute(abilityInstance, model, network);
 
+        if (network.isClientPlaying(((SpawnPlayerAbilityInstanceModel)abilityInstance).getHostAddress())) {
+            return;
+        }
+
         BotEntityModel bot = BotService.getFirstBotEntity(model);
         if (bot == null) {
             return;
@@ -32,5 +36,7 @@ public class SpawnPlayerAbilityExecutor extends AbstractAbilityExecutor {
         model.addAbilityInstance(
                 new SpawnEntityAbilityInstanceModel(player)
         );
+
+        network.setClientAsPlaying(player.getClientUUID());
     }
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SuperBombEntityModel extends BombEntityModel {
-    public SuperBombEntityModel(EntityModel parent) {
-        super(parent);
+    public SuperBombEntityModel() {
+        super();
         this.setPower(9);
         this.entityType = EntityType.SuperBomb;
     }

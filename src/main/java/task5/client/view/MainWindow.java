@@ -91,61 +91,51 @@ public class MainWindow extends JFrame implements ISubscriber {
     public void handleKeyActions() {
         Set<KeyBindManager.KeyAction> keysToHandle = new HashSet<>(clientModel.getPressedKeys());
         clientModel.clearPressedKeys();
+
         for (KeyBindManager.KeyAction keyAction : keysToHandle) {
+            if (clientModel.getMainPlayer() == null) {
+                clientNetwork.sendPacket(
+                        new PlayerJoinC2SPacket(clientModel.getClientUUID())
+                );
+                return;
+            }
             switch (keyAction) {
                 case USE_ABILITY:
-                    /*playerController.execute(
-                            PlayerController.OP.USE_ABILITY, clientModel,
-                            clientModel.getMainPlayer().getId()
-                    );*/
+                    if (!clientModel.getMainPlayer().isAlive()) break;
                     clientNetwork.sendPacket(
                             new PlayerAbilityUseC2SPacket(clientModel.getMainPlayer().getId())
                     );
                     break;
                 case CHANGE_ABILITY:
-                    int abilityOrdinal = (clientModel.getMainPlayer().getAbility() == Ability.SIMPLE_BOMB) ?
-                            Ability.SUPER_BOMB.ordinal() :
-                            Ability.SIMPLE_BOMB.ordinal();
-                    /*playerController.execute(
-                            PlayerController.OP.CHANGE_ABILITY, clientModel,
-                            new int[]{clientModel.getMainPlayer().getId(), abilityOrdinal}
-                    );*/
+                    if (!clientModel.getMainPlayer().isAlive()) break;
+                    Ability nextAbility = (clientModel.getMainPlayer().getAbility() == Ability.SIMPLE_BOMB) ? Ability.SUPER_BOMB: Ability.SIMPLE_BOMB;
                     clientNetwork.sendPacket(
-                            new PlayerAbilityChangeC2SPacket(clientModel.getMainPlayer().getId(), abilityOrdinal)
+                            new PlayerAbilityChangeC2SPacket(
+                                    clientModel.getMainPlayer().getId(),
+                                    nextAbility
+                            )
                     );
                     break;
                 case MOVE_UP:
-                    /*playerController.execute(
-                            PlayerController.OP.MOVE, clientModel,
-                            new int[]{clientModel.getMainPlayer().getId(), Direction.UP.ordinal()}
-                    );*/
+                    if (!clientModel.getMainPlayer().isAlive()) break;
                     clientNetwork.sendPacket(
                             new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.UP, true)
                     );
                     break;
                 case MOVE_DOWN:
-                    /*playerController.execute(
-                            PlayerController.OP.MOVE, clientModel,
-                            new int[]{clientModel.getMainPlayer().getId(), Direction.DOWN.ordinal()}
-                    );*/
+                    if (!clientModel.getMainPlayer().isAlive()) break;
                     clientNetwork.sendPacket(
                             new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.DOWN, true)
                     );
                     break;
                 case MOVE_RIGHT:
-                    /*playerController.execute(
-                            PlayerController.OP.MOVE, clientModel,
-                            new int[]{clientModel.getMainPlayer().getId(), Direction.RIGHT.ordinal()}
-                    );*/
+                    if (!clientModel.getMainPlayer().isAlive()) break;
                     clientNetwork.sendPacket(
                             new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.RIGHT, true)
                     );
                     break;
                 case MOVE_LEFT:
-                    /*playerController.execute(
-                            PlayerController.OP.MOVE, clientModel,
-                            new int[]{clientModel.getMainPlayer().getId(), Direction.LEFT.ordinal()}
-                    );*/
+                    if (!clientModel.getMainPlayer().isAlive()) break;
                     clientNetwork.sendPacket(
                             new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.LEFT, true)
                     );
@@ -165,6 +155,14 @@ public class MainWindow extends JFrame implements ISubscriber {
         keysToHandle = new HashSet<>(clientModel.getReleasedKeys());
         clientModel.clearReleasedKeys();
         for (KeyBindManager.KeyAction keyAction : keysToHandle) {
+
+            if (clientModel.getMainPlayer() == null) {
+                clientNetwork.sendPacket(
+                        new PlayerJoinC2SPacket(clientModel.getClientUUID())
+                );
+                return;
+            }
+
             switch (keyAction) {
                 case USE_ABILITY:
                     break;
@@ -176,10 +174,7 @@ public class MainWindow extends JFrame implements ISubscriber {
                 case MOVE_DOWN:
                 case MOVE_RIGHT:
                 case MOVE_LEFT:
-                    /*playerController.execute(
-                            PlayerController.OP.MOVE, clientModel,
-                            new int[]{clientModel.getMainPlayer().getId(), -1}
-                    );*/
+                    if (!clientModel.getMainPlayer().isAlive()) break;
                     clientNetwork.sendPacket(
                             new PlayerMoveC2SPacket(clientModel.getMainPlayer().getId(), Direction.DOWN, false)
                     );
