@@ -63,6 +63,18 @@ public class FieldPanel extends JPanel {
             int spriteX = (int)(x+w*(entity.getX()-(int)entity.getX())-spriteWidth/2);
             int spriteY = (int)(y+h*(entity.getY()-(int)entity.getY())-spriteHeight/2);
 
+            if (entity.equals(clientModel.getMainPlayer())) {
+                g.setColor(Color.RED);
+                int rectWidth = (int)(w*(entity.getHitboxWidth() + 0.1));
+                int rectHeight = (int)(h*(entity.getHitboxHeight() + 0.1));
+                g.fillRect(
+                        (int)(x+w*(entity.getX()-(int)entity.getX())-rectWidth/2),
+                        (int)(y+h*(entity.getY()-(int)entity.getY())-rectHeight/2),
+                        rectWidth,
+                        rectHeight
+                );
+            }
+
             BufferedImage sprite = (entity.getSpritePath() != null) ?
                     ResourceManager.getSprite(entity.getSpritePath()) :
                     ResourceManager.getMissingTexture();
